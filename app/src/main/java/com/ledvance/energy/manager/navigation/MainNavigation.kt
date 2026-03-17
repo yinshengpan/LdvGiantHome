@@ -19,7 +19,6 @@ import com.ledvance.energy.manager.screen.FirmwareUpdateScreen
 import com.ledvance.energy.manager.screen.LanguageScreen
 import com.ledvance.energy.manager.screen.LicenseContentScreen
 import com.ledvance.energy.manager.screen.LicensesScreen
-import com.ledvance.energy.manager.screen.NFCDetectionScreen
 import com.ledvance.energy.manager.screen.ScanQRCodeScreen
 import com.ledvance.energy.manager.screen.SetHistoryScreen
 import com.ledvance.energy.manager.state.LedvanceAppState
@@ -106,17 +105,6 @@ fun MainNavigation(
                     DeviceManager.setSN(route.device.address, it)
                     backStack.removeAll { it is QRCodeScanRoute }
                     backStack.add(DeviceDetailRoute(route.device.copy(sn = it)))
-                })
-            }
-
-            entry<NFCDetectionRoute> { route ->
-                PageLifecycleLogger("NFCDetectionRoute")
-                NFCDetectionScreen(onBack = {
-                    backStack.removeLastOrNull()
-                }, onResult = { sn ->
-                    DeviceManager.setSN(route.device.address, sn)
-                    backStack.removeAll { it is NFCDetectionRoute }
-                    backStack.add(DeviceDetailRoute(route.device.copy(sn = sn)))
                 })
             }
 

@@ -51,7 +51,6 @@ import com.ledvance.ble.bean.ScannedDevice
 import com.ledvance.energy.manager.dialog.ConnectDeviceDialog
 import com.ledvance.energy.manager.dialog.LedvanceDialog
 import com.ledvance.energy.manager.navigation.DeviceDetailRoute
-import com.ledvance.energy.manager.navigation.NFCDetectionRoute
 import com.ledvance.energy.manager.navigation.NavigationRoute
 import com.ledvance.energy.manager.navigation.QRCodeScanRoute
 import com.ledvance.energy.manager.state.LedvanceAppState
@@ -133,7 +132,6 @@ fun DeviceListScreen(
             onNFCDetection = {
                 showConnectDeviceDialog = false
                 val device = currentSelectedDevice ?: return@ConnectDeviceDialog
-                onGotoPage.invoke(NFCDetectionRoute(device))
             },
             onScanQRCode = {
                 showConnectDeviceDialog = false

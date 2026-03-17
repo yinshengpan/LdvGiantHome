@@ -62,16 +62,11 @@ import com.ledvance.ble.constant.Constants
 import com.ledvance.database.model.ChargerEntity
 import com.ledvance.database.model.DeviceEntity
 import com.ledvance.energy.manager.dialog.LedvanceDialog
-import com.ledvance.energy.manager.dialog.NfcDisableDialog
-import com.ledvance.energy.manager.dialog.NfcNotSupportDialog
-import com.ledvance.energy.manager.dialog.NfcOperationType
-import com.ledvance.energy.manager.dialog.NfcProgressDialog
 import com.ledvance.energy.manager.navigation.FirmwareUpdateRoute
 import com.ledvance.energy.manager.navigation.NavigationRoute
 import com.ledvance.energy.manager.viewmodel.BleViewModel
 import com.ledvance.energy.manager.viewmodel.DeviceDetailFactory
 import com.ledvance.energy.manager.viewmodel.DeviceDetailViewModel
-import com.ledvance.nfc.utils.NfcProgressState
 import com.ledvance.ui.R
 import com.ledvance.ui.component.InputTextType
 import com.ledvance.ui.component.LedvanceButton
@@ -117,12 +112,6 @@ fun DeviceDetailScreen(
     val localDevice by viewModel.device.collectAsStateWithLifecycle()
     val chargerList by viewModel.chargerList.collectAsStateWithLifecycle()
 
-    var showProgressDialogDialog by remember { mutableStateOf<NfcOperationType?>(null) }
-    val writingProgress by viewModel.writingProgress.collectAsStateWithLifecycle()
-    val hasSupportedNfc = remember { viewModel.hasSupportNfc() }
-    val nfcEnable by viewModel.nfcEnable.collectAsStateWithLifecycle()
-    var showNfcDisableDialog by remember { mutableStateOf(false) }
-    var showNfcNotSupportDialog by remember { mutableStateOf(false) }
     var tripCurrent by remember { mutableStateOf("") }
 
     LaunchedEffect(connectStatus, localDevice) {
@@ -135,32 +124,6 @@ fun DeviceDetailScreen(
 
     if (loading) {
         LoadingCard()
-    }
-
-    showProgressDialogDialog?.also {
-        NfcProgressDialog(
-            type = it, progress = writingProgress, onCloseDialog = {
-                showProgressDialogDialog = null
-                viewModel.hideReadOrWriteDriverDialog()
-            })
-    }
-
-    LaunchedEffect(writingProgress) {
-        if (writingProgress == NfcProgressState.Success) {
-            tripCurrent = ""
-            viewModel.updateLocalTripCurrentByNFC(device)
-        }
-    }
-
-    if (showNfcDisableDialog) {
-        NfcDisableDialog(onCancel = {
-            showNfcDisableDialog = false
-        })
-    }
-    if (showNfcNotSupportDialog) {
-        NfcNotSupportDialog(onConfirm = {
-            showNfcNotSupportDialog = false
-        })
     }
 
     var showInvalidParamValueDialog by remember { mutableStateOf(false) }
@@ -247,24 +210,6 @@ fun DeviceDetailScreen(
                                 }
                             },
                         )
-                        NFCProgramView(onProgram = {
-                            if (!hasSupportedNfc) {
-                                showNfcNotSupportDialog = true
-                                return@NFCProgramView
-                            }
-                            if (!nfcEnable) {
-                                showNfcDisableDialog = true
-                                return@NFCProgramView
-                            }
-                            val current = tripCurrent.toIntOrNull() ?: 0
-                            if (current !in Constants.tripCurrentRange) {
-                                showInvalidParamValueDialog = true
-                                return@NFCProgramView
-                            }
-                            viewModel.updateNFCTripCurrent(tripCurrent)
-                            showProgressDialogDialog = NfcOperationType.Write
-                            viewModel.showWriteDriverDialog()
-                        })
                     }
 
                     if (!deviceOnline) {
