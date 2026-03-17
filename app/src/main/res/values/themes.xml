@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Allows us to override night specific attributes in the
+       values-night folder. -->
+    <style name="NightAdjusted.Theme.LedvanceApp" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:navigationBarColor">@color/background</item>
+    </style>
+
+    <!-- The final theme we use -->
+    <style name="Theme.LedvanceApp" parent="NightAdjusted.Theme.LedvanceApp">
+        <item name="android:forceDarkAllowed" tools:targetApi="29">false</item>
+    </style>
+
+    <style name="NightAdjusted.Theme.Splash" parent="Theme.SplashScreen">
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">false</item>
+    </style>
+
+    <style name="Theme.LedvanceApp.Splash" parent="NightAdjusted.Theme.Splash">
+<!--        <item name="windowSplashScreenAnimatedIcon">@drawable/group_1</item>-->
+<!--        <item name="windowSplashScreenBackground">@color/background</item>-->
+<!--        <item name="windowSplashScreenAnimationDuration">0</item>-->
+        <item name="postSplashScreenTheme">@style/Theme.LedvanceApp</item>
+    </style>
+</resources>

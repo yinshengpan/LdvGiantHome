@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">"Home Load Shed"</string>
+    <string name="licenses_url" translatable="false">"https://www.ledvanceapp.com/fieldassistant/opensource"</string>
+    <string name="privacy_policy_url" translatable="false">"https://www.ledvanceapp.com/fieldassistant/private-policy"</string>
+    <string name="terms_of_use_url" translatable="false">"https://www.ledvanceapp.com/fieldassistant/term-of-us"</string>
+    <string name="eu_data_act_url" translatable="false">"https://www.ledvanceapp.com/fieldassistant/dataact"</string>
+</resources>

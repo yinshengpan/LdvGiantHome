@@ -1,0 +1,24 @@
+{
+  "readKey": "a6732326703504732035-d6aa9aaf3c6c04e348f3b78a8b99a9f254d2e271c039c1b952ebdfd7f90accd8",
+  "download": {
+    "folder": "localazy/conversion",
+    "includeSourceLang": true,
+    "excludedLangs": [],
+    "langExpansions": {
+      "en": [
+        ""
+      ]
+    },
+    "files": [
+      {
+        "conditions": "empty: ${langAndroidRes}",
+        "output": "values/strings.json",
+        "stop": true
+      },
+      {
+        "output": "values-${langAndroidRes}/strings.json",
+        "stop": true
+      }
+    ]
+  }
+}
