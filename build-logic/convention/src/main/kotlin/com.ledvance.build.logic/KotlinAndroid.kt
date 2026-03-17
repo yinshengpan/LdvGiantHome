@@ -32,13 +32,13 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
  * Configure base Kotlin with Android options
  */
 internal fun Project.configureKotlinAndroid(
-    commonExtension: CommonExtension<*, *, *, *, *, *>,
+    commonExtension: CommonExtension,
 ) {
     commonExtension.apply {
         compileSdk = libs.findVersion("compileSdk").get().toString().toInt()
 
 
-        defaultConfig {
+        defaultConfig.apply {
             minSdk = libs.findVersion("minSdk").get().toString().toInt()
             ndk {
                 abiFilters.add("armeabi-v7a")
@@ -46,12 +46,12 @@ internal fun Project.configureKotlinAndroid(
             }
         }
 
-        buildFeatures {
+        buildFeatures.apply {
             buildConfig = true
             aidl = true
         }
 
-        compileOptions {
+        compileOptions.apply {
             // Up to Java 11 APIs are available through desugaring
             // https://developer.android.com/studio/write/java11-minimal-support-table
             sourceCompatibility = JavaVersion.VERSION_21

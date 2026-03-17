@@ -14,8 +14,7 @@
  *   limitations under the License.
  */
 
-import com.ledvance.build.logic.libs
-import com.android.build.gradle.LibraryExtension
+import com.android.build.api.dsl.LibraryExtension
 import com.ledvance.build.logic.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -26,11 +25,9 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             apply(plugin = "com.android.library")
-            apply(plugin = "org.jetbrains.kotlin.android")
 
             extensions.configure<LibraryExtension> {
                 configureKotlinAndroid(this)
-                defaultConfig.targetSdk = libs.findVersion("targetSdk").get().toString().toInt()
                 buildTypes {
                     create("internalRelease")
                 }

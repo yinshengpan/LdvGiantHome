@@ -16,7 +16,6 @@ android {
         applicationId = useApplicationId
         versionCode = providers.gradleProperty("versionCode").orNull?.toIntOrNull() ?: 0
         versionName = providers.gradleProperty("versionName").orNull ?: ""
-        setProperty("archivesBaseName", "HomeLoadShed-$versionName[$versionCode]_${getDate()}")
 
         manifestPlaceholders["COMMIT_ID"] = getCommitId()
     }

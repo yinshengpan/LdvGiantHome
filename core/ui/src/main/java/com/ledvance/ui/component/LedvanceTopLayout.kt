@@ -64,7 +64,7 @@ fun LedvanceTopLayout(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
-                    .debouncedClickable(onClick = { onBackClick?.invoke() })
+                    .debouncedClickable(onClick = { onBackClick.invoke() })
             ) {
                 Icon(
                     painter = painterResource(R.drawable.ic_back),

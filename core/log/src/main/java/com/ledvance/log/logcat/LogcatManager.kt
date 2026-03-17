@@ -42,13 +42,13 @@ internal object LogcatManager {
                         }
                     }
                     line = try {
-                        reader?.readLine()
+                        reader.readLine()
                     } catch (e: IOException) {
                         e.printStackTrace()
                         closeStream(reader)
                         return
                     }
-                    if (line == null || line!!.contains("read: Unexpected EOF!")) {
+                    if (line == null || line.contains("read: Unexpected EOF!")) {
                         // 正常情况讲，line 是不会为空的，因为没有新的日志前提下 reader.readLine() 会阻塞读取
                         // 但是在某些特殊机型（vivo iQOO 9 Pro Android 12）上面会出现，在没有新的日志前提下，会返回 null
                         // 并且等待一会儿再读取还不行，无论循环等待多次，因为原先的流里面已经没有东西了，要读取新的日志必须创建新的流
@@ -61,7 +61,7 @@ internal object LogcatManager {
                         }
                         return@synchronized
                     }
-                    LogManager.writeLogcat(line ?: "")
+                    LogManager.writeLogcat(line)
                 }
             }
         }

@@ -36,7 +36,7 @@ fun LedvanceTopAppBar(
     navigationIconContentDescription: String? = null,
     actionIcon: Painter? = null,
     actionIconContentDescription: String? = null,
-    colors: TopAppBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(),
+    colors: TopAppBarColors = TopAppBarDefaults.topAppBarColors(),
     onNavigationClick: (() -> Unit)? = {},
     onActionClick: () -> Unit = {},
 ) {
