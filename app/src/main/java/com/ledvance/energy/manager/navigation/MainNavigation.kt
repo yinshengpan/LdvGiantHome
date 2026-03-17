@@ -13,17 +13,12 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.ledvance.energy.manager.extensions.launchCustomChromeTab
-import com.ledvance.energy.manager.screen.DeviceDetailScreen
 import com.ledvance.energy.manager.screen.DeviceListScreen
-import com.ledvance.energy.manager.screen.FirmwareUpdateScreen
 import com.ledvance.energy.manager.screen.LanguageScreen
 import com.ledvance.energy.manager.screen.LicenseContentScreen
 import com.ledvance.energy.manager.screen.LicensesScreen
-import com.ledvance.energy.manager.screen.ScanQRCodeScreen
-import com.ledvance.energy.manager.screen.SetHistoryScreen
 import com.ledvance.energy.manager.state.LedvanceAppState
 import com.ledvance.ui.theme.AppTheme
-import com.ledvance.utils.DeviceManager
 import timber.log.Timber
 
 /**
@@ -71,40 +66,11 @@ fun MainNavigation(
                 })
 
             }
-            entry<DeviceDetailRoute> {
-                PageLifecycleLogger("DeviceDetailRoute")
-                DeviceDetailScreen(device = it.device, onBack = {
-                    backStack.removeLastOrNull()
-                }, onGotoPage = {
-                    backStack.add(it)
-                })
-            }
+
             entry<LanguageRoute> {
                 PageLifecycleLogger("LanguageRoute")
                 LanguageScreen(onBack = {
                     backStack.removeLastOrNull()
-                })
-            }
-
-            entry<FirmwareUpdateRoute> {
-                PageLifecycleLogger("FirmwareUpdateRoute")
-                FirmwareUpdateScreen(onBack = { isBackToDeviceList ->
-                    if (isBackToDeviceList) {
-                        backStack.removeIf { it is FirmwareUpdateRoute || it is DeviceDetailRoute }
-                    } else {
-                        backStack.removeLastOrNull()
-                    }
-                })
-            }
-
-            entry<QRCodeScanRoute> { route ->
-                PageLifecycleLogger("QRCodeScanRoute")
-                ScanQRCodeScreen(onBack = {
-                    backStack.removeLastOrNull()
-                }, onResult = {
-                    DeviceManager.setSN(route.device.address, it)
-                    backStack.removeAll { it is QRCodeScanRoute }
-                    backStack.add(DeviceDetailRoute(route.device.copy(sn = it)))
                 })
             }
 
@@ -137,13 +103,6 @@ fun MainNavigation(
                 LicenseContentScreen(license = it.license) {
                     backStack.removeLastOrNull()
                 }
-            }
-
-            entry<SetHistoryRoute> {
-                PageLifecycleLogger("SetHistoryRoute")
-                SetHistoryScreen(onBack = {
-                    backStack.removeLastOrNull()
-                })
             }
         }
     )

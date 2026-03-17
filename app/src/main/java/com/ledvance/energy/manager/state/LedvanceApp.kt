@@ -30,7 +30,7 @@ fun LedvanceApp(
     MainNavigationScaffold(
         snackbarHost = { SnackbarHost(LocalSnackBarHostState.current) }
     ) {
-        MainNavigation(appState = appState,)
+        MainNavigation(appState = appState)
     }
 }
 

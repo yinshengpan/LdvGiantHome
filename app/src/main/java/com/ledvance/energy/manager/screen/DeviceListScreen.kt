@@ -50,9 +50,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 import com.ledvance.ble.bean.ScannedDevice
 import com.ledvance.energy.manager.dialog.ConnectDeviceDialog
 import com.ledvance.energy.manager.dialog.LedvanceDialog
-import com.ledvance.energy.manager.navigation.DeviceDetailRoute
 import com.ledvance.energy.manager.navigation.NavigationRoute
-import com.ledvance.energy.manager.navigation.QRCodeScanRoute
 import com.ledvance.energy.manager.state.LedvanceAppState
 import com.ledvance.energy.manager.state.rememberBluetoothBusinessState
 import com.ledvance.energy.manager.viewmodel.BleViewModel
@@ -101,7 +99,6 @@ fun DeviceListScreen(
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA) {
         if (it) {
             val device = currentSelectedDevice ?: return@rememberPermissionState
-            onGotoPage.invoke(QRCodeScanRoute(device))
         }
     }
 
@@ -137,7 +134,6 @@ fun DeviceListScreen(
                 showConnectDeviceDialog = false
                 if (cameraPermissionState.status.isGranted) {
                     val device = currentSelectedDevice ?: return@ConnectDeviceDialog
-                    onGotoPage.invoke(QRCodeScanRoute(device))
                 } else {
                     cameraPermissionState.launchPermissionRequest()
                 }
@@ -189,7 +185,6 @@ fun DeviceListScreen(
                                 val sn = it.sn.ifEmpty { DeviceManager.getSN(it.address) }
                                 if (sn.isNotEmpty()) {
                                     bleViewModel.stopBleScan()
-                                    onGotoPage.invoke(DeviceDetailRoute(it.copy(sn = sn)))
                                     return@launch
                                 }
                                 showConnectDeviceDialog = true

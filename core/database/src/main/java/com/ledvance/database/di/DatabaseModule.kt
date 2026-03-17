@@ -23,5 +23,5 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun providesAppDatabase(@ApplicationContext context: Context): AppDatabase =
-        Room.databaseBuilder(context, AppDatabase::class.java, "energy-manager-database").build()
+        Room.databaseBuilder(context, AppDatabase::class.java, "ldv-giant-home-database").build()
 }

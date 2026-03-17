@@ -36,22 +36,12 @@ class DeviceRepo @Inject constructor(
         return@withContext tryCatchReturn { deviceDao.getDevice(address) }
     }
 
-    suspend fun getSN(address: String): String? = withContext(Dispatchers.IO) {
-        return@withContext tryCatchReturn { deviceDao.getSN(address) }
-    }
-
     fun getDeviceListFlow(): Flow<List<DeviceEntity>> {
         return deviceDao.getDeviceListFlow().catch { }
     }
 
     fun getDeviceFlow(address: String): Flow<DeviceEntity?> {
         return deviceDao.getDeviceFlow(address).catch { }
-    }
-
-    suspend fun updateTripCurrent(address: String, tripCurrent: Int) = withContext(Dispatchers.IO) {
-        return@withContext tryCatch {
-            deviceDao.updateTripCurrent(address, tripCurrent)
-        }
     }
 
 }

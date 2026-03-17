@@ -23,12 +23,6 @@ interface DeviceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(devices: List<DeviceEntity>)
 
-    @Query("select firmware_version from devices where address = :address")
-    suspend fun getFMVersion(address: String): String?
-
-    @Query("select sn from devices where address = :address")
-    suspend fun getSN(address: String): String?
-
     @Query("select * from devices where address = :address")
     suspend fun getDevice(address: String): DeviceEntity?
 
@@ -46,8 +40,5 @@ interface DeviceDao {
 
     @Query("delete from devices where address=:address")
     suspend fun deleteDevice(address: String)
-
-    @Query("update devices set trip_current_value=:tripCurrent where address=:address")
-    suspend fun updateTripCurrent(address: String,tripCurrent: Int)
 
 }

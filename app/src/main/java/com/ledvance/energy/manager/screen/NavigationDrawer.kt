@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import com.ledvance.energy.manager.navigation.LanguageRoute
 import com.ledvance.energy.manager.navigation.NavigationRoute
 import com.ledvance.energy.manager.navigation.OpenSourceLicensesRoute
-import com.ledvance.energy.manager.navigation.SetHistoryRoute
 import com.ledvance.energy.manager.state.LedvanceAppState
 import com.ledvance.giant.BuildConfig
 import com.ledvance.log.LogManager
@@ -107,7 +106,6 @@ fun NavigationDrawer(
                     title = "Set History",
                     icon = painterResource(R.mipmap.icon_set_history),
                     onClick = {
-                        onGotoPage.invoke(SetHistoryRoute)
                         scope.launch { appState.drawerState.close() }
                     }
                 )
