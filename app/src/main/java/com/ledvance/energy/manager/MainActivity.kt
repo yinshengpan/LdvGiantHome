@@ -38,8 +38,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
-        LanguageUtils.updateLanguageResourceConfiguration(this)
-        LanguageUtils.updateLanguageResourceConfiguration(AppContext.get())
         var darkTheme by mutableStateOf(false)
         // var darkTheme by mutableStateOf(resources.configuration.isSystemInDarkTheme)
         initDarkTheme(onDarkThemeChanged = { isDarkTheme ->
@@ -55,9 +53,6 @@ class MainActivity : AppCompatActivity() {
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         Timber.tag(TAG).i("onConfigurationChanged: $newConfig")
-        LanguageUtils.updateSystemLanguageTag(newConfig.locale.toLanguageTag())
-        LanguageUtils.updateLanguageResourceConfiguration(this)
-        LanguageUtils.updateLanguageResourceConfiguration(AppContext.get())
     }
 
     private fun initDarkTheme(onDarkThemeChanged: (Boolean) -> Unit) {

@@ -17,7 +17,7 @@ class LdvInitializer : Initializer<Boolean> {
     override fun dependencies(): List<Class<out Initializer<*>?>?> {
         return listOf(
 //            FirebaseInitializer::class.java,
-            LanguageInitializer::class.java,
+//            LanguageInitializer::class.java,
             DarkThemeInitializer::class.java,
             SyncInitializer::class.java
         )
