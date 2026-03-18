@@ -24,13 +24,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ledvance.energy.manager.navigation.LanguageRoute
-import com.ledvance.energy.manager.navigation.NavigationRoute
 import com.ledvance.energy.manager.navigation.OpenSourceLicensesRoute
 import com.ledvance.energy.manager.state.LedvanceAppState
 import com.ledvance.giant.BuildConfig
 import com.ledvance.log.LogManager
 import com.ledvance.ui.R
 import com.ledvance.ui.extensions.debouncedClickable
+import com.ledvance.ui.navigation.NavigationRoute
 import com.ledvance.ui.theme.AppTheme
 import kotlinx.coroutines.launch
 

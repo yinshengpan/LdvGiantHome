@@ -1,7 +1,5 @@
 package com.ledvance.energy.manager.screen
 
-import android.Manifest
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.Arrangement
@@ -45,13 +43,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
 import com.ledvance.ble.bean.ScannedDevice
-import com.ledvance.energy.manager.dialog.ConnectDeviceDialog
 import com.ledvance.energy.manager.dialog.LedvanceDialog
-import com.ledvance.energy.manager.navigation.NavigationRoute
-import com.ledvance.energy.manager.state.LedvanceAppState
 import com.ledvance.energy.manager.state.rememberBluetoothBusinessState
 import com.ledvance.energy.manager.viewmodel.BleViewModel
 import com.ledvance.energy.manager.viewmodel.DeviceListViewModel
@@ -63,9 +56,9 @@ import com.ledvance.ui.component.scrollbar.rememberDraggableScroller
 import com.ledvance.ui.component.scrollbar.scrollbarState
 import com.ledvance.ui.extensions.debouncedClickable
 import com.ledvance.ui.extensions.stringResourceFormat
+import com.ledvance.ui.navigation.NavigationRoute
 import com.ledvance.ui.theme.AppTheme
 import com.ledvance.utils.BluetoothManager
-import com.ledvance.utils.DeviceManager
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -80,27 +73,19 @@ private const val TAG = "DeviceListScreen"
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun DeviceListScreen(
-    appState: LedvanceAppState,
     bleViewModel: BleViewModel = hiltViewModel(),
     viewModel: DeviceListViewModel = hiltViewModel(),
+    onBackPressed: () -> Unit,
     onGotoPage: (NavigationRoute) -> Unit,
 ) {
     val scope = rememberCoroutineScope()
-    val drawerState = appState.drawerState
-    val activity = LocalActivity.current
 
     val scanDevices by bleViewModel.scanDevices.collectAsStateWithLifecycle()
     val localDevices by viewModel.localDevices.collectAsStateWithLifecycle()
     val bluetoothEnableState by BluetoothManager.bluetoothEnableState.collectAsStateWithLifecycle()
     var bluetoothPermission by remember { mutableStateOf(false) }
     val bluetoothBusinessState by rememberBluetoothBusinessState()
-    var showConnectDeviceDialog by remember { mutableStateOf<Boolean>(false) }
     var currentSelectedDevice by remember { mutableStateOf<ScannedDevice?>(null) }
-    val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA) {
-        if (it) {
-            val device = currentSelectedDevice ?: return@rememberPermissionState
-        }
-    }
 
     LifecycleResumeEffect(Unit) {
         bluetoothPermission = bluetoothBusinessState.hasAllow()
@@ -121,79 +106,37 @@ fun DeviceListScreen(
         }
     }
 
-    if (showConnectDeviceDialog) {
-        ConnectDeviceDialog(
-            onDismissRequest = {
-                showConnectDeviceDialog = false
-            },
-            onNFCDetection = {
-                showConnectDeviceDialog = false
-                val device = currentSelectedDevice ?: return@ConnectDeviceDialog
-            },
-            onScanQRCode = {
-                showConnectDeviceDialog = false
-                if (cameraPermissionState.status.isGranted) {
-                    val device = currentSelectedDevice ?: return@ConnectDeviceDialog
-                } else {
-                    cameraPermissionState.launchPermissionRequest()
-                }
-            }
-        )
-    }
-
-    NavigationDrawer(appState = appState, onGotoPage = onGotoPage) {
-        LedvanceScreen(
-            topBarContainerColor = AppTheme.colors.primaryBackground,
-            topBarContentColor = AppTheme.colors.primaryContent,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            leftIconPainter = painterResource(R.drawable.ic_menu),
-            onLeftIconClick = {
-                scope.launch { drawerState.open() }
-            },
-            verticalArrangement = Arrangement.Center,
-            title = stringResource(R.string.device_list),
-            onBackPressed = {
-                if (drawerState.isOpen) {
-                    scope.launch { drawerState.close() }
-                    return@LedvanceScreen
-                }
-                activity?.finish()
-            }
-        ) {
-            when {
-                scanDevices.isEmpty() && localDevices.isEmpty() -> {
-                    LottieAsset(
-                        assetName = "ble.lottie",
-                        modifier = Modifier
-                            .padding(top = 76.dp)
-                            .align(Alignment.TopCenter)
-                    )
-                }
-
-                else -> {
-                    DeviceListContent(
-                        scanDevices = scanDevices,
-                        localDevices = localDevices,
-                        onDeleteClick = {
-                            scope.launch {
-                                viewModel.deleteDevice(it.address)
-                            }
-                        },
-                        onItemClick = {
-                            scope.launch {
-                                currentSelectedDevice = it
-                                val sn = it.sn.ifEmpty { DeviceManager.getSN(it.address) }
-                                if (sn.isNotEmpty()) {
-                                    bleViewModel.stopBleScan()
-                                    return@launch
-                                }
-                                showConnectDeviceDialog = true
-                            }
-                        })
-                }
+    LedvanceScreen(
+        topBarContainerColor = AppTheme.colors.primaryBackground,
+        topBarContentColor = AppTheme.colors.primaryContent,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        title = stringResource(R.string.device_list),
+        onBackPressed = onBackPressed
+    ) {
+        when {
+            scanDevices.isEmpty() && localDevices.isEmpty() -> {
+                LottieAsset(
+                    assetName = "ble.lottie",
+                    modifier = Modifier
+                        .padding(top = 76.dp)
+                        .align(Alignment.TopCenter)
+                )
             }
 
+            else -> {
+                DeviceListContent(
+                    scanDevices = scanDevices,
+                    localDevices = localDevices,
+                    onDeleteClick = {
+                    },
+                    onItemClick = {
+                        scope.launch {
+                        }
+                    })
+            }
         }
+
     }
 }
 

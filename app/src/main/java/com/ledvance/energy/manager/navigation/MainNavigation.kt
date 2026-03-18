@@ -4,7 +4,6 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
@@ -18,8 +17,11 @@ import com.ledvance.energy.manager.screen.LanguageScreen
 import com.ledvance.energy.manager.screen.LicenseContentScreen
 import com.ledvance.energy.manager.screen.LicensesScreen
 import com.ledvance.energy.manager.state.LedvanceAppState
+import com.ledvance.home.navigation.HomeRoute
+import com.ledvance.home.navigation.homeScreen
+import com.ledvance.ui.navigation.NavigationRoute
+import com.ledvance.ui.navigation.PageLifecycleLogger
 import com.ledvance.ui.theme.AppTheme
-import timber.log.Timber
 
 /**
  * @author : jason yin
@@ -27,15 +29,13 @@ import timber.log.Timber
  * Created date 2025/6/19 13:33
  * Describe : MainNavigation
  */
-private const val TAG = "MainNavigation"
+
 
 @Composable
-fun MainNavigation(
-    appState: LedvanceAppState,
-) {
+fun MainNavigation(appState: LedvanceAppState) {
     val context = LocalContext.current
     val chromeTabColor = AppTheme.colors.screenBackground
-    val backStack = rememberMutableStateListOf<NavigationRoute>(DeviceListRoute)
+    val backStack = rememberMutableStateListOf<NavigationRoute>(HomeRoute)
     NavDisplay(
         backStack = backStack,
         onBack = { backStack.removeLastOrNull() },
@@ -59,13 +59,9 @@ fun MainNavigation(
                     slideOutHorizontally(targetOffsetX = { it })
         },
         entryProvider = entryProvider {
-            entry<DeviceListRoute> {
-                PageLifecycleLogger("DeviceListRoute")
-                DeviceListScreen(appState, onGotoPage = {
-                    backStack.add(it)
-                })
+            homeScreen(onNavigateToAddNewDevice = {
 
-            }
+            })
 
             entry<LanguageRoute> {
                 PageLifecycleLogger("LanguageRoute")
@@ -108,12 +104,3 @@ fun MainNavigation(
     )
 }
 
-@Composable
-private fun PageLifecycleLogger(pageName: String) {
-    DisposableEffect(pageName) {
-        Timber.tag(TAG).d("Page shown: $pageName")
-        onDispose {
-            Timber.tag(TAG).d("Page destroyed: $pageName")
-        }
-    }
-}

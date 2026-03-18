@@ -187,5 +187,6 @@ ledvance-android-licenses = { id = "ledvance.android.licenses" }
 ledvance-kotlinx-serialization = { id = "ledvance.kotlinx.serialization" }
 ledvance-application-signing = { id = "ledvance.application.signing" }
 ledvance-jvm-library = { id = "ledvance.jvm.library" }
+ledvance-compose-feature = { id = "ledvance.compose.feature" }
 [bundles]
 

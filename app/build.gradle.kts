@@ -34,9 +34,9 @@ dependencies {
     implementation(projects.core.database)
     implementation(projects.core.network)
     implementation(projects.core.log)
-//    debugImplementation(projects.core.log)
-//    internalReleaseImplementation(projects.core.log)
-//    releaseImplementation(projects.core.log)
+
+    implementation(projects.feature.home)
+    implementation(projects.feature.search)
 
     implementation(libs.appcompat)
     implementation(libs.core.ktx)

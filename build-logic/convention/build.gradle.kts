@@ -92,5 +92,9 @@ gradlePlugin {
             id = libs.plugins.ledvance.jvm.library.get().pluginId
             implementationClass = "JvmLibraryConventionPlugin"
         }
+        register("AndroidComposeFeature") {
+            id = libs.plugins.ledvance.compose.feature.get().pluginId
+            implementationClass = "AndroidComposeFeatureConventionPlugin"
+        }
     }
 }
