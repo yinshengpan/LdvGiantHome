@@ -1,4 +1,4 @@
-package com.ledvance.energy.manager.state
+package com.ledvance.ui.state
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -10,8 +10,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ledvance.connected.system.extensions.openBluetooth
-import com.ledvance.energy.manager.dialog.LedvanceDialog
 import com.ledvance.ui.R
+import com.ledvance.ui.dialog.LedvanceDialog
 import com.ledvance.utils.BluetoothManager
 
 /**

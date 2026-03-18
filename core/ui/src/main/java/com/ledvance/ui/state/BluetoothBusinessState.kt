@@ -1,4 +1,4 @@
-package com.ledvance.energy.manager.state
+package com.ledvance.ui.state
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State

@@ -8,6 +8,8 @@ android {
   }
 
 dependencies {
+    implementation(projects.core.utils)
+    implementation(projects.core.domain)
     implementation(libs.metrics.performance)
     implementation(libs.activity.compose)
     implementation(libs.timber)
@@ -15,4 +17,5 @@ dependencies {
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.ui.compose)
     implementation(libs.lottie.compose)
+    implementation(libs.accompanist.permissions)
 }

@@ -1,4 +1,4 @@
-package com.ledvance.energy.manager.dialog
+package com.ledvance.ui.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

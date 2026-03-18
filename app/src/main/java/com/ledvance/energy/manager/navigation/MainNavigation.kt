@@ -12,13 +12,14 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.ledvance.energy.manager.extensions.launchCustomChromeTab
-import com.ledvance.energy.manager.screen.DeviceListScreen
 import com.ledvance.energy.manager.screen.LanguageScreen
 import com.ledvance.energy.manager.screen.LicenseContentScreen
 import com.ledvance.energy.manager.screen.LicensesScreen
 import com.ledvance.energy.manager.state.LedvanceAppState
 import com.ledvance.home.navigation.HomeRoute
 import com.ledvance.home.navigation.homeScreen
+import com.ledvance.home.navigation.navigateToSearch
+import com.ledvance.home.navigation.searchScreen
 import com.ledvance.ui.navigation.NavigationRoute
 import com.ledvance.ui.navigation.PageLifecycleLogger
 import com.ledvance.ui.theme.AppTheme
@@ -29,8 +30,6 @@ import com.ledvance.ui.theme.AppTheme
  * Created date 2025/6/19 13:33
  * Describe : MainNavigation
  */
-
-
 @Composable
 fun MainNavigation(appState: LedvanceAppState) {
     val context = LocalContext.current
@@ -59,8 +58,14 @@ fun MainNavigation(appState: LedvanceAppState) {
                     slideOutHorizontally(targetOffsetX = { it })
         },
         entryProvider = entryProvider {
-            homeScreen(onNavigateToAddNewDevice = {
+            homeScreen(
+                onNavigateToAddNewDevice = {
+                    backStack.navigateToSearch()
+                }
+            )
 
+            searchScreen(onBackClick = {
+                backStack.removeLastOrNull()
             })
 
             entry<LanguageRoute> {

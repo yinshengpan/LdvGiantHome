@@ -1,6 +1,8 @@
 package com.ledvance.home
 
 import androidx.compose.runtime.Immutable
+import com.ledvance.domain.bean.DeviceUiItem
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * @author : jason yin
@@ -16,9 +18,14 @@ internal interface HomeContract {
         data object Loading : UiState
 
         @Immutable
-        data object Success : UiState
+        data class Success(
+            val devices: List<DeviceUiItem>,
+            val onlineMap: Map<String, Boolean>
+        ) : UiState
 
         @Immutable
-        data object Error : UiState
+        data object Empty : UiState
     }
+
+    val uiState: StateFlow<UiState>
 }

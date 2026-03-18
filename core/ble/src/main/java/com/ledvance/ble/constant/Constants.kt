@@ -9,9 +9,9 @@ import java.util.UUID
  * Describe : Constants
  */
 object Constants {
-    internal val BLE_PREFIX: String = "DLM_"
-    internal val FILTER_SERVICE_UUID: UUID = UUID.fromString("0000FFF0-0000-1000-8000-00805F9B34FB")
-    internal val SERVICE_UUID: UUID = UUID.fromString("0000A002-0000-1000-8000-00805F9B34FB")
+    internal val BLE_PREFIX: String = "HYD"
+    internal val FILTER_SERVICE_UUID: UUID = UUID.fromString("0000ABCD-0000-1000-8000-00805F9B34FB")
+    internal val SERVICE_UUID: UUID = UUID.fromString("0000FFF0-0000-1000-8000-00805F9B34FB")
     internal val RX_CHAR_UUID: UUID = UUID.fromString("0000FFF3-0000-1000-8000-00805F9B34FB")
     internal val TX_CHAR_UUID: UUID = UUID.fromString("0000FFF4-0000-1000-8000-00805F9B34FB")
     internal val CLIENT_CHAR_CFG_UUID: UUID =

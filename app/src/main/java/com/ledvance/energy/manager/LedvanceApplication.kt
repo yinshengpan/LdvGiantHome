@@ -2,10 +2,14 @@ package com.ledvance.energy.manager
 
 import android.app.Application
 import android.content.Context
+import com.ledvance.domain.di.Dispatcher
+import com.ledvance.domain.di.Dispatchers
 import com.ledvance.utils.AppContext
 import com.ledvance.utils.extensions.enableStrictModePolicy
 import com.ledvance.utils.extensions.enableTimerDebugTree
 import dagger.hilt.android.HiltAndroidApp
+import kotlinx.coroutines.CoroutineDispatcher
+import javax.inject.Inject
 
 /**
  * @author : jason yin
@@ -15,6 +19,12 @@ import dagger.hilt.android.HiltAndroidApp
  */
 @HiltAndroidApp
 class LedvanceApplication : Application() {
+
+
+    @Dispatcher(Dispatchers.IO)
+    @Inject
+    lateinit var ioDispatcher: CoroutineDispatcher
+
     override fun attachBaseContext(base: Context?) {
         super.attachBaseContext(base)
         AppContext.init(this)

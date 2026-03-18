@@ -2,6 +2,7 @@ package com.ledvance.database.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.ledvance.domain.bean.DeviceType
 
 /**
  * @author : jason yin
@@ -14,4 +15,6 @@ data class DeviceEntity(
     @PrimaryKey
     val address: String,
     val name: String,
+    val deviceType: DeviceType,
+    val switch: Boolean = true,
 )
