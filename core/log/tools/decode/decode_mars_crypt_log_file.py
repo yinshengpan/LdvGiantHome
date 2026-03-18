@@ -35,8 +35,8 @@ class ZstdDecompressReader:
     def read(self, size):
         return self.buffer
 
-PRIV_KEY = "44985dde2be6289927bd77e079a5107abceb1c9a022eac07cbeacaa91d4fac4f"
-PUB_KEY = "1367836e0b33b576b7449cb416835b74c8b41352e2642d5a24aa8aa3d46ff7c9a3911b2344200e00d057b19d5cd2a132a39298e7c1a4650b5c8834bbc661d036"
+PRIV_KEY = "8192c98aa092722ef91bcea6d5bf8f5c4f1cb490cad2a7fec1ddf90a49f2fdbd"
+PUB_KEY = "293c0ce4e8aecfb1944043a872ef80136380a04aef336df52a853b8a0cd620c3ce1d4daaf8fde1014403dd66c9733e454f6662cf61176034fa2d4989811efd7"
 
 def tea_decipher(v, k):
     op = 0xffffffffL

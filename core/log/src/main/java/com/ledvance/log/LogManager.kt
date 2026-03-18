@@ -42,7 +42,7 @@ object LogManager {
     private var xlogDir: String? = null
     private var mFlushLogHandler: Handler? = null
     private const val PUB_KEY =
-        "1367836e0b33b576b7449cb416835b74c8b41352e2642d5a24aa8aa3d46ff7c9a3911b2344200e00d057b19d5cd2a132a39298e7c1a4650b5c8834bbc661d036"
+        "293c0ce4e8aecfb1944043a872ef80136380a04aef336df52a853b8a0cd620c3ce1d4daaf8fde1014403dd66c9733e454f6662cf61176034fa2d4989811efd7"
     private var mLogcatInstance: Log.LogInstance? = null
 
     internal fun initialize(context: Context, enableLogcat: Boolean = false) {
