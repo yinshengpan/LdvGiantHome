@@ -20,7 +20,8 @@ internal interface HomeContract {
         @Immutable
         data class Success(
             val devices: List<DeviceUiItem>,
-            val onlineMap: Map<String, Boolean>
+            val onlineMap: Map<String, Boolean>,
+            val connectedMap: Map<String, Boolean>
         ) : UiState
 
         @Immutable
@@ -30,5 +31,7 @@ internal interface HomeContract {
     val uiState: StateFlow<UiState>
 
     fun onSwitchChange(device: DeviceUiItem, switch: Boolean)
+    fun connectDevice(mac: String)
+    fun disconnectDevice(mac: String)
     fun connectDevices(devices: List<DeviceUiItem>)
 }

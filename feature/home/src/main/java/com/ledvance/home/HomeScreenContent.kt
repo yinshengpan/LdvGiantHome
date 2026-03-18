@@ -36,16 +36,14 @@ import com.ledvance.ui.extensions.debouncedClickable
 import com.ledvance.ui.extensions.getIconResId
 import com.ledvance.ui.theme.AppTheme
 
-/**
- * @author : jason yin
- * Email : j.yin@ledvance.com
- * Created date 3/18/26 15:35
- * Describe : HomeScreenContent
- */
+import androidx.compose.ui.Alignment
+
 @Composable
 internal fun HomeScreenContent(
     uiState: HomeContract.UiState.Success,
     onSwitchChange: (DeviceUiItem, Boolean) -> Unit,
+    onConnectClick: (DeviceUiItem) -> Unit,
+    onDisconnectClick: (DeviceUiItem) -> Unit,
     onDeviceClick: (DeviceUiItem) -> Unit,
 ) {
     LazyVerticalGrid(
@@ -61,9 +59,12 @@ internal fun HomeScreenContent(
             span = { GridItemSpan(1) }) { device ->
             DeviceItem(
                 device = device,
-                isOnline = true,
+                isOnline = uiState.onlineMap[device.address] ?: false,
+                isConnected = uiState.connectedMap[device.address] ?: false,
                 switch = device.switch,
                 onSwitchChange = onSwitchChange,
+                onConnectClick = onConnectClick,
+                onDisconnectClick = onDisconnectClick,
                 onClick = onDeviceClick
             )
         }
@@ -74,8 +75,11 @@ internal fun HomeScreenContent(
 fun DeviceItem(
     device: DeviceUiItem,
     isOnline: Boolean,
+    isConnected: Boolean,
     switch: Boolean,
     onSwitchChange: (DeviceUiItem, Boolean) -> Unit,
+    onConnectClick: (DeviceUiItem) -> Unit,
+    onDisconnectClick: (DeviceUiItem) -> Unit,
     onClick: (DeviceUiItem) -> Unit
 ) {
     val colorFilter = remember {
@@ -89,7 +93,7 @@ fun DeviceItem(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(124.dp)
+                .height(134.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .debouncedClickable(onClick = { onClick.invoke(device) })
         ) {
@@ -100,22 +104,45 @@ fun DeviceItem(
                     modifier = Modifier
                         .size(60.dp)
                         .clip(shape = RoundedCornerShape(6.dp)),
-                    colorFilter = if (!isOnline) colorFilter else null
+                    colorFilter = if (!isOnline && !isConnected) colorFilter else null
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                if (!isOnline) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_ble_disabled),
-                        contentDescription = "offline",
-                        modifier = Modifier
-                            .size(24.dp),
-                    )
+                if (!isConnected) {
+                    if (isOnline) {
+                        Text(
+                            text = "Connect",
+                            color = AppTheme.colors.primary,
+                            style = AppTheme.typography.bodySmall,
+                            modifier = Modifier
+                                .padding(top = 10.dp, end = 10.dp)
+                                .debouncedClickable { onConnectClick(device) }
+                        )
+                    } else {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_ble_disabled),
+                            contentDescription = "offline",
+                            modifier = Modifier
+                                .size(24.dp)
+                                .padding(end = 10.dp)
+                                .debouncedClickable { onConnectClick(device) }
+                        )
+                    }
                 } else {
-                    LedvanceSwitch(
-                        checked = switch,
-                        onCheckedChange = { onSwitchChange.invoke(device, it) },
-                        modifier = Modifier.padding(top = 10.dp, end = 10.dp),
-                    )
+                    Column(horizontalAlignment = Alignment.End) {
+                        LedvanceSwitch(
+                            checked = switch,
+                            onCheckedChange = { onSwitchChange.invoke(device, it) },
+                            modifier = Modifier.padding(top = 10.dp, end = 10.dp),
+                        )
+                        Text(
+                            text = "Disconnect",
+                            color = androidx.compose.ui.graphics.Color.Red,
+                            style = AppTheme.typography.bodySmall,
+                            modifier = Modifier
+                                .padding(end = 10.dp, top = 4.dp)
+                                .debouncedClickable { onDisconnectClick(device) }
+                        )
+                    }
                 }
             }
             Text(

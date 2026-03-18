@@ -18,12 +18,28 @@ import com.ledvance.ui.theme.AppTheme
  * Created date 3/18/26 10:53
  * Describe : HomeScreen
  */
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.lifecycle.compose.LifecycleResumeEffect
+import com.ledvance.ui.state.rememberBluetoothBusinessState
+import com.ledvance.utils.BluetoothManager
+
 @Composable
 internal fun HomeScreen(
     viewModel: HomeContract = hiltViewModel<HomeViewModel>(),
     onToAddNewDevice: () -> Unit,
+    onNavigateToControlPanel: (String) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val bluetoothEnableState by BluetoothManager.bluetoothEnableState.collectAsStateWithLifecycle()
+    var bluetoothPermission by remember { mutableStateOf(false) }
+    val bluetoothBusinessState = rememberBluetoothBusinessState()
+
+    LifecycleResumeEffect(Unit) {
+        bluetoothPermission = bluetoothBusinessState.hasAllow()
+        onPauseOrDispose { }
+    }
 
     LedvanceScreen(
         topBarContainerColor = AppTheme.colors.primaryBackground,
@@ -47,8 +63,14 @@ internal fun HomeScreen(
                     onSwitchChange = { device, switch ->
                         viewModel.onSwitchChange(device, switch)
                     },
+                    onConnectClick = {
+                        viewModel.connectDevice(it.address)
+                    },
+                    onDisconnectClick = {
+                        viewModel.disconnectDevice(it.address)
+                    },
                     onDeviceClick = {
-
+                        onNavigateToControlPanel(it.address)
                     },
                 )
             }

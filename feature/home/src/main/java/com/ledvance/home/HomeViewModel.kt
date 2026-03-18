@@ -24,19 +24,30 @@ import javax.inject.Inject
  * Created date 3/18/26 10:37
  * Describe : HomeViewModel
  */
+import kotlinx.coroutines.flow.combine
+import com.ledvance.ble.core.DeviceRegistry
+
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
     private val getDevicesUseCase: GetDevicesUseCase,
     private val deviceSwitchUseCase: DeviceSwitchUseCase,
     private val connectionManager: ConnectionManager,
+    private val deviceRegistry: DeviceRegistry,
 ) : ViewModel(), HomeContract {
-    override val uiState: StateFlow<HomeContract.UiState> = getDevicesUseCase().map {
-        if (it.isEmpty()) {
+
+    override val uiState: StateFlow<HomeContract.UiState> = combine(
+        getDevicesUseCase(),
+        deviceRegistry.devicesFlow
+    ) { dbDevices, bleDevices ->
+        if (dbDevices.isEmpty()) {
             HomeContract.UiState.Empty
         } else {
+            val onlineMap = bleDevices.associate { it.mac to it.isOnline }
+            val connectedMap = bleDevices.associate { it.mac to it.isConnected }
             HomeContract.UiState.Success(
-                devices = it,
-                onlineMap = mapOf()
+                devices = dbDevices,
+                onlineMap = onlineMap,
+                connectedMap = connectedMap
             )
         }
     }
@@ -65,6 +76,14 @@ internal class HomeViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    override fun connectDevice(mac: String) {
+        connectionManager.requestConnect(mac)
+    }
+
+    override fun disconnectDevice(mac: String) {
+        connectionManager.disconnect(mac)
     }
 
     override fun connectDevices(devices: List<DeviceUiItem>) {

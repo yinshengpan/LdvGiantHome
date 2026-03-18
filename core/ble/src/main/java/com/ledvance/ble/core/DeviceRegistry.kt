@@ -64,6 +64,19 @@ class DeviceRegistry @Inject constructor() {
         emit()
     }
 
+    fun updateDeviceInfo(mac: String, power: Boolean, r: Int, g: Int, b: Int, w: Int, brightness: Int, mode: Int, speed: Int) {
+        val old = deviceMap[mac] ?: return
+        deviceMap[mac] = old.copy(
+            power = power,
+            r = r, g = g, b = b, w = w,
+            brightness = brightness,
+            mode = mode,
+            speed = speed,
+            lastActiveTime = now()
+        )
+        emit()
+    }
+
     fun updateActive(mac: String) {
         val old = deviceMap[mac] ?: return
         deviceMap[mac] = old.copy(lastActiveTime = now())

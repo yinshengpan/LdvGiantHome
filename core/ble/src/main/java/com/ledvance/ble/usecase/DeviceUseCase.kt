@@ -23,52 +23,53 @@ class DeviceUseCase @Inject constructor(
 
     suspend fun toggle(mac: String) {
         val device = registry.get(mac) ?: return
-
-        connectionManager.requestConnect(mac)
-
-        waitConnected(mac)
-
-        val protocol = createProtocol(mac)
-
-        protocol.on() // 示例
-
+        ensureConnected(mac)
+        createProtocol(mac).on() // 示例
         registry.updateActive(mac)
     }
 
     suspend fun on(mac: String) {
-        connectionManager.requestConnect(mac)
-
-        waitConnected(mac)
-
+        ensureConnected(mac)
         val protocol = createProtocol(mac)
-
         protocol.on() // 示例
-
         registry.updateActive(mac)
     }
 
     suspend fun off(mac: String) {
-        connectionManager.requestConnect(mac)
-
-//        waitConnected(mac)
-
+        ensureConnected(mac)
         val protocol = createProtocol(mac)
-
-        protocol.on() // 示例
-
+        protocol.off() // 示例
         registry.updateActive(mac)
     }
 
     suspend fun setHSV(mac: String, h: Int, s: Int, v: Int) {
-        connectionManager.requestConnect(mac)
-        waitConnected(mac)
-
+        ensureConnected(mac)
         createProtocol(mac).setHSV(h, s, v)
         registry.updateActive(mac)
     }
 
+    suspend fun setCCT(mac: String, temp: Int, brightness: Int) {
+        ensureConnected(mac)
+        createProtocol(mac).setCCT(temp, brightness)
+        registry.updateActive(mac)
+    }
+
+    suspend fun setScene(mac: String, sceneId: Int) {
+        ensureConnected(mac)
+        createProtocol(mac).setScene(sceneId)
+        registry.updateActive(mac)
+    }
+
+    private suspend fun ensureConnected(mac: String) {
+        val device = registry.get(mac)
+        if (device?.isConnected != true) {
+            connectionManager.requestConnect(mac)
+            waitConnected(mac)
+        }
+    }
+
     private suspend fun waitConnected(mac: String) {
-        repeat(10) {
+        repeat(50) {
             if (registry.get(mac)?.isConnected == true) return
             delay(300)
         }
@@ -79,6 +80,6 @@ class DeviceUseCase @Inject constructor(
         val client = connectionManager.getClient(mac)
             ?: error("no client")
 
-        return GiantProtocol(client, CommandQueue())
+        return GiantProtocol(client, client.commandQueue)
     }
 }

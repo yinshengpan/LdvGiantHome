@@ -41,6 +41,7 @@ import java.util.concurrent.CopyOnWriteArrayList
 class BleClient(
     private val address: String,
     private val bleRepository: BleRepository,
+    private val onNotificationReceived: ((ByteArray) -> Unit)? = null
 ) {
 
     private val TAG = "BleClient"
@@ -50,6 +51,7 @@ class BleClient(
     private var gatt: ClientBleGatt? = null
     private var rxChar: ClientBleGattCharacteristic? = null
     private var txChar: ClientBleGattCharacteristic? = null
+    val commandQueue = CommandQueue()
 
     private val _state = MutableStateFlow(ConnectionState.DISCONNECTED)
     val state: StateFlow<ConnectionState> = _state
@@ -98,7 +100,9 @@ class BleClient(
     private suspend fun observeNotify() {
         txChar?.getNotifications()
             ?.onEach {
+                val bytes = it.value
                 Timber.d("observeNotify ${it.value.toHexString()}")
+                onNotificationReceived?.invoke(bytes)
             }
             ?.catch {
                 Timber.tag(TAG).e(it)

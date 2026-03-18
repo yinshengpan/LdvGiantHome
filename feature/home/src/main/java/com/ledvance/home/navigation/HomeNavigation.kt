@@ -16,17 +16,35 @@ import kotlinx.serialization.Serializable
 @Serializable
 data object HomeRoute : NavigationRoute
 
+@Serializable
+data class ControlPanelRoute(val mac: String) : NavigationRoute
+
 fun SnapshotStateList<Any>.navigateToHome() {
     add(HomeRoute)
 }
 
+fun SnapshotStateList<Any>.navigateToControlPanel(mac: String) {
+    add(ControlPanelRoute(mac))
+}
+
 fun EntryProviderScope<Any>.homeScreen(
     onNavigateToAddNewDevice: () -> Unit,
+    onNavigateToControlPanel: (String) -> Unit
 ) {
     entry<HomeRoute> {
         PageLifecycleLogger("HomeRoute")
         HomeScreen(
-            onToAddNewDevice = onNavigateToAddNewDevice
+            onToAddNewDevice = onNavigateToAddNewDevice,
+            onNavigateToControlPanel = onNavigateToControlPanel
+        )
+    }
+
+    entry<ControlPanelRoute> { route ->
+        PageLifecycleLogger("ControlPanelRoute")
+        com.ledvance.home.control.ControlPanelScreen(
+            onNavigateBack = {
+                // How navigation back is handled depends on the app, usually popping state list
+            }
         )
     }
 }

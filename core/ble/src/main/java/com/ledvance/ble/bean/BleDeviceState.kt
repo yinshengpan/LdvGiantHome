@@ -18,7 +18,16 @@ data class BleDeviceState(
     val lastSeenTime: Long,
     val lastActiveTime: Long,
 
-    val protocolType: ProtocolType
+    val protocolType: ProtocolType,
+
+    val power: Boolean = true,
+    val mode: Int = 0,
+    val speed: Int = 50,
+    val brightness: Int = 100,
+    val r: Int = 255,
+    val g: Int = 255,
+    val b: Int = 255,
+    val w: Int = 0
 )
 
 enum class ConnectionState {
