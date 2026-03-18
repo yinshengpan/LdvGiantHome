@@ -231,7 +231,7 @@ class DLBBleClient(
 
     private fun getSNByteArray(): ByteArray {
         // SN fixed 16 bytes, pad 0
-        val snBytes = device.sn.toByteArray(Charsets.US_ASCII)
+        val snBytes = byteArrayOf()
         val snFixed = ByteArray(16) { 0 }
         System.arraycopy(snBytes, 0, snFixed, 0, minOf(snBytes.size, 16))
         return snFixed

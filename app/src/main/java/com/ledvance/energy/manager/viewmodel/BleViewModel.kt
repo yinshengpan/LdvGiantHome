@@ -5,7 +5,7 @@ import android.os.SystemClock
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ledvance.ble.DLBBleUseCase
+import com.ledvance.ble.BleUseCase
 import com.ledvance.ble.bean.ConnectStatus
 import com.ledvance.ble.bean.ScannedDevice
 import com.ledvance.database.repo.DeviceRepo
@@ -28,14 +28,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BleViewModel @Inject constructor(
-    private val bleUseCase: DLBBleUseCase,
-    private val deviceRepo: DeviceRepo,
+    private val bleUseCase: BleUseCase,
 ) : ViewModel() {
     private val TAG = "BleViewModel"
     private val _deviceOnline = MutableStateFlow<Boolean>(false)
     private val _scanResult = MutableStateFlow<List<ScannedDevice>>(emptyList())
-    private val _addChargerRestarting = MutableStateFlow<String?>(null)
-    val addChargerRestarting: StateFlow<String?> = _addChargerRestarting
     val scanDevices = _scanResult.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
@@ -43,16 +40,7 @@ class BleViewModel @Inject constructor(
     )
     private var scanJob: Job? = null
     private var connectingJob: Job? = null
-    private var currentPolling: Job? = null
-    private var currentAddCharger: Job? = null
-    private val bleMutex = Mutex()
 
-    @Volatile
-    private var canPolling: Boolean = true
-
-    fun setCanPolling(can: Boolean) {
-        canPolling = can
-    }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_SCAN)
     fun startBleScan() {

@@ -2,7 +2,6 @@ package com.ledvance.ble.repo
 
 import android.Manifest
 import android.content.Context
-import android.os.SystemClock
 import androidx.annotation.RequiresPermission
 import com.ledvance.ble.utils.BleScanResultAggregator
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -10,12 +9,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import no.nordicsemi.android.kotlin.ble.client.main.callback.ClientBleGatt
 import no.nordicsemi.android.kotlin.ble.core.data.BleGattConnectOptions
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanFilter
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanMode
+import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResult
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScannerSettings
 import no.nordicsemi.android.kotlin.ble.scanner.BleScanner
 import timber.log.Timber
@@ -46,11 +47,12 @@ class BleRepository @Inject constructor(
     )
     fun scanDevices(
         filters: List<BleScanFilter> = emptyList(),
-        settings: BleScannerSettings = BleScannerSettings(scanMode = BleScanMode.SCAN_MODE_BALANCED)
+        settings: BleScannerSettings = BleScannerSettings(scanMode = BleScanMode.SCAN_MODE_BALANCED),
     ) = bleScanner.scan(filters, settings)
         .map {
             Timber.tag(TAG).d("scanDevices() >>>>>> ${it.device.name}")
             aggregator.aggregateDevices(it)
+                .distinctBy { it.address }
         }
 
     @RequiresPermission(value = Manifest.permission.BLUETOOTH_CONNECT, conditional = true)

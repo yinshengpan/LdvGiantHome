@@ -3,8 +3,9 @@ plugins {
 }
 
 android {
-    namespace = "com.ledvance.home"
+    namespace = "com.ledvance.search"
 }
 
 dependencies {
+    implementation(projects.core.ble)
 }

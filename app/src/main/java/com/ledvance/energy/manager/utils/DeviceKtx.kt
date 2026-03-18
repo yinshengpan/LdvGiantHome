@@ -12,6 +12,5 @@ import com.ledvance.database.model.DeviceEntity
  */
 fun DeviceEntity.toScannedDevice(): ScannedDevice = ScannedDevice(
     address = address,
-    sn = address,
     name = name
 )

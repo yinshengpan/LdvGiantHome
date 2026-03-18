@@ -1,4 +1,4 @@
-package com.ledvance.energy.manager.state
+package com.ledvance.ui.state
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
@@ -14,8 +14,8 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.MultiplePermissionsState
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.ledvance.connected.system.extensions.openAppDetail
-import com.ledvance.energy.manager.dialog.LedvanceDialog
 import com.ledvance.ui.R
+import com.ledvance.ui.dialog.LedvanceDialog
 import com.ledvance.utils.extensions.BLUETOOTH_PERMISSION
 
 /**
@@ -79,7 +79,6 @@ private class MutableBluetoothPermissionState(
         get() = this
 }
 
-@ExperimentalPermissionsApi
 @Stable
 interface BluetoothPermissionState : State<BluetoothPermissionState> {
     fun hasGranted(): Boolean

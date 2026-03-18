@@ -14,4 +14,6 @@ data class DeviceEntity(
     @PrimaryKey
     val address: String,
     val name: String,
+    val switch: Boolean,
+    val online: Boolean
 )
