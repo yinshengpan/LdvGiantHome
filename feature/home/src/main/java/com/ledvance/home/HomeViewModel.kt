@@ -2,7 +2,10 @@ package com.ledvance.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ledvance.ble.core.ConnectionManager
+import com.ledvance.ble.usecase.DeviceSwitchUseCase
 import com.ledvance.database.usecase.GetDevicesUseCase
+import com.ledvance.domain.bean.DeviceUiItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -11,6 +14,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -22,7 +26,9 @@ import javax.inject.Inject
  */
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
-    private val getDevicesUseCase: GetDevicesUseCase
+    private val getDevicesUseCase: GetDevicesUseCase,
+    private val deviceSwitchUseCase: DeviceSwitchUseCase,
+    private val connectionManager: ConnectionManager,
 ) : ViewModel(), HomeContract {
     override val uiState: StateFlow<HomeContract.UiState> = getDevicesUseCase().map {
         if (it.isEmpty()) {
@@ -49,4 +55,21 @@ internal class HomeViewModel @Inject constructor(
             started = SharingStarted.WhileSubscribed(),
             initialValue = HomeContract.UiState.Loading
         )
+
+    override fun onSwitchChange(device: DeviceUiItem, switch: Boolean) {
+        viewModelScope.launch {
+            deviceSwitchUseCase(
+                DeviceSwitchUseCase.Param(
+                    address = device.address,
+                    switch = switch
+                )
+            )
+        }
+    }
+
+    override fun connectDevices(devices: List<DeviceUiItem>) {
+        devices.forEach {
+            connectionManager.requestConnect(it.address)
+        }
+    }
 }

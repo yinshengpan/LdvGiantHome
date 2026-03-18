@@ -25,7 +25,7 @@ class BleScanResultAggregator {
             devices[scanItem.device.address] = ScannedDevice(
                 name = name,
                 address = scanItem.device.address,
-//                rssi = rssi,
+                rssi = rssi,
                 deviceType = DeviceType.fromName(name),
                 scanTime = SystemClock.elapsedRealtime()
             )

@@ -2,6 +2,7 @@ package com.ledvance.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
@@ -23,6 +24,7 @@ internal fun HomeScreen(
     onToAddNewDevice: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     LedvanceScreen(
         topBarContainerColor = AppTheme.colors.primaryBackground,
         topBarContentColor = AppTheme.colors.primaryContent,
@@ -36,9 +38,15 @@ internal fun HomeScreen(
             HomeContract.UiState.Empty -> {}
             HomeContract.UiState.Loading -> {}
             is HomeContract.UiState.Success -> {
+                val successUiState = uiState as HomeContract.UiState.Success
+                LaunchedEffect(successUiState.devices) {
+                    viewModel.connectDevices(successUiState.devices.take(3))
+                }
                 HomeScreenContent(
-                    uiState = uiState as HomeContract.UiState.Success,
-                    onSwitchChange = { device, switch -> },
+                    uiState = successUiState,
+                    onSwitchChange = { device, switch ->
+                        viewModel.onSwitchChange(device, switch)
+                    },
                     onDeviceClick = {
 
                     },

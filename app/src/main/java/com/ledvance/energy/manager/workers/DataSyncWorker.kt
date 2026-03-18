@@ -39,9 +39,9 @@ internal class DataSyncWorker @AssistedInject constructor(
             async {
                 licensesRepo.syncLicenses()
             },
-            async {
-                firmwareRepo.syncFirmware()
-            }
+//            async {
+//                firmwareRepo.syncFirmware()
+//            }
         )
         return@withContext Result.success()
     }

@@ -22,6 +22,7 @@ abstract class SuspendUseCase<in P, R> constructor(
                 }
             }
         } catch (e: Exception) {
+            e.printStackTrace()
             Result.failure(e)
         }.also { result ->
             postExecute(parameter, result)

@@ -3,20 +3,19 @@ package com.ledvance.ble.repo
 import android.Manifest
 import android.content.Context
 import androidx.annotation.RequiresPermission
+import com.ledvance.ble.core.DeviceRegistry
 import com.ledvance.ble.utils.BleScanResultAggregator
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import no.nordicsemi.android.kotlin.ble.client.main.callback.ClientBleGatt
 import no.nordicsemi.android.kotlin.ble.core.data.BleGattConnectOptions
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanFilter
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanMode
-import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResult
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScannerSettings
 import no.nordicsemi.android.kotlin.ble.scanner.BleScanner
 import timber.log.Timber
@@ -30,6 +29,7 @@ import javax.inject.Inject
  */
 class BleRepository @Inject constructor(
     @ApplicationContext private val context: Context,
+    private val deviceRegistry: DeviceRegistry
 ) {
     private val TAG = "BleRepository"
 
@@ -52,7 +52,9 @@ class BleRepository @Inject constructor(
         .map {
             Timber.tag(TAG).d("scanDevices() >>>>>> ${it.device.name}")
             aggregator.aggregateDevices(it)
-                .distinctBy { it.address }
+                .distinctBy { it.address }.also { devices ->
+                    deviceRegistry.onScanResult(devices)
+                }
         }
 
     @RequiresPermission(value = Manifest.permission.BLUETOOTH_CONNECT, conditional = true)

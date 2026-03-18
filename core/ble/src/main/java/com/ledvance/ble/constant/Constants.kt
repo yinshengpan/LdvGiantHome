@@ -10,12 +10,11 @@ import java.util.UUID
  */
 object Constants {
     internal val BLE_PREFIX: String = "HYD"
-    internal val FILTER_SERVICE_UUID: UUID = UUID.fromString("0000ABCD-0000-1000-8000-00805F9B34FB")
+    internal val FILTER_SERVICE_UUID: UUID = UUID.fromString("00000000-0000-1000-8000-00805F9B34FB")
     internal val SERVICE_UUID: UUID = UUID.fromString("0000FFF0-0000-1000-8000-00805F9B34FB")
     internal val RX_CHAR_UUID: UUID = UUID.fromString("0000FFF3-0000-1000-8000-00805F9B34FB")
     internal val TX_CHAR_UUID: UUID = UUID.fromString("0000FFF4-0000-1000-8000-00805F9B34FB")
-    internal val CLIENT_CHAR_CFG_UUID: UUID =
-        UUID.fromString("00002902-0000-1000-8000-00805F9B34FB")
+    internal val CLIENT_CHAR_CFG_UUID: UUID = UUID.fromString("00002902-0000-1000-8000-00805F9B34FB")
 
     internal const val START_FLAG: Byte = 0x68.toByte()
     internal const val MAX_DATA_LEN = 250

@@ -28,4 +28,7 @@ internal interface HomeContract {
     }
 
     val uiState: StateFlow<UiState>
+
+    fun onSwitchChange(device: DeviceUiItem, switch: Boolean)
+    fun connectDevices(devices: List<DeviceUiItem>)
 }
