@@ -11,6 +11,14 @@ import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.drawOutline
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
@@ -86,3 +94,23 @@ inline fun Modifier.clickCount(
         }
     )
 }
+
+fun Modifier.clipWithBorder(
+    shape: Shape,
+    borderColor: Color,
+    borderWidth: Dp = 1.dp
+): Modifier = this
+    .clip(shape)
+    .drawWithContent {
+        // 先绘制内容（已裁剪）
+        drawContent()
+
+        // 再绘制边框
+        val strokeWidthPx = borderWidth.toPx()
+        val outline = shape.createOutline(size, layoutDirection, this)
+        drawOutline(
+            outline = outline,
+            color = borderColor,
+            style = Stroke(width = strokeWidthPx)
+        )
+    }

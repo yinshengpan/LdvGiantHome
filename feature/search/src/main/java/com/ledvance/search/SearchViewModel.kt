@@ -1,4 +1,4 @@
-package com.ledvance.home
+package com.ledvance.search
 
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel

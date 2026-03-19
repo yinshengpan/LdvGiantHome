@@ -36,6 +36,16 @@ fun Int.toDp(): Dp {
     return with(density) { this@toDp.toDp() }
 }
 
+val Float.toDp: Dp
+    @Composable get() = LocalDensity.current.run {
+        this@toDp.toDp()
+    }
+
+val Dp.toPx: Float
+    @Composable get() = LocalDensity.current.run {
+        this@toPx.toPx()
+    }
+
 
 @Composable
 fun stringResourceFormat(@StringRes id: Int, vararg formatArgs: Any): String {

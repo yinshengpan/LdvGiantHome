@@ -18,9 +18,9 @@ import com.ledvance.energy.manager.screen.LicensesScreen
 import com.ledvance.energy.manager.state.LedvanceAppState
 import com.ledvance.home.navigation.HomeRoute
 import com.ledvance.home.navigation.homeScreen
-import com.ledvance.home.navigation.navigateToSearch
 import com.ledvance.home.navigation.navigateToControlPanel
-import com.ledvance.home.navigation.searchScreen
+import com.ledvance.search.navigation.navigateToSearch
+import com.ledvance.search.navigation.searchScreen
 import com.ledvance.ui.navigation.NavigationRoute
 import com.ledvance.ui.navigation.PageLifecycleLogger
 import com.ledvance.ui.theme.AppTheme

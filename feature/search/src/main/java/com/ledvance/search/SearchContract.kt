@@ -1,4 +1,4 @@
-package com.ledvance.home
+package com.ledvance.search
 
 import androidx.compose.runtime.Immutable
 import com.ledvance.ble.bean.ScannedDevice

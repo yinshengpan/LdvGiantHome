@@ -1,8 +1,8 @@
-package com.ledvance.home.navigation
+package com.ledvance.search.navigation
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation3.runtime.EntryProviderScope
-import com.ledvance.home.SearchScreen
+import com.ledvance.search.SearchScreen
 import com.ledvance.ui.navigation.NavigationRoute
 import com.ledvance.ui.navigation.PageLifecycleLogger
 import kotlinx.serialization.Serializable

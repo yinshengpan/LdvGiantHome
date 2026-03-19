@@ -1,4 +1,4 @@
-package com.ledvance.home
+package com.ledvance.search
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Row

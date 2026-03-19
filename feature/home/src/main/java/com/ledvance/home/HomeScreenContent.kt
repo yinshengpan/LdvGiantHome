@@ -36,8 +36,6 @@ import com.ledvance.ui.extensions.debouncedClickable
 import com.ledvance.ui.extensions.getIconResId
 import com.ledvance.ui.theme.AppTheme
 
-import androidx.compose.ui.Alignment
-
 @Composable
 internal fun HomeScreenContent(
     uiState: HomeContract.UiState.Success,
