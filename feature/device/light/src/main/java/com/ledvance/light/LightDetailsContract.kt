@@ -46,4 +46,5 @@ internal interface LightDetailsContract {
     fun onWhiteModeCctChange(cct: Int)
     fun onWhiteModeBrightnessChange(brightness: Int)
     fun onClickScene(scene: Scene)
+    fun onModeChange(modeId: Int)
 }

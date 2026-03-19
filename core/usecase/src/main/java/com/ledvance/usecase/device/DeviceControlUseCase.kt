@@ -3,7 +3,6 @@ package com.ledvance.usecase.device
 import com.ledvance.ble.core.ConnectionManager
 import com.ledvance.ble.core.DeviceRegistry
 import com.ledvance.ble.protocol.BleProtocol
-import com.ledvance.ble.protocol.GiantProtocol
 import com.ledvance.database.repo.DeviceRepo
 import com.ledvance.domain.bean.command.BrightnessType
 import kotlinx.coroutines.delay
@@ -25,7 +24,7 @@ class DeviceControlUseCase @Inject constructor(
 
     suspend fun switch(address: String, switch: Boolean) {
         ensureConnected(address)
-        val protocol = createProtocol(address)
+        val protocol = getProtocol(address)
         if (switch) {
             protocol.on()
         } else {
@@ -37,40 +36,40 @@ class DeviceControlUseCase @Inject constructor(
 
     suspend fun setColourModeHS(address: String, h: Int, s: Int) {
         ensureConnected(address)
-        val protocol = createProtocol(address)
+        val protocol = getProtocol(address)
         protocol.setHSV(h, s)
         registry.updateActive(address)
     }
 
     suspend fun setColourModeBrightness(address: String, brightness: Int) {
         ensureConnected(address)
-        val protocol = createProtocol(address)
+        val protocol = getProtocol(address)
         protocol.setBrightness(BrightnessType.RGB, brightness)
         registry.updateActive(address)
     }
 
     suspend fun setWhiteModeCCT(address: String, cct: Int) {
         ensureConnected(address)
-        createProtocol(address).setCCT(cct)
+        getProtocol(address).setCCT(cct)
         registry.updateActive(address)
     }
 
     suspend fun setWhiteModeBrightness(address: String, brightness: Int) {
         ensureConnected(address)
-        val protocol = createProtocol(address)
+        val protocol = getProtocol(address)
         protocol.setBrightness(BrightnessType.WCT, brightness)
         registry.updateActive(address)
     }
 
     suspend fun setScene(address: String, sceneId: Byte) {
         ensureConnected(address)
-        createProtocol(address).setScene(sceneId)
+        getProtocol(address).setScene(sceneId)
         registry.updateActive(address)
     }
 
     suspend fun queryDeviceInfo(address: String) {
         ensureConnected(address)
-        createProtocol(address).queryDeviceInfo()
+        getProtocol(address).queryDeviceInfo()
         registry.updateActive(address)
     }
 
@@ -90,10 +89,10 @@ class DeviceControlUseCase @Inject constructor(
         error("connect timeout")
     }
 
-    private fun createProtocol(address: String): BleProtocol {
+    private fun getProtocol(address: String): BleProtocol {
         val client = connectionManager.getClient(address)
             ?: error("no client")
 
-        return GiantProtocol(client, client.commandQueue)
+        return client.protocol
     }
 }

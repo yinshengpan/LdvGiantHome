@@ -2,7 +2,6 @@ package com.ledvance.ble.core
 
 import com.ledvance.ble.bean.BleDeviceState
 import com.ledvance.ble.bean.ConnectionState
-import com.ledvance.ble.protocol.GiantProtocol
 import com.ledvance.ble.repo.BleRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -60,7 +59,6 @@ class ConnectionManager @Inject constructor(
         scope.launch {
             try {
                 client.connect()
-                GiantProtocol(client,client.commandQueue).queryDeviceInfo()
                 registry.updateConnection(mac, ConnectionState.CONNECTED)
             } catch (e: Exception) {
                 connectionMap.remove(mac)

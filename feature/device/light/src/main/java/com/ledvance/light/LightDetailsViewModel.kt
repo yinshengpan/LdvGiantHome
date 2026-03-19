@@ -88,6 +88,10 @@ internal class LightDetailsViewModel @AssistedInject constructor(
                     is Command.WhiteModeBrightness -> {
                         deviceControlUseCase.setWhiteModeBrightness(address, it.brightness)
                     }
+
+                    is Command.Mode -> {
+                        deviceControlUseCase.setScene(address, it.modeId.toByte())
+                    }
                 }
             }
         }
@@ -142,6 +146,10 @@ internal class LightDetailsViewModel @AssistedInject constructor(
         }
     }
 
+    override fun onModeChange(modeId: Int) {
+        commandFlow.tryEmit(Command.Mode(modeId))
+    }
+
     private data class ScreenState(
         val workMode: WorkMode = WorkMode.Colour,
         val colourModeHue: Int = -1,
@@ -156,5 +164,6 @@ internal class LightDetailsViewModel @AssistedInject constructor(
         data class ColourModeBrightness(val brightness: Int) : Command
         data class WhiteModeCct(val cct: Int) : Command
         data class WhiteModeBrightness(val brightness: Int) : Command
+        data class Mode(val modeId: Int) : Command
     }
 }

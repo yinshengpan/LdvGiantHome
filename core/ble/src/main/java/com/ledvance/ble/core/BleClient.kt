@@ -3,6 +3,8 @@ package com.ledvance.ble.core
 import android.annotation.SuppressLint
 import com.ledvance.ble.bean.ConnectionState
 import com.ledvance.ble.constant.Constants
+import com.ledvance.ble.protocol.BleProtocol
+import com.ledvance.ble.protocol.GiantProtocol
 import com.ledvance.ble.repo.BleRepository
 import com.ledvance.utils.extensions.tryCatch
 import kotlinx.coroutines.CoroutineScope
@@ -41,6 +43,7 @@ class BleClient(
     private var writeChar: ClientBleGattCharacteristic? = null
     private var notifyChar: ClientBleGattCharacteristic? = null
     val commandQueue = CommandQueue()
+    val protocol: BleProtocol by lazy { GiantProtocol(this, commandQueue) }
 
     private val _state = MutableStateFlow(ConnectionState.DISCONNECTED)
     val state: StateFlow<ConnectionState> = _state
@@ -72,6 +75,7 @@ class BleClient(
             observeNotify()
 
             _state.value = ConnectionState.CONNECTED
+            protocol.queryDeviceInfo()
             return true
         } catch (e: Exception) {
             return fail("exception ${e.stackTraceToString()}")
