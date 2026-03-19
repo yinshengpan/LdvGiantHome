@@ -55,7 +55,17 @@ class DeviceRegistry @Inject constructor() {
     }
 
     fun updateConnection(mac: String, state: ConnectionState) {
-        val old = deviceMap[mac] ?: return
+        val old = deviceMap[mac] ?: BleDeviceState(
+            mac = mac,
+            name = mac,
+            rssi = 0,
+            isOnline = true,
+            isConnected = false,
+            connectionState = ConnectionState.DISCONNECTED,
+            lastSeenTime = now(),
+            lastActiveTime = 0,
+            protocolType = ProtocolType.LEDVANCE
+        )
         deviceMap[mac] = old.copy(
             isConnected = state == ConnectionState.CONNECTED,
             connectionState = state,

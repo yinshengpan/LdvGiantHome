@@ -3,17 +3,11 @@ package com.ledvance.ble
 import android.Manifest
 import android.os.ParcelUuid
 import androidx.annotation.RequiresPermission
-import com.ledvance.ble.bean.Configuration
 import com.ledvance.ble.bean.ConnectStatus
-import com.ledvance.ble.bean.DeviceConfiguration
-import com.ledvance.ble.bean.Handshake
 import com.ledvance.ble.bean.ScannedDevice
 import com.ledvance.ble.constant.Constants
 import com.ledvance.ble.repo.BleRepository
 import com.ledvance.utils.BluetoothManager
-import com.ledvance.utils.extensions.toHex
-import com.ledvance.utils.extensions.toInt
-import com.ledvance.utils.extensions.toUnsignedInt
 import com.ledvance.utils.extensions.tryCatch
 import com.ledvance.utils.extensions.tryCatchReturn
 import kotlinx.coroutines.CoroutineScope
@@ -94,12 +88,12 @@ class BleUseCase @Inject constructor(
                 connectStatusFlow.update { ConnectStatus.Failed }
                 return false
             }
-            val rxChar = service.findCharacteristic(Constants.RX_CHAR_UUID) ?: let {
+            val rxChar = service.findCharacteristic(Constants.WRITE_CHAR_UUID) ?: let {
                 Timber.tag(TAG).e("connect() not found rxChar")
                 connectStatusFlow.update { ConnectStatus.Failed }
                 return false
             }
-            val txChar = service.findCharacteristic(Constants.TX_CHAR_UUID) ?: let {
+            val txChar = service.findCharacteristic(Constants.NOTIFY_CHAR_UUID) ?: let {
                 Timber.tag(TAG).e("nconnect() ot found txChar")
                 connectStatusFlow.update { ConnectStatus.Failed }
                 return false

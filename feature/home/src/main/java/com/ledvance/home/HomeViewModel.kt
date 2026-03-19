@@ -44,6 +44,7 @@ internal class HomeViewModel @Inject constructor(
         } else {
             val onlineMap = bleDevices.associate { it.mac to it.isOnline }
             val connectedMap = bleDevices.associate { it.mac to it.isConnected }
+            Timber.d("onlineMap:$onlineMap,connectedMap:$connectedMap")
             HomeContract.UiState.Success(
                 devices = dbDevices,
                 onlineMap = onlineMap,

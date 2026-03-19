@@ -104,45 +104,23 @@ fun DeviceItem(
                     modifier = Modifier
                         .size(60.dp)
                         .clip(shape = RoundedCornerShape(6.dp)),
-                    colorFilter = if (!isOnline && !isConnected) colorFilter else null
+                    colorFilter = if (!isOnline) colorFilter else null
                 )
                 Spacer(modifier = Modifier.weight(1f))
-                if (!isConnected) {
-                    if (isOnline) {
-                        Text(
-                            text = "Connect",
-                            color = AppTheme.colors.primary,
-                            style = AppTheme.typography.bodySmall,
-                            modifier = Modifier
-                                .padding(top = 10.dp, end = 10.dp)
-                                .debouncedClickable { onConnectClick(device) }
-                        )
-                    } else {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_ble_disabled),
-                            contentDescription = "offline",
-                            modifier = Modifier
-                                .size(24.dp)
-                                .padding(end = 10.dp)
-                                .debouncedClickable { onConnectClick(device) }
-                        )
-                    }
+                if (!isOnline) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_ble_disabled),
+                        contentDescription = "offline",
+                        modifier = Modifier
+                            .padding(top = 10.dp, end = 10.dp)
+                            .size(24.dp),
+                    )
                 } else {
-                    Column(horizontalAlignment = Alignment.End) {
-                        LedvanceSwitch(
-                            checked = switch,
-                            onCheckedChange = { onSwitchChange.invoke(device, it) },
-                            modifier = Modifier.padding(top = 10.dp, end = 10.dp),
-                        )
-                        Text(
-                            text = "Disconnect",
-                            color = androidx.compose.ui.graphics.Color.Red,
-                            style = AppTheme.typography.bodySmall,
-                            modifier = Modifier
-                                .padding(end = 10.dp, top = 4.dp)
-                                .debouncedClickable { onDisconnectClick(device) }
-                        )
-                    }
+                    LedvanceSwitch(
+                        checked = switch,
+                        onCheckedChange = { onSwitchChange.invoke(device, it) },
+                        modifier = Modifier.padding(top = 10.dp, end = 10.dp),
+                    )
                 }
             }
             Text(

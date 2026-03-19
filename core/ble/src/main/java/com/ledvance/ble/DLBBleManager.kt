@@ -13,10 +13,10 @@ import com.ledvance.ble.constant.Constants.CLIENT_CHAR_CFG_UUID
 import com.ledvance.ble.constant.Constants.DEFAULT_PART_SIZE
 import com.ledvance.ble.constant.Constants.FRAME_INTERVAL_MS
 import com.ledvance.ble.constant.Constants.MAX_DATA_LEN
-import com.ledvance.ble.constant.Constants.RX_CHAR_UUID
+import com.ledvance.ble.constant.Constants.WRITE_CHAR_UUID
 import com.ledvance.ble.constant.Constants.SERVICE_UUID
 import com.ledvance.ble.constant.Constants.START_FLAG
-import com.ledvance.ble.constant.Constants.TX_CHAR_UUID
+import com.ledvance.ble.constant.Constants.NOTIFY_CHAR_UUID
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -158,8 +158,8 @@ class DLBBleManager(
                 log("Service not found")
                 return
             }
-            rxChar = svc.getCharacteristic(RX_CHAR_UUID)
-            txChar = svc.getCharacteristic(TX_CHAR_UUID)
+            rxChar = svc.getCharacteristic(WRITE_CHAR_UUID)
+            txChar = svc.getCharacteristic(NOTIFY_CHAR_UUID)
             if (txChar == null || rxChar == null) {
                 log("Missing chars")
                 return

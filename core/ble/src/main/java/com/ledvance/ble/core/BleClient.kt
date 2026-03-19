@@ -1,17 +1,10 @@
 package com.ledvance.ble.core
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.os.Handler
-import android.os.HandlerThread
-import androidx.annotation.RequiresPermission
-import com.ledvance.ble.DLBBleClient
 import com.ledvance.ble.bean.ConnectionState
-import com.ledvance.ble.bean.ScannedDevice
 import com.ledvance.ble.constant.Constants
 import com.ledvance.ble.repo.BleRepository
 import com.ledvance.utils.extensions.tryCatch
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -21,16 +14,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withTimeout
 import kotlinx.coroutines.withTimeoutOrNull
 import no.nordicsemi.android.kotlin.ble.client.main.callback.ClientBleGatt
 import no.nordicsemi.android.kotlin.ble.client.main.service.ClientBleGattCharacteristic
 import no.nordicsemi.android.kotlin.ble.core.data.util.DataByteArray
 import timber.log.Timber
-import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * @author : jason yin
@@ -49,8 +37,8 @@ class BleClient(
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     private var gatt: ClientBleGatt? = null
-    private var rxChar: ClientBleGattCharacteristic? = null
-    private var txChar: ClientBleGattCharacteristic? = null
+    private var writeChar: ClientBleGattCharacteristic? = null
+    private var notifyChar: ClientBleGattCharacteristic? = null
     val commandQueue = CommandQueue()
 
     private val _state = MutableStateFlow(ConnectionState.DISCONNECTED)
@@ -70,10 +58,10 @@ class BleClient(
                 .findService(Constants.SERVICE_UUID)
                 ?: return fail("service not found")
 
-            rxChar = service.findCharacteristic(Constants.RX_CHAR_UUID)
+            writeChar = service.findCharacteristic(Constants.WRITE_CHAR_UUID)
                 ?: return fail("rx not found")
 
-            txChar = service.findCharacteristic(Constants.TX_CHAR_UUID)
+            notifyChar = service.findCharacteristic(Constants.NOTIFY_CHAR_UUID)
                 ?: return fail("tx not found")
 
             tryCatch { gatt.requestMtu(517) }
@@ -92,13 +80,13 @@ class BleClient(
     fun disconnect() {
         gatt?.disconnect()
         gatt = null
-        rxChar = null
-        txChar = null
+        writeChar = null
+        notifyChar = null
         _state.value = ConnectionState.DISCONNECTED
     }
 
     private suspend fun observeNotify() {
-        txChar?.getNotifications()
+        notifyChar?.getNotifications()
             ?.onEach {
                 val bytes = it.value
                 Timber.d("observeNotify ${it.value.toHexString()}")
@@ -114,7 +102,7 @@ class BleClient(
     suspend fun write(data: ByteArray) {
         delay(Constants.FRAME_INTERVAL_MS)
         Timber.tag(TAG).d("write ${data.toHexString()}")
-        tryCatch { rxChar?.write(DataByteArray(data)) }
+        tryCatch { writeChar?.write(DataByteArray(data)) }
     }
 
     private fun fail(msg: String): Boolean {
