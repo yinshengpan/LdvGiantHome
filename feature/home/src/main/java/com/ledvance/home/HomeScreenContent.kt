@@ -58,7 +58,6 @@ internal fun HomeScreenContent(
             DeviceItem(
                 device = device,
                 isOnline = uiState.onlineMap[device.address] ?: false,
-                isConnected = uiState.connectedMap[device.address] ?: false,
                 switch = device.switch,
                 onSwitchChange = onSwitchChange,
                 onConnectClick = onConnectClick,
@@ -73,7 +72,6 @@ internal fun HomeScreenContent(
 fun DeviceItem(
     device: DeviceUiItem,
     isOnline: Boolean,
-    isConnected: Boolean,
     switch: Boolean,
     onSwitchChange: (DeviceUiItem, Boolean) -> Unit,
     onConnectClick: (DeviceUiItem) -> Unit,

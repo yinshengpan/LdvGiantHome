@@ -7,7 +7,7 @@ package com.ledvance.ble.bean
  * Describe : BleDeviceState
  */
 data class BleDeviceState(
-    val mac: String,
+    val address: String,
     val name: String?,
     val rssi: Int,
 

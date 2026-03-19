@@ -25,10 +25,8 @@ fun WhiteModePicker(
     modifier: Modifier = Modifier,
     isSupportCCT: Boolean = true,
     borderShape: Shape = RoundedCornerShape(10.dp),
-    onCCTChanged: (Int, Color) -> Unit = { _, _ -> },
-    onCCTComplete: (Int, Color) -> Unit = { _, _ -> },
-    onBrightnessChanged: (Int) -> Unit = {},
-    onBrightnessComplete: (Int) -> Unit = {},
+    onCctChange: (Int, Color) -> Unit = { _, _ -> },
+    onBrightnessChange: (Int) -> Unit = { },
 ) {
     WhitePicker(
         cct = cct,
@@ -36,20 +34,10 @@ fun WhiteModePicker(
         modifier = Modifier
             .then(modifier)
             .fillMaxWidth()
-            .then(if (isSupportCCT) Modifier.height(240.dp) else Modifier)
+            .then(if (isSupportCCT) Modifier.height(220.dp) else Modifier)
             .clipWithBorder(borderShape, AppTheme.colors.divider, 2.dp),
         isSupportCCT = isSupportCCT,
-        onBrightnessChanged = {
-            onBrightnessChanged.invoke(it)
-        },
-        onBrightnessComplete = {
-            onBrightnessComplete.invoke(it)
-        },
-        onCCTChanged = { cct, color ->
-            onCCTChanged.invoke(cct, color)
-        },
-        onCCTComplete = { cct, color ->
-            onCCTComplete.invoke(cct, color)
-        }
+        onCctChange = onCctChange,
+        onBrightnessChange = onBrightnessChange,
     )
 }

@@ -2,6 +2,7 @@ package com.ledvance.database.repo
 
 import com.ledvance.database.dao.DeviceDao
 import com.ledvance.database.model.DeviceEntity
+import com.ledvance.database.model.DeviceSwitchUpdateEntity
 import com.ledvance.utils.extensions.tryCatch
 import com.ledvance.utils.extensions.tryCatchReturn
 import kotlinx.coroutines.Dispatchers
@@ -32,12 +33,27 @@ class DeviceRepo @Inject constructor(
         tryCatch { deviceDao.update(deviceEntity) }
     }
 
+    suspend fun updateDeviceSwitch(address: String, switch: Boolean) = withContext(Dispatchers.IO) {
+        tryCatch { deviceDao.updateDeviceSwitch(address, switch) }
+    }
+
+    suspend fun updateDeviceSwitch(list: List<Pair<String, Boolean>>) = withContext(Dispatchers.IO) {
+        tryCatch {
+            val stateList = list.map { (address, switch) -> DeviceSwitchUpdateEntity(address, switch) }
+            deviceDao.updateDeviceSwitchList(stateList)
+        }
+    }
+
     suspend fun getDevice(address: String) = withContext(Dispatchers.IO) {
         return@withContext tryCatchReturn { deviceDao.getDevice(address) }
     }
 
     fun getDeviceListFlow(): Flow<List<DeviceEntity>> {
         return deviceDao.getDeviceListFlow().catch { }
+    }
+
+    fun getDeviceIdListFlow(): Flow<List<String>> {
+        return deviceDao.getDeviceIdListFlow().catch { }
     }
 
     fun getDeviceFlow(address: String): Flow<DeviceEntity?> {

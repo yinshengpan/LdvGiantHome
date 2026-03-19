@@ -6,6 +6,7 @@ import com.ledvance.ble.bean.ProtocolType
 import com.ledvance.ble.bean.ScannedDevice
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -17,7 +18,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class DeviceRegistry @Inject constructor() {
-
+    private val TAG = "DeviceRegistry"
     private val deviceMap = mutableMapOf<String, BleDeviceState>()
 
     private val _devicesFlow = MutableStateFlow<List<BleDeviceState>>(emptyList())
@@ -26,7 +27,6 @@ class DeviceRegistry @Inject constructor() {
     fun onScanResult(list: List<ScannedDevice>) {
         val now = now()
         var changed = false
-
         list.forEach { scan ->
             val mac = scan.address
             val old = deviceMap[mac]
@@ -36,7 +36,7 @@ class DeviceRegistry @Inject constructor() {
                 lastSeenTime = now,
                 isOnline = true
             ) ?: BleDeviceState(
-                mac = mac,
+                address = mac,
                 name = scan.name,
                 rssi = scan.rssi,
                 isOnline = true,
@@ -56,7 +56,7 @@ class DeviceRegistry @Inject constructor() {
 
     fun updateConnection(mac: String, state: ConnectionState) {
         val old = deviceMap[mac] ?: BleDeviceState(
-            mac = mac,
+            address = mac,
             name = mac,
             rssi = 0,
             isOnline = true,
@@ -75,6 +75,8 @@ class DeviceRegistry @Inject constructor() {
     }
 
     fun updateDeviceInfo(mac: String, power: Boolean, r: Int, g: Int, b: Int, w: Int, brightness: Int, mode: Int, speed: Int) {
+        Timber.tag(TAG)
+            .d("updateDeviceInfo() called with: mac = $mac, power = $power, r = $r, g = $g, b = $b, w = $w, brightness = $brightness, mode = $mode, speed = $speed")
         val old = deviceMap[mac] ?: return
         deviceMap[mac] = old.copy(
             power = power,

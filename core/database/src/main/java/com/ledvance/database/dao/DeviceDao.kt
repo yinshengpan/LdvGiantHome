@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.ledvance.database.model.DeviceEntity
+import com.ledvance.database.model.DeviceSwitchUpdateEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -29,8 +30,17 @@ interface DeviceDao {
     @Query("select * from devices")
     fun getDeviceListFlow(): Flow<List<DeviceEntity>>
 
+    @Query("select address from devices")
+    fun getDeviceIdListFlow(): Flow<List<String>>
+
     @Query("select * from devices where address = :address")
     fun getDeviceFlow(address: String): Flow<DeviceEntity?>
+
+    @Query("UPDATE devices SET switch_state = :switch WHERE address = :address")
+    suspend fun updateDeviceSwitch(address: String, switch: Boolean)
+
+    @Update(entity = DeviceEntity::class)
+    suspend fun updateDeviceSwitchList(list: List<DeviceSwitchUpdateEntity>)
 
     @Delete
     suspend fun delete(device: DeviceEntity)
@@ -40,5 +50,4 @@ interface DeviceDao {
 
     @Query("delete from devices where address=:address")
     suspend fun deleteDevice(address: String)
-
 }

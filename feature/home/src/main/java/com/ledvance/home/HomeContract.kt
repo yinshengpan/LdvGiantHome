@@ -21,7 +21,6 @@ internal interface HomeContract {
         data class Success(
             val devices: List<DeviceUiItem>,
             val onlineMap: Map<String, Boolean>,
-            val connectedMap: Map<String, Boolean>
         ) : UiState
 
         @Immutable

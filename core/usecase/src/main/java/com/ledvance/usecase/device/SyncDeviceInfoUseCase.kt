@@ -1,0 +1,37 @@
+package com.ledvance.usecase.device
+
+import com.ledvance.ble.core.DeviceRegistry
+import com.ledvance.database.repo.DeviceRepo
+import com.ledvance.usecase.base.UseCase
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
+
+/**
+ * @author : jason yin
+ * Email : j.yin@ledvance.com
+ * Created date 3/19/26 14:30
+ * Describe : SyncDeviceInfoUseCase
+ */
+class SyncDeviceInfoUseCase(
+    private val dispatcher: CoroutineDispatcher,
+    private val deviceRegistry: DeviceRegistry,
+    private val deviceRepo: DeviceRepo,
+) : UseCase<CoroutineScope, Job>() {
+    override fun execute(parameter: CoroutineScope): Job {
+        return deviceRegistry.devicesFlow.map {
+            it.map { device -> (device.address to device.power) }
+        }
+            .distinctUntilChanged()
+            .onEach { stateList ->
+                deviceRepo.updateDeviceSwitch(stateList)
+            }.flowOn(dispatcher)
+            .launchIn(parameter)
+    }
+
+}

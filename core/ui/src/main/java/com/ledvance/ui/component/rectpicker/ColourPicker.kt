@@ -26,12 +26,16 @@ internal fun ColourPicker(
     showBrightness: Boolean = true,
     minBrightness: Int = 1,
     maxBrightness: Int = 100,
-    onColorChanged: (Hsv) -> Unit = {},
-    onColorComplete: (Hsv) -> Unit = {}
+    onColorChange: (Hsv) -> Unit = {},
+    onColorComplete: (Hsv) -> Unit = {},
+    onBrightnessChange: (Int) -> Unit = {},
+    onBrightnessComplete: (Int) -> Unit = {},
 ) {
     var hsv by remember { mutableStateOf(initialHsv) }
-    val currentOnColorChanged by rememberUpdatedState(onColorChanged)
+    val currentOnColorChanged by rememberUpdatedState(onColorChange)
     val currentOnColorComplete by rememberUpdatedState(onColorComplete)
+    val currentOnBrightnessChange by rememberUpdatedState(onBrightnessChange)
+    val currentOnBrightnessComplete by rememberUpdatedState(onBrightnessComplete)
     LaunchedEffect(initialHsv) {
         hsv = initialHsv
     }
@@ -92,11 +96,11 @@ internal fun ColourPicker(
                 valueRange = minBrightness..maxBrightness,
                 onValueChange = { newBrightness ->
                     hsv = hsv.copy(brightness = newBrightness)
-                    currentOnColorChanged(hsv)
+                    currentOnBrightnessChange(newBrightness)
                 },
                 onValueComplete = {
                     hsv = hsv.copy(brightness = it)
-                    currentOnColorComplete(hsv)
+                    currentOnBrightnessComplete(it)
                 }
             )
         }

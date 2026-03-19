@@ -21,12 +21,13 @@ fun SnapshotStateList<Any>.navigateToLightDetails(address: String) {
 }
 
 fun EntryProviderScope<Any>.lightDetailsScreen(
-    onNavigateToAddNewDevice: () -> Unit,
+    onBackClick: () -> Unit,
 ) {
     entry<LightDetailsRoute> {
         PageLifecycleLogger("LightDetailsRoute")
         LightDetailsScreen(
-            onToAddNewDevice = onNavigateToAddNewDevice
+            address = it.address,
+            onBackClick = onBackClick
         )
     }
 }

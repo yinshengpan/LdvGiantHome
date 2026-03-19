@@ -28,10 +28,8 @@ internal fun WhitePicker(
     isSupportCCT: Boolean = true,
     minBrightness: Int = 1,
     maxBrightness: Int = 100,
-    onCCTChanged: (Int, Color) -> Unit = { _, _ -> },
-    onCCTComplete: (Int, Color) -> Unit = { _, _ -> },
-    onBrightnessChanged: (Int) -> Unit = {},
-    onBrightnessComplete: (Int) -> Unit = {},
+    onCctChange: (Int, Color) -> Unit = { _, _ -> },
+    onBrightnessChange: (Int) -> Unit = { },
 ) {
     var useCct by remember(cct) { mutableIntStateOf(cct) }
     val useBrightness by remember(brightness) {
@@ -90,10 +88,10 @@ internal fun WhitePicker(
                 value = useCct,
                 onValueChange = {
                     useCct = it
-                    onCCTChanged(useCct, cctColor)
+                    onCctChange(useCct, cctColor)
                 },
                 onRelease = {
-                    onCCTComplete(it, cctColor)
+                    onCctChange(it, cctColor)
                 },
                 valueToCoor = ::valueToCoor,
                 coorToValue = ::coorToValue,
@@ -111,10 +109,10 @@ internal fun WhitePicker(
             value = useBrightness,
             valueRange = minBrightness..maxBrightness,
             onValueChange = { newBrightness ->
-                onBrightnessChanged.invoke(newBrightness)
+                onBrightnessChange(newBrightness)
             },
             onValueComplete = {
-                onBrightnessComplete.invoke(it)
+                onBrightnessChange(it)
             }
         )
     }

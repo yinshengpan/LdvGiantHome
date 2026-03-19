@@ -16,7 +16,7 @@ internal interface SearchContract :
     OneTimeActionConsumerContract<SearchContract.SearchOneTimeAction> {
 
     sealed interface SearchOneTimeAction : OneTimeAction {
-        data class AddDeviceSuccess(val deviceName: String) : SearchOneTimeAction
+        data class AddDeviceSuccess(val address: String) : SearchOneTimeAction
     }
 
     @Immutable

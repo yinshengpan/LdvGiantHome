@@ -1,15 +1,24 @@
 package com.ledvance.home
 
+/**
+ * @author : jason yin
+ * Email : j.yin@ledvance.com
+ * Created date 3/18/26 10:37
+ * Describe : HomeViewModel
+ */
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ledvance.ble.core.ConnectionManager
-import com.ledvance.ble.usecase.DeviceSwitchUseCase
-import com.ledvance.database.usecase.GetDevicesUseCase
 import com.ledvance.domain.bean.DeviceUiItem
+import com.ledvance.usecase.device.DeviceControlUseCase
+import com.ledvance.usecase.device.GetDeviceStateUseCase
+import com.ledvance.usecase.device.GetDevicesUseCase
+import com.ledvance.usecase.device.SyncDeviceInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
@@ -17,37 +26,27 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
 
-/**
- * @author : jason yin
- * Email : j.yin@ledvance.com
- * Created date 3/18/26 10:37
- * Describe : HomeViewModel
- */
-import kotlinx.coroutines.flow.combine
-import com.ledvance.ble.core.DeviceRegistry
-
 @HiltViewModel
 internal class HomeViewModel @Inject constructor(
     private val getDevicesUseCase: GetDevicesUseCase,
-    private val deviceSwitchUseCase: DeviceSwitchUseCase,
+    private val deviceControlUseCase: DeviceControlUseCase,
     private val connectionManager: ConnectionManager,
-    private val deviceRegistry: DeviceRegistry,
+    private val getDeviceStateUseCase: GetDeviceStateUseCase,
+    private val syncDeviceInfoUseCase: SyncDeviceInfoUseCase,
 ) : ViewModel(), HomeContract {
-
+    private val TAG = "HomeViewModel"
     override val uiState: StateFlow<HomeContract.UiState> = combine(
         getDevicesUseCase(),
-        deviceRegistry.devicesFlow
-    ) { dbDevices, bleDevices ->
+        getDeviceStateUseCase()
+    ) { dbDevices, deviceStateList ->
         if (dbDevices.isEmpty()) {
             HomeContract.UiState.Empty
         } else {
-            val onlineMap = bleDevices.associate { it.mac to it.isOnline }
-            val connectedMap = bleDevices.associate { it.mac to it.isConnected }
-            Timber.d("onlineMap:$onlineMap,connectedMap:$connectedMap")
+            val onlineMap = deviceStateList.associate { it.address to it.isOnline }
+            Timber.tag(TAG).d("onlineMap:$onlineMap")
             HomeContract.UiState.Success(
                 devices = dbDevices,
                 onlineMap = onlineMap,
-                connectedMap = connectedMap
             )
         }
     }
@@ -67,14 +66,13 @@ internal class HomeViewModel @Inject constructor(
             initialValue = HomeContract.UiState.Loading
         )
 
+    init {
+        syncDeviceInfoUseCase(viewModelScope)
+    }
+
     override fun onSwitchChange(device: DeviceUiItem, switch: Boolean) {
         viewModelScope.launch {
-            deviceSwitchUseCase(
-                DeviceSwitchUseCase.Param(
-                    address = device.address,
-                    switch = switch
-                )
-            )
+            deviceControlUseCase.switch(device.address, switch)
         }
     }
 

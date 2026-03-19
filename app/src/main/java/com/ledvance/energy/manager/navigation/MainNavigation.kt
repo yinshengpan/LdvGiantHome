@@ -18,7 +18,8 @@ import com.ledvance.energy.manager.screen.LicensesScreen
 import com.ledvance.energy.manager.state.LedvanceAppState
 import com.ledvance.home.navigation.HomeRoute
 import com.ledvance.home.navigation.homeScreen
-import com.ledvance.home.navigation.navigateToControlPanel
+import com.ledvance.light.navigation.lightDetailsScreen
+import com.ledvance.light.navigation.navigateToLightDetails
 import com.ledvance.search.navigation.navigateToSearch
 import com.ledvance.search.navigation.searchScreen
 import com.ledvance.ui.navigation.NavigationRoute
@@ -64,11 +65,15 @@ fun MainNavigation(appState: LedvanceAppState) {
                     backStack.navigateToSearch()
                 },
                 onNavigateToControlPanel = { mac ->
-                    backStack.navigateToControlPanel(mac)
+                    backStack.navigateToLightDetails(mac)
                 }
             )
 
             searchScreen(onBackClick = {
+                backStack.removeLastOrNull()
+            })
+
+            lightDetailsScreen(onBackClick = {
                 backStack.removeLastOrNull()
             })
 

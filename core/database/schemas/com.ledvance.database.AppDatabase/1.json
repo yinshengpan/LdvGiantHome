@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "38d3e18d6a73abf7f7b0ef4b2245757c",
+    "identityHash": "662aa9a4144e389af256d5363b3a5036",
     "entities": [
       {
         "tableName": "devices",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`address` TEXT NOT NULL, `name` TEXT NOT NULL, `deviceType` INTEGER NOT NULL, `switch` INTEGER NOT NULL, PRIMARY KEY(`address`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`address` TEXT NOT NULL, `name` TEXT NOT NULL, `device_type` INTEGER NOT NULL, `switch_state` INTEGER NOT NULL, `work_mode` TEXT NOT NULL, `hue` INTEGER NOT NULL, `sat` INTEGER NOT NULL, `value` INTEGER NOT NULL, `cct` INTEGER NOT NULL, `brightness` INTEGER NOT NULL, `speed` INTEGER NOT NULL, PRIMARY KEY(`address`))",
         "fields": [
           {
             "fieldPath": "address",
@@ -22,13 +22,55 @@
           },
           {
             "fieldPath": "deviceType",
-            "columnName": "deviceType",
+            "columnName": "device_type",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
             "fieldPath": "switch",
-            "columnName": "switch",
+            "columnName": "switch_state",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "workMode",
+            "columnName": "work_mode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hue",
+            "columnName": "hue",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sat",
+            "columnName": "sat",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "value",
+            "columnName": "value",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "cct",
+            "columnName": "cct",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "brightness",
+            "columnName": "brightness",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "speed",
+            "columnName": "speed",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -43,7 +85,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '38d3e18d6a73abf7f7b0ef4b2245757c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '662aa9a4144e389af256d5363b3a5036')"
     ]
   }
 }

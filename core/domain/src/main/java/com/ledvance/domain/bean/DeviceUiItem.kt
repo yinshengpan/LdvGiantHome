@@ -10,5 +10,5 @@ data class DeviceUiItem(
     val name: String,
     val address: String,
     val switch: Boolean,
-    val deviceType: DeviceType
+    val deviceType: DeviceType,
 )

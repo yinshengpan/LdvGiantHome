@@ -22,6 +22,7 @@ class AndroidComposeFeatureConventionPlugin : Plugin<Project> {
                 "implementation"(project(":core:utils"))
                 "implementation"(project(":core:ui"))
                 "implementation"(project(":core:domain"))
+                "implementation"(project(":core:usecase"))
 
                 "implementation"(libs.findLibrary("timber").get())
                 "implementation"(libs.findLibrary("navigation3.runtime").get())

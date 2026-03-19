@@ -17,6 +17,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.withTimeoutOrNull
 import no.nordicsemi.android.kotlin.ble.client.main.callback.ClientBleGatt
 import no.nordicsemi.android.kotlin.ble.client.main.service.ClientBleGattCharacteristic
+import no.nordicsemi.android.kotlin.ble.core.data.BleWriteType
 import no.nordicsemi.android.kotlin.ble.core.data.util.DataByteArray
 import timber.log.Timber
 
@@ -79,6 +80,7 @@ class BleClient(
 
     fun disconnect() {
         gatt?.disconnect()
+        gatt?.close()
         gatt = null
         writeChar = null
         notifyChar = null
@@ -93,16 +95,16 @@ class BleClient(
                 onNotificationReceived?.invoke(bytes)
             }
             ?.catch {
-                Timber.tag(TAG).e(it)
+                Timber.tag(TAG).e(it, "getNotifications")
             }
             ?.launchIn(scope)
     }
 
     @SuppressLint("MissingPermission")
-    suspend fun write(data: ByteArray) {
+    suspend fun write(data: ByteArray, writeType: BleWriteType = BleWriteType.NO_RESPONSE) {
         delay(Constants.FRAME_INTERVAL_MS)
         Timber.tag(TAG).d("write ${data.toHexString()}")
-        tryCatch { writeChar?.write(DataByteArray(data)) }
+        tryCatch { writeChar?.write(DataByteArray(data), writeType) }
     }
 
     private fun fail(msg: String): Boolean {
