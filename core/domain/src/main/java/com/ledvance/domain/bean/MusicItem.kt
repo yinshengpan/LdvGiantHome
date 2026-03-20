@@ -1,7 +1,5 @@
 package com.ledvance.domain.bean
 
-import com.ledvance.domain.R
-
 /**
  * @author : jason yin
  * Email : j.yin@ledvance.com
@@ -12,20 +10,20 @@ data class MusicItem(
     val id: Int,
     val title: String,
     val subtitle: String,
-    val resId: Int
+    val fileName: String
 ) {
     companion object {
         val allMusicItems = listOf(
-            MusicItem(1, "a bird lived", "July - July", 1),
-            MusicItem(2, "Fallen Leaves Sound", "- July", 2),
-            MusicItem(3, "To Heaven", "To Heaven - July", 3),
-            MusicItem(4, "Truth", "Tune On Memories - July", 4),
-            MusicItem(5, "Unknown Place", "Unknown Place - July", 5),
-            MusicItem(6, "Walking to Heaven", "In Love - July", 6),
-            MusicItem(7, "City Lights", "Downtown - July", 7),
-            MusicItem(8, "Ocean Breeze", "Seaside - July", 8),
-            MusicItem(9, "Mountain High", "Summit - July", 9),
-            MusicItem(10, "Forest Whisper", "Woodland - July", 10)
+            MusicItem(1, "水色", "Deep Forest-晨", "Deep Forest - 水色.mp3"),
+            MusicItem(2, "月光の雲海 (月光下的云海)", "iw ix-极品钢琴 游戏原声带", "iw ix - 月光の雲海 (月光下的云海).mp3"),
+            MusicItem(3, "a bird lived", "July-July", "July - a bird lived.mp3"),
+            MusicItem(4, "Fallen Leaves Sound", "July-null", "July - Fallen Leaves Sound.mp3"),
+            MusicItem(5, "To Heaven", "July-To Heaven", "July - To Heaven.mp3"),
+            MusicItem(6, "Truth", "July-Tune On Memories", "July - Truth.mp3"),
+            MusicItem(7, "Unknown Place", "July-Unknown Place", "July - Unknown Place.mp3"),
+            MusicItem(8, "Walking to Heaven", "July-In Love", "July - Walking to Heaven.mp3"),
+            MusicItem(9, "Matrimonio De Amor (梦中的婚礼)", "Richard Clayderman", "Richard Clayderman - Matrimonio De Amor (梦中的婚礼).mp3"),
+            MusicItem(10, "いつも何度でも (永远同在)", "宗次郎", "宗次郎 - いつも何度でも (永远同在).mp3")
         )
     }
 }

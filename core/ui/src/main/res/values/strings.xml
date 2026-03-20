@@ -23,6 +23,8 @@
     <string name="dialog_bluetooth_permissions_request_title">"Bluetooth permissions request"</string>
     <string name="dialog_location_enable_request_message">"bluetooth device scanner need location permission"</string>
     <string name="dialog_location_enable_request_title">"Location enable request"</string>
+    <string name="dialog_mic_permissions_request_message">"Music rhythm effects need microphone permission"</string>
+    <string name="dialog_mic_permissions_request_title">"Microphone permission request"</string>
     <string name="energy_controller">"Load Shed"</string>
     <string name="firmware_update_dialog_content">"A new firmware update is available. Would you like to start now?"</string>
     <string name="firmware_update_dialog_title">"Firmware Update"</string>

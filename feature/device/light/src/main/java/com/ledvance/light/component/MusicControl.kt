@@ -1,11 +1,10 @@
 package com.ledvance.light.component
 
-import android.media.MediaPlayer
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -14,208 +13,159 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ledvance.domain.bean.MusicItem
-import com.ledvance.ui.theme.AppTheme
 import com.ledvance.ui.R
-import kotlinx.coroutines.delay
 
-/**
- * @author : jason yin
- * Email : j.yin@ledvance.com
- * Created date 3/19/26 18:16
- * Describe : MusicControl
- */
 @Composable
 fun MusicControl() {
-    val context = LocalContext.current
-    val musicList = remember { MusicItem.allMusicItems }
-    var currentItem by remember { mutableStateOf(musicList.first()) }
-    var isPlaying by remember { mutableStateOf(false) }
-    var currentPosition by remember { mutableLongStateOf(0L) }
-    var duration by remember { mutableLongStateOf(0L) }
-    var isRepeat by remember { mutableStateOf(false) }
-
-    val mediaPlayer = remember { MediaPlayer() }
-
-    fun playMusic(item: MusicItem) {
-        try {
-            mediaPlayer.reset()
-            val resId = context.resources.getIdentifier("m${item.id}", "raw", context.packageName)
-            if (resId == 0) return 
-            val afd = context.resources.openRawResourceFd(resId)
-            mediaPlayer.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
-            afd.close()
-            mediaPlayer.prepare()
-            mediaPlayer.start()
-            isPlaying = true
-            duration = mediaPlayer.duration.toLong()
-            currentItem = item
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    DisposableEffect(Unit) {
-        playMusic(currentItem)
-        onDispose {
-            mediaPlayer.stop()
-            mediaPlayer.release()
-        }
-    }
-
-    // Update progress
-    LaunchedEffect(isPlaying) {
-        while (isPlaying) {
-            currentPosition = mediaPlayer.currentPosition.toLong()
-            delay(500)
-        }
-    }
-
-    mediaPlayer.setOnCompletionListener {
-        if (isRepeat) {
-            mediaPlayer.start()
-        } else {
-            val nextIndex = (musicList.indexOf(currentItem) + 1) % musicList.size
-            playMusic(musicList[nextIndex])
-        }
-    }
+    val playerState = rememberMusicPlayerState()
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(AppTheme.colors.screenBackground)
+            .background(Color(0xFF2E2E2E)) // Match screenshot dark theme
     ) {
-        // Playlist
-        LazyColumn(
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-        ) {
-            items(musicList) { item ->
-                val isSelected = item == currentItem
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 4.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(if (isSelected) Color(0xFFBC00FF) else Color.Transparent)
-                        .clickable { playMusic(item) }
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+        playerState.musicList.forEachIndexed { index, item ->
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { playerState.playTrack(index, playFromZero = true) }
+                    .padding(horizontal = 24.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = item.id.toString(),
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Normal,
+                    modifier = Modifier.width(32.dp)
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = item.id.toString(),
+                        text = item.title,
                         color = Color.White,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Medium,
-                        modifier = Modifier.width(40.dp)
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Normal
                     )
-                    Column {
-                        Text(
-                            text = item.title,
-                            color = Color.White,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Normal
-                        )
-                        Text(
-                            text = item.subtitle,
-                            color = Color.White.copy(alpha = 0.6f),
-                            fontSize = 14.sp
-                        )
-                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = item.subtitle,
+                        color = Color.White.copy(alpha = 0.5f),
+                        fontSize = 14.sp
+                    )
                 }
             }
         }
 
         // Playback Controls
-        Card(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            shape = RoundedCornerShape(24.dp),
-            colors = CardDefaults.cardColors(containerColor = Color(0xFF3F3F3F))
+                .clip(RoundedCornerShape(bottomStart = 10.dp, bottomEnd = 10.dp))
+                .background(Color(0xFF6B6B6B)) // Lighter grey background for control panel
+                .padding(horizontal = 24.dp, vertical = 16.dp)
         ) {
-            Column(
-                modifier = Modifier.padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                // Timer
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                // Seek bar & Timer
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = formatTime(currentPosition), color = Color.White.copy(alpha = 0.7f), fontSize = 14.sp)
-                    Text(text = formatTime(duration), color = Color.White.copy(alpha = 0.7f), fontSize = 14.sp)
+                    Text(text = formatTime(playerState.currentPosition), color = Color.White.copy(alpha = 0.8f), fontSize = 12.sp)
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Slider(
+                        value = playerState.currentPosition.toFloat(),
+                        onValueChange = {
+                            playerState.seekTo(it.toLong())
+                        },
+                        valueRange = 0f..playerState.duration.toFloat().coerceAtLeast(1f),
+                        colors = SliderDefaults.colors(
+                            thumbColor = Color(0xFFE040FB), // Bright purple matching screenshot
+                            activeTrackColor = Color(0xFFE040FB),
+                            inactiveTrackColor = Color(0xFF4A4A4A)
+                        ),
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(text = formatTime(playerState.duration), color = Color.White.copy(alpha = 0.8f), fontSize = 12.sp)
                 }
 
-                // Seek bar
-                Slider(
-                    value = currentPosition.toFloat(),
-                    onValueChange = {
-                        mediaPlayer.seekTo(it.toInt())
-                        currentPosition = it.toLong()
-                    },
-                    valueRange = 0f..duration.toFloat().coerceAtLeast(1f),
-                    colors = SliderDefaults.colors(
-                        thumbColor = Color(0xFFBC00FF),
-                        activeTrackColor = Color(0xFFBC00FF),
-                        inactiveTrackColor = Color.Gray
-                    )
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
                 // Transport Controls
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
+                    // Previous (ic_play_next horizontally flipped)
                     IconButton(onClick = {
-                        val prevIndex = (musicList.indexOf(currentItem) - 1 + musicList.size) % musicList.size
-                        playMusic(musicList[prevIndex])
+                        playerState.playPrevious()
                     }) {
-                        Icon(painter = painterResource(R.drawable.ic_add), contentDescription = null, tint = Color.White, modifier = Modifier.size(32.dp))
+                        Icon(
+                            painter = painterResource(R.drawable.ic_play_next),
+                            contentDescription = "Previous",
+                            tint = Color.White,
+                            modifier = Modifier
+                                .size(28.dp)
+                                .graphicsLayer(scaleX = -1f) // Flip horizontally
+                        )
                     }
 
-                    FloatingActionButton(
-                        onClick = {
-                            if (isPlaying) {
-                                mediaPlayer.pause()
-                            } else {
-                                mediaPlayer.start()
-                            }
-                            isPlaying = !isPlaying
-                        },
-                        containerColor = Color.White.copy(alpha = 0.2f),
-                        contentColor = Color.White,
-                        shape = CircleShape
+                    // Play/Pause
+                    Box(
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(CircleShape)
+                            .background(Color.White.copy(alpha = 0.2f))
+                            .clickable {
+                                playerState.togglePlayPause()
+                            },
+                        contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            if (isPlaying) painterResource(android.R.drawable.ic_media_pause) else painterResource(R.drawable.ic_add),
-                            contentDescription = null,
+                            painter = if (playerState.isPlaying) painterResource(R.drawable.ic_pause) else painterResource(R.drawable.ic_play),
+                            contentDescription = "Play/Pause",
+                            tint = Color.White,
                             modifier = Modifier.size(32.dp)
                         )
                     }
 
+                    // Next
                     IconButton(onClick = {
-                        val nextIndex = (musicList.indexOf(currentItem) + 1) % musicList.size
-                        playMusic(musicList[nextIndex])
+                        playerState.playNext()
                     }) {
-                        Icon(painter = painterResource(R.drawable.ic_add), contentDescription = null, tint = Color.White, modifier = Modifier.size(32.dp))
+                        Icon(
+                            painter = painterResource(R.drawable.ic_play_next),
+                            contentDescription = "Next",
+                            tint = Color.White,
+                            modifier = Modifier.size(28.dp)
+                        )
                     }
 
-                    IconButton(onClick = { isRepeat = !isRepeat }) {
+                    // Play Mode
+                    IconButton(onClick = {
+                        playerState.togglePlaybackMode()
+                    }) {
+                        val modeIcon = when (playerState.playbackMode) {
+                            PlaybackMode.SEQUENTIAL -> R.drawable.ic_play_mode_order
+                            PlaybackMode.LOOP_ONE -> R.drawable.ic_play_mode_loop
+                            PlaybackMode.SHUFFLE -> R.drawable.ic_play_mode_shuffle
+                        }
                         Icon(
-                            painter = painterResource(R.drawable.ic_add),
-                            contentDescription = null,
-                            tint = if (isRepeat) Color(0xFFBC00FF) else Color.White
+                            painter = painterResource(modeIcon),
+                            contentDescription = "Play Mode",
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
                         )
                     }
                 }

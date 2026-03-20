@@ -7,4 +7,6 @@ android {
 }
 
 dependencies {
+    implementation(libs.accompanist.permissions)
+    implementation(libs.media3.exoplayer)
 }
