@@ -27,7 +27,8 @@ internal interface LightDetailsContract {
             val colourModeSat: Int,
             val colourModeBrightness: Int,
             val whiteModeCct: Int,
-            val whiteModeBrightness: Int
+            val whiteModeBrightness: Int,
+            val speed: Int,
         ) : UiState
 
         @Immutable
@@ -47,4 +48,5 @@ internal interface LightDetailsContract {
     fun onWhiteModeBrightnessChange(brightness: Int)
     fun onClickScene(scene: Scene)
     fun onModeChange(modeId: Int)
+    fun onSpeedChange(speed: Int)
 }

@@ -57,7 +57,8 @@ internal class LightDetailsViewModel @AssistedInject constructor(
             colourModeSat = screenState.colourModeSat.takeIf { it != -1 } ?: deviceInfo.s,
             colourModeBrightness = screenState.colourModeBrightness.takeIf { it != -1 } ?: deviceInfo.v,
             whiteModeCct = screenState.whiteModeCct.takeIf { it != -1 } ?: deviceInfo.w,
-            whiteModeBrightness = screenState.whiteModeBrightness.takeIf { it != -1 } ?: deviceInfo.brightness
+            whiteModeBrightness = screenState.whiteModeBrightness.takeIf { it != -1 } ?: deviceInfo.brightness,
+            speed = screenState.speed.takeIf { it != -1 } ?: deviceInfo.speed
         )
     }.stateIn(
         scope = viewModelScope,
@@ -91,6 +92,10 @@ internal class LightDetailsViewModel @AssistedInject constructor(
 
                     is Command.Mode -> {
                         deviceControlUseCase.setScene(address, it.modeId.toByte())
+                    }
+
+                    is Command.Speed -> {
+                        deviceControlUseCase.setSpeed(address, it.speed)
                     }
                 }
             }
@@ -146,6 +151,11 @@ internal class LightDetailsViewModel @AssistedInject constructor(
         }
     }
 
+    override fun onSpeedChange(speed: Int) {
+        screenState.update { it.copy(speed = speed) }
+        commandFlow.tryEmit(Command.Speed(speed))
+    }
+
     override fun onModeChange(modeId: Int) {
         commandFlow.tryEmit(Command.Mode(modeId))
     }
@@ -156,7 +166,8 @@ internal class LightDetailsViewModel @AssistedInject constructor(
         val colourModeSat: Int = -1,
         val colourModeBrightness: Int = -1,
         val whiteModeCct: Int = -1,
-        val whiteModeBrightness: Int = -1
+        val whiteModeBrightness: Int = -1,
+        val speed: Int = -1,
     )
 
     sealed interface Command {
@@ -165,5 +176,6 @@ internal class LightDetailsViewModel @AssistedInject constructor(
         data class WhiteModeCct(val cct: Int) : Command
         data class WhiteModeBrightness(val brightness: Int) : Command
         data class Mode(val modeId: Int) : Command
+        data class Speed(val speed: Int) : Command
     }
 }

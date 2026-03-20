@@ -67,6 +67,12 @@ class DeviceControlUseCase @Inject constructor(
         registry.updateActive(address)
     }
 
+    suspend fun setSpeed(address: String, speed: Int) {
+        ensureConnected(address)
+        getProtocol(address).setSpeed(speed)
+        registry.updateActive(address)
+    }
+
     suspend fun queryDeviceInfo(address: String) {
         ensureConnected(address)
         getProtocol(address).queryDeviceInfo()

@@ -1,6 +1,7 @@
 package com.ledvance.ui.component.rectpicker
 
 import android.annotation.SuppressLint
+import androidx.annotation.IdRes
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
@@ -50,13 +51,14 @@ import kotlin.math.roundToInt
 @Composable
 internal fun BrightnessSlider(
     value: Int,
+    modifier: Modifier = Modifier,
     onValueChange: (Int) -> Unit,
     onValueComplete: (Int) -> Unit = {},
-    modifier: Modifier = Modifier,
     valueRange: IntRange = 1..100,
     minValue: Int = 1,
     activeColor: Color = Color.White,
     trackColor: Color = Color(0xFF666666),
+    @IdRes iconResId: Int? = null,
 ) {
     var isDragging by remember { mutableStateOf(false) }
     val currentOnValueChange by rememberUpdatedState(onValueChange)
@@ -75,9 +77,9 @@ internal fun BrightnessSlider(
         val activeWidthDp = activeWidth.toDp
 
         val iconToShow = when {
-            percent > 60 -> R.drawable.ic_brightness_3
-            percent > 20 -> R.drawable.ic_brightness_2
-            else -> R.drawable.ic_brightness_1
+            percent > 60 -> iconResId ?: R.drawable.ic_brightness_3
+            percent > 20 -> iconResId ?: R.drawable.ic_brightness_2
+            else -> iconResId ?: R.drawable.ic_brightness_1
         }
 
         val gestureModifier = Modifier

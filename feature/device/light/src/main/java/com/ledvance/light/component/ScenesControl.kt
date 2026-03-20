@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -68,6 +67,14 @@ fun ScenesControl(onClickScene: (Scene) -> Unit) {
                 .fillMaxWidth()
                 .padding(15.dp)
         ) {
+
+            Text(
+                text = "Scenes",
+                style = AppTheme.typography.titleMedium,
+                color = AppTheme.colors.title,
+                modifier = Modifier.fillMaxWidth()
+            )
+
             LedvanceRadioGroup(
                 selectorItem = selectedSceneSegment,
                 items = allScenesSegment,

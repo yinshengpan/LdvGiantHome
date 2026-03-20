@@ -2,12 +2,15 @@ package com.ledvance.light
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.ledvance.domain.bean.WorkMode
 import com.ledvance.domain.bean.command.scenes.Scene
 import com.ledvance.light.component.LightControl
 import com.ledvance.light.component.ScenesControl
+import com.ledvance.light.component.SpeedControl
 
 /**
  * @author : jason yin
@@ -25,8 +28,14 @@ internal fun LightDetailsScreenContent(
     onWhiteModeCctChange: (Int) -> Unit,
     onWhiteModeBrightnessChange: (Int) -> Unit,
     onClickScene: (Scene) -> Unit,
+    onSpeedChange: (Int) -> Unit,
 ) {
-    Column(modifier = Modifier.fillMaxSize()) {
+    val scrollState = rememberScrollState()
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState),
+    ) {
         LightControl(
             switch = uiState.switch,
             workMode = uiState.workMode,
@@ -44,5 +53,7 @@ internal fun LightDetailsScreenContent(
         )
 
         ScenesControl(onClickScene = onClickScene)
+
+        SpeedControl(uiState.speed, onSpeedChange = onSpeedChange)
     }
 }

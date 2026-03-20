@@ -36,7 +36,6 @@ internal fun LightDetailsScreen(
         verticalArrangement = Arrangement.Center,
         onBackPressed = onBackClick,
         title = title,
-        modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
         when (uiState) {
             LightDetailsContract.UiState.Error -> {}
@@ -50,7 +49,8 @@ internal fun LightDetailsScreen(
                     onColourModeBrightnessChange = { brightness -> viewModel.onColourModeBrightnessChange(brightness) },
                     onWhiteModeCctChange = { cct -> viewModel.onWhiteModeCctChange(cct) },
                     onWhiteModeBrightnessChange = { brightness -> viewModel.onWhiteModeBrightnessChange(brightness) },
-                    onClickScene = { viewModel.onClickScene(it) }
+                    onClickScene = { viewModel.onClickScene(it) },
+                    onSpeedChange = { viewModel.onSpeedChange(it) },
                 )
             }
         }
