@@ -64,8 +64,8 @@ fun MainNavigation(appState: LedvanceAppState) {
                 onNavigateToAddNewDevice = {
                     backStack.navigateToSearch()
                 },
-                onNavigateToControlPanel = { mac ->
-                    backStack.navigateToLightDetails(mac)
+                onNavigateToControlPanel = {
+                    backStack.navigateToLightDetails(it)
                 }
             )
 

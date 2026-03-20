@@ -1,5 +1,6 @@
 package com.ledvance.utils.extensions
 
+import java.time.DayOfWeek
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -28,4 +29,26 @@ fun Long.toLocalDateTime(): LocalDateTime {
     return Instant.ofEpochMilli(this)
         .atZone(ZoneId.systemDefault())
         .toLocalDateTime()
+}
+
+data class TimeInfo(
+    val year: Int,
+    val month: Int,
+    val day: Int,
+    val hour: Int,
+    val minute: Int,
+    val second: Int,
+    val week: DayOfWeek,
+)
+
+fun LocalDateTime.toTimeInfo(): TimeInfo {
+    return TimeInfo(
+        year = this.year,
+        month = this.monthValue,
+        day = this.dayOfMonth,
+        hour = this.hour,
+        minute = this.minute,
+        second = this.second,
+        week = this.dayOfWeek,
+    )
 }

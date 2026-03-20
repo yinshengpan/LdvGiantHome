@@ -3,11 +3,15 @@ package com.ledvance.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.ledvance.database.converter.DeviceIdConverter
 import com.ledvance.database.converter.DeviceTypeConverter
 import com.ledvance.database.converter.StringListConverter
+import com.ledvance.database.converter.TimerTypeConverter
 import com.ledvance.database.converter.WorkModeConverter
 import com.ledvance.database.dao.DeviceDao
+import com.ledvance.database.dao.TimerDao
 import com.ledvance.database.model.DeviceEntity
+import com.ledvance.database.model.TimerEntity
 
 /**
  * @author : jason yin
@@ -16,11 +20,20 @@ import com.ledvance.database.model.DeviceEntity
  * Describe : AppDatabase
  */
 @Database(
-    entities = [DeviceEntity::class],
+    entities = [DeviceEntity::class, TimerEntity::class],
     version = 1,
     exportSchema = true
 )
-@TypeConverters(StringListConverter::class, DeviceTypeConverter::class, WorkModeConverter::class)
+@TypeConverters(
+    value = [
+        StringListConverter::class,
+        DeviceTypeConverter::class,
+        WorkModeConverter::class,
+        DeviceIdConverter::class,
+        TimerTypeConverter::class,
+    ]
+)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun deviceDao(): DeviceDao
+    abstract fun timerDao(): TimerDao
 }

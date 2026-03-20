@@ -2,6 +2,7 @@ package com.ledvance.usecase.device
 
 import com.ledvance.database.model.DeviceEntity
 import com.ledvance.database.repo.DeviceRepo
+import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
 import com.ledvance.usecase.base.SuspendUseCase
 import kotlinx.coroutines.CoroutineDispatcher
@@ -20,7 +21,7 @@ class AddDeviceUseCase(
         with(parameter) {
             deviceRepo.addDevice(
                 deviceEntity = DeviceEntity(
-                    address = address,
+                    deviceId = deviceId,
                     name = name,
                     deviceType = DeviceType.fromName(name)
                 )
@@ -29,7 +30,7 @@ class AddDeviceUseCase(
     }
 
     data class Param(
-        val address: String,
+        val deviceId: DeviceId,
         val name: String
     )
 }

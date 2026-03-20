@@ -1,6 +1,7 @@
 package com.ledvance.usecase.device
 
 import com.ledvance.ble.core.DeviceRegistry
+import com.ledvance.database.model.DeviceBaseUpdateEntity
 import com.ledvance.database.repo.DeviceRepo
 import com.ledvance.usecase.base.UseCase
 import kotlinx.coroutines.CoroutineDispatcher
@@ -25,13 +26,25 @@ class SyncDeviceInfoUseCase(
 ) : UseCase<CoroutineScope, Job>() {
     override fun execute(parameter: CoroutineScope): Job {
         return deviceRegistry.devicesFlow.map {
-            it.map { device -> (device.address to device.power) }
+            it.map { device ->
+                DeviceBaseUpdateEntity(
+                    deviceId = device.deviceId,
+                    power = device.power,
+                    modeType = device.modeType,
+                    mode = device.mode,
+                    brightness = device.brightness,
+                    speed = device.speed,
+                    r = device.r,
+                    g = device.g,
+                    b = device.b,
+                    w = device.w,
+                )
+            }
         }
             .distinctUntilChanged()
             .onEach { stateList ->
-                deviceRepo.updateDeviceSwitch(stateList)
+                deviceRepo.syncBaseInfoList(stateList)
             }.flowOn(dispatcher)
             .launchIn(parameter)
     }
-
 }

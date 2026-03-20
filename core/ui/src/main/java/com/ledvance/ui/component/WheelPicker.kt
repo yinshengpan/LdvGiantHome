@@ -45,15 +45,23 @@ fun <T> WheelPicker(
     val flingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
     val density = LocalDensity.current
     val itemHeightPx = with(density) { itemHeight.toPx() }
-    
-    LaunchedEffect(listState) {
-        snapshotFlow { listState.firstVisibleItemIndex }
-            .distinctUntilChanged()
-            .collect { index ->
-                if (index in items.indices) {
-                    onSelectionChanged(items[index])
-                }
-            }
+
+    // Use derivedStateOf to find the item closest to the center of the viewport
+    val centerIndex by remember {
+        derivedStateOf {
+            val layoutInfo = listState.layoutInfo
+            val visibleItems = layoutInfo.visibleItemsInfo
+            if (visibleItems.isEmpty()) return@derivedStateOf initialIndex
+            
+            val containerCenter = (layoutInfo.viewportEndOffset + layoutInfo.viewportStartOffset) / 2
+            visibleItems.minByOrNull { kotlin.math.abs((it.offset + it.size / 2) - containerCenter) }?.index ?: 0
+        }
+    }
+
+    LaunchedEffect(centerIndex) {
+        if (centerIndex in items.indices) {
+            onSelectionChanged(items[centerIndex])
+        }
     }
 
     Box(
@@ -82,18 +90,16 @@ fun <T> WheelPicker(
         ) {
             items(items.size) { index ->
                 val item = items[index]
-                
-                // Calculate distance from the center item for visual effects
-                val centerIndex = listState.firstVisibleItemIndex
                 val distance = kotlin.math.abs(index - centerIndex)
+                
                 val alpha = when (distance) {
                     0 -> 1.0f
-                    1 -> 0.6f
-                    2 -> 0.3f
-                    else -> 0.1f
+                    1 -> 0.7f
+                    2 -> 0.4f
+                    else -> 0.2f
                 }
                 val scale = when (distance) {
-                    0 -> 1.1f
+                    0 -> 1.2f
                     1 -> 1.0f
                     2 -> 0.9f
                     else -> 0.8f
@@ -107,11 +113,10 @@ fun <T> WheelPicker(
                 ) {
                     Text(
                         text = label(item),
-                        color = textColor,
+                        color = if (distance == 0) textColor else textColor.copy(alpha = alpha),
                         fontSize = 20.sp,
                         fontWeight = if (distance == 0) FontWeight.Bold else FontWeight.Normal,
                         modifier = Modifier
-                            .alpha(alpha)
                             .graphicsLayer(
                                 scaleX = scale,
                                 scaleY = scale

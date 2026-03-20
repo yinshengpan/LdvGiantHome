@@ -4,6 +4,8 @@ import com.ledvance.ble.core.ConnectionManager
 import com.ledvance.ble.core.DeviceRegistry
 import com.ledvance.ble.protocol.BleProtocol
 import com.ledvance.database.repo.DeviceRepo
+import com.ledvance.domain.bean.DeviceId
+import com.ledvance.domain.bean.TimerType
 import com.ledvance.domain.bean.command.BrightnessType
 import kotlinx.coroutines.delay
 import javax.inject.Inject
@@ -22,81 +24,95 @@ class DeviceControlUseCase @Inject constructor(
     private val deviceRepo: DeviceRepo,
 ) {
 
-    suspend fun switch(address: String, switch: Boolean) {
-        ensureConnected(address)
-        val protocol = getProtocol(address)
-        if (switch) {
-            protocol.on()
-        } else {
-            protocol.off()
-        }
-        registry.updateActive(address)
-        deviceRepo.updateDeviceSwitch(address, switch)
+    suspend fun setPower(deviceId: DeviceId, power: Boolean) {
+        ensureConnected(deviceId)
+        val protocol = getProtocol(deviceId)
+        protocol.setPower(power)
+        registry.updateActive(deviceId)
+        deviceRepo.updateDevicePower(deviceId, power)
     }
 
-    suspend fun setColourModeHS(address: String, h: Int, s: Int) {
-        ensureConnected(address)
-        val protocol = getProtocol(address)
+    suspend fun setColourModeHS(deviceId: DeviceId, h: Int, s: Int) {
+        ensureConnected(deviceId)
+        val protocol = getProtocol(deviceId)
         protocol.setHSV(h, s)
-        registry.updateActive(address)
+        registry.updateActive(deviceId)
     }
 
-    suspend fun setColourModeBrightness(address: String, brightness: Int) {
-        ensureConnected(address)
-        val protocol = getProtocol(address)
+    suspend fun setColourModeBrightness(deviceId: DeviceId, brightness: Int) {
+        ensureConnected(deviceId)
+        val protocol = getProtocol(deviceId)
         protocol.setBrightness(BrightnessType.RGB, brightness)
-        registry.updateActive(address)
+        registry.updateActive(deviceId)
     }
 
-    suspend fun setWhiteModeCCT(address: String, cct: Int) {
-        ensureConnected(address)
-        getProtocol(address).setCCT(cct)
-        registry.updateActive(address)
+    suspend fun setWhiteModeCCT(deviceId: DeviceId, cct: Int) {
+        ensureConnected(deviceId)
+        getProtocol(deviceId).setCCT(cct)
+        registry.updateActive(deviceId)
     }
 
-    suspend fun setWhiteModeBrightness(address: String, brightness: Int) {
-        ensureConnected(address)
-        val protocol = getProtocol(address)
+    suspend fun setWhiteModeBrightness(deviceId: DeviceId, brightness: Int) {
+        ensureConnected(deviceId)
+        val protocol = getProtocol(deviceId)
         protocol.setBrightness(BrightnessType.WCT, brightness)
-        registry.updateActive(address)
+        registry.updateActive(deviceId)
     }
 
-    suspend fun setScene(address: String, sceneId: Byte) {
-        ensureConnected(address)
-        getProtocol(address).setScene(sceneId)
-        registry.updateActive(address)
+    suspend fun setScene(deviceId: DeviceId, sceneId: Byte) {
+        ensureConnected(deviceId)
+        getProtocol(deviceId).setScene(sceneId)
+        registry.updateActive(deviceId)
     }
 
-    suspend fun setSpeed(address: String, speed: Int) {
-        ensureConnected(address)
-        getProtocol(address).setSpeed(speed)
-        registry.updateActive(address)
+    suspend fun setSpeed(deviceId: DeviceId, speed: Int) {
+        ensureConnected(deviceId)
+        getProtocol(deviceId).setSpeed(speed)
+        registry.updateActive(deviceId)
     }
 
-    suspend fun queryDeviceInfo(address: String) {
-        ensureConnected(address)
-        getProtocol(address).queryDeviceInfo()
-        registry.updateActive(address)
+    suspend fun queryDeviceInfo(deviceId: DeviceId) {
+        ensureConnected(deviceId)
+        getProtocol(deviceId).queryDeviceInfo()
+        registry.updateActive(deviceId)
     }
 
-    private suspend fun ensureConnected(address: String) {
-        val device = registry.get(address)
+    suspend fun syncDeviceTime(deviceId: DeviceId) {
+        ensureConnected(deviceId)
+        getProtocol(deviceId).syncCurrentTime()
+        registry.updateActive(deviceId)
+    }
+
+    suspend fun queryTimer(deviceId: DeviceId) {
+        ensureConnected(deviceId)
+        getProtocol(deviceId).queryTimer()
+        registry.updateActive(deviceId)
+    }
+
+    suspend fun setTimer(deviceId: DeviceId, timerType: TimerType, hour: Int, min: Int, weekCycle: Int) {
+        ensureConnected(deviceId)
+        getProtocol(deviceId).setTimer(timerType, hour, min, weekCycle)
+        registry.updateActive(deviceId)
+    }
+
+    private suspend fun ensureConnected(deviceId: DeviceId) {
+        val device = registry.get(deviceId)
         if (device?.isConnected != true) {
-            connectionManager.requestConnect(address)
-            waitConnected(address)
+            connectionManager.requestConnect(deviceId)
+            waitConnected(deviceId)
         }
     }
 
-    private suspend fun waitConnected(address: String) {
+    private suspend fun waitConnected(deviceId: DeviceId) {
         repeat(50) {
-            if (registry.get(address)?.isConnected == true) return
+            if (registry.get(deviceId)?.isConnected == true) return
             delay(300)
         }
         error("connect timeout")
     }
 
-    private fun getProtocol(address: String): BleProtocol {
-        val client = connectionManager.getClient(address)
+    private fun getProtocol(deviceId: DeviceId): BleProtocol {
+        val client = connectionManager.getClient(deviceId)
             ?: error("no client")
 
         return client.protocol

@@ -40,7 +40,7 @@ internal class SearchViewModel @Inject constructor(
         flow = bleSearchUseCase.scanDeviceListFlow,
         flow2 = getAllDeviceIdUseCase()
     ) { scanDevices, localDeviceIdList ->
-        val devices = scanDevices.filter { !localDeviceIdList.contains(it.address) }
+        val devices = scanDevices.filter { !localDeviceIdList.contains(it.deviceId) }
         if (devices.isEmpty()) {
             SearchContract.UiState.Loading
         } else {
@@ -67,11 +67,11 @@ internal class SearchViewModel @Inject constructor(
         viewModelScope.launch {
             addDeviceUseCase(
                 parameter = AddDeviceUseCase.Param(
-                    address = scannedDevice.address,
+                    deviceId = scannedDevice.deviceId,
                     name = scannedDevice.name
                 )
             )
-            publish(SearchContract.SearchOneTimeAction.AddDeviceSuccess(scannedDevice.address))
+            publish(SearchContract.SearchOneTimeAction.AddDeviceSuccess(scannedDevice.deviceId))
         }
     }
 

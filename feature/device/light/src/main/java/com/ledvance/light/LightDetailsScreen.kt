@@ -1,14 +1,12 @@
 package com.ledvance.light
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ledvance.domain.bean.DeviceId
 import com.ledvance.ui.component.LedvanceScreen
 import com.ledvance.ui.theme.AppTheme
 
@@ -20,9 +18,9 @@ import com.ledvance.ui.theme.AppTheme
  */
 @Composable
 internal fun LightDetailsScreen(
-    address: String,
+    deviceId: DeviceId,
     viewModel: LightDetailsContract = hiltViewModel<LightDetailsViewModel, LightDetailsViewModel.Factory>(
-        creationCallback = { it.create(address = address) }),
+        creationCallback = { it.create(deviceId = deviceId) }),
     onBackClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -51,6 +49,9 @@ internal fun LightDetailsScreen(
                     onWhiteModeBrightnessChange = { brightness -> viewModel.onWhiteModeBrightnessChange(brightness) },
                     onClickScene = { viewModel.onClickScene(it) },
                     onSpeedChange = { viewModel.onSpeedChange(it) },
+                    onTimerTimeChange = { timerType, hour, minutes -> viewModel.onTimerTimeChange(timerType, hour, minutes) },
+                    onTimerRepeatChange = { timerType, days -> viewModel.onTimerRepeatChange(timerType, days) },
+                    onTimerSwitchChange = { timerType, switch -> viewModel.onTimerSwitchChange(timerType, switch) }
                 )
             }
         }

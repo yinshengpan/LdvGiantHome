@@ -6,8 +6,10 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.ledvance.database.model.DeviceBaseUpdateEntity
 import com.ledvance.database.model.DeviceEntity
-import com.ledvance.database.model.DeviceSwitchUpdateEntity
+import com.ledvance.database.model.DevicePowerUpdateEntity
+import com.ledvance.domain.bean.DeviceId
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -24,23 +26,31 @@ interface DeviceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(devices: List<DeviceEntity>)
 
-    @Query("select * from devices where address = :address")
-    suspend fun getDevice(address: String): DeviceEntity?
+    @Query("select * from devices where device_id = :deviceId")
+    suspend fun getDevice(deviceId: DeviceId): DeviceEntity?
 
     @Query("select * from devices")
     fun getDeviceListFlow(): Flow<List<DeviceEntity>>
 
-    @Query("select address from devices")
-    fun getDeviceIdListFlow(): Flow<List<String>>
+    @Query("select device_id from devices")
+    fun getDeviceIdListFlow(): Flow<List<DeviceId>>
 
-    @Query("select * from devices where address = :address")
-    fun getDeviceFlow(address: String): Flow<DeviceEntity?>
+    @Query("select * from devices where device_id = :deviceId")
+    fun getDeviceFlow(deviceId: DeviceId): Flow<DeviceEntity?>
 
-    @Query("UPDATE devices SET switch_state = :switch WHERE address = :address")
-    suspend fun updateDeviceSwitch(address: String, switch: Boolean)
+    @Query("UPDATE devices SET power = :power WHERE device_id = :deviceId")
+    suspend fun updateDevicePower(deviceId: DeviceId, power: Boolean)
 
     @Update(entity = DeviceEntity::class)
-    suspend fun updateDeviceSwitchList(list: List<DeviceSwitchUpdateEntity>)
+    suspend fun updateDevicePowerList(list: List<DevicePowerUpdateEntity>)
+
+    /** 持久化蓝牙回响的基础状态数据 */
+    @Update(entity = DeviceEntity::class)
+    suspend fun updateBaseInfo(baseInfo: DeviceBaseUpdateEntity)
+
+    /** 持久化蓝牙回响的基础状态数据 */
+    @Update(entity = DeviceEntity::class)
+    suspend fun updateBaseInfoList(baseInfoList: List<DeviceBaseUpdateEntity>)
 
     @Delete
     suspend fun delete(device: DeviceEntity)
@@ -48,6 +58,6 @@ interface DeviceDao {
     @Update
     suspend fun update(device: DeviceEntity)
 
-    @Query("delete from devices where address=:address")
-    suspend fun deleteDevice(address: String)
+    @Query("delete from devices where device_id=:deviceId")
+    suspend fun deleteDevice(deviceId: DeviceId)
 }

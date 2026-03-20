@@ -1,8 +1,10 @@
 package com.ledvance.database.repo
 
 import com.ledvance.database.dao.DeviceDao
+import com.ledvance.database.model.DeviceBaseUpdateEntity
 import com.ledvance.database.model.DeviceEntity
-import com.ledvance.database.model.DeviceSwitchUpdateEntity
+import com.ledvance.database.model.DevicePowerUpdateEntity
+import com.ledvance.domain.bean.DeviceId
 import com.ledvance.utils.extensions.tryCatch
 import com.ledvance.utils.extensions.tryCatchReturn
 import kotlinx.coroutines.Dispatchers
@@ -25,39 +27,66 @@ class DeviceRepo @Inject constructor(
         tryCatch { deviceDao.insert(deviceEntity) }
     }
 
-    suspend fun deleteDevice(address: String) = withContext(Dispatchers.IO) {
-        tryCatch { deviceDao.deleteDevice(address) }
+    suspend fun deleteDevice(deviceId: DeviceId) = withContext(Dispatchers.IO) {
+        tryCatch { deviceDao.deleteDevice(deviceId) }
     }
 
     suspend fun updateDevice(deviceEntity: DeviceEntity) = withContext(Dispatchers.IO) {
         tryCatch { deviceDao.update(deviceEntity) }
     }
 
-    suspend fun updateDeviceSwitch(address: String, switch: Boolean) = withContext(Dispatchers.IO) {
-        tryCatch { deviceDao.updateDeviceSwitch(address, switch) }
+    suspend fun updateDevicePower(deviceId: DeviceId, power: Boolean) = withContext(Dispatchers.IO) {
+        tryCatch { deviceDao.updateDevicePower(deviceId, power) }
     }
 
-    suspend fun updateDeviceSwitch(list: List<Pair<String, Boolean>>) = withContext(Dispatchers.IO) {
+    suspend fun updateDevicePower(list: List<Pair<DeviceId, Boolean>>) = withContext(Dispatchers.IO) {
         tryCatch {
-            val stateList = list.map { (address, switch) -> DeviceSwitchUpdateEntity(address, switch) }
-            deviceDao.updateDeviceSwitchList(stateList)
+            val stateList = list.map { (deviceId, power) ->
+                DevicePowerUpdateEntity(deviceId, power)
+            }
+            deviceDao.updateDevicePowerList(stateList)
         }
     }
 
-    suspend fun getDevice(address: String) = withContext(Dispatchers.IO) {
-        return@withContext tryCatchReturn { deviceDao.getDevice(address) }
+    /** 同步设备基础状态（RGBW、亮度、模式类型、模式号、速度）*/
+    suspend fun syncBaseInfo(
+        deviceId: DeviceId,
+        power: Boolean,
+        modeType: Int,
+        mode: Int,
+        brightness: Int,
+        speed: Int,
+        r: Int, g: Int, b: Int, w: Int
+    ) = withContext(Dispatchers.IO) {
+        tryCatch {
+            deviceDao.updateBaseInfo(
+                DeviceBaseUpdateEntity(
+                    deviceId, power, modeType, mode, brightness, speed, r, g, b, w
+                )
+            )
+        }
+    }
+
+    suspend fun syncBaseInfoList(list: List<DeviceBaseUpdateEntity>) = withContext(Dispatchers.IO) {
+        tryCatch {
+            deviceDao.updateBaseInfoList(list)
+        }
+    }
+
+    suspend fun getDevice(deviceId: DeviceId) = withContext(Dispatchers.IO) {
+        return@withContext tryCatchReturn { deviceDao.getDevice(deviceId) }
     }
 
     fun getDeviceListFlow(): Flow<List<DeviceEntity>> {
         return deviceDao.getDeviceListFlow().catch { }
     }
 
-    fun getDeviceIdListFlow(): Flow<List<String>> {
+    fun getDeviceIdListFlow(): Flow<List<DeviceId>> {
         return deviceDao.getDeviceIdListFlow().catch { }
     }
 
-    fun getDeviceFlow(address: String): Flow<DeviceEntity?> {
-        return deviceDao.getDeviceFlow(address).catch { }
+    fun getDeviceFlow(deviceId: DeviceId): Flow<DeviceEntity?> {
+        return deviceDao.getDeviceFlow(deviceId).catch { }
     }
 
 }

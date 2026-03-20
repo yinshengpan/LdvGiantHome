@@ -6,6 +6,8 @@ import com.ledvance.ble.constant.Constants
 import com.ledvance.ble.protocol.BleProtocol
 import com.ledvance.ble.protocol.GiantProtocol
 import com.ledvance.ble.repo.BleRepository
+import com.ledvance.domain.bean.DeviceId
+import com.ledvance.domain.bean.asMacAddress
 import com.ledvance.utils.extensions.tryCatch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,7 +32,7 @@ import timber.log.Timber
  * Describe : BleClient
  */
 class BleClient(
-    private val address: String,
+    private val deviceId: DeviceId,
     private val bleRepository: BleRepository,
     private val onNotificationReceived: ((ByteArray) -> Unit)? = null
 ) {
@@ -55,7 +57,7 @@ class BleClient(
         try {
             _state.value = ConnectionState.CONNECTING
             val gatt = withTimeoutOrNull(15_000) {
-                bleRepository.connectDevice(address, scope)
+                bleRepository.connectDevice(deviceId.asMacAddress(), scope)
             } ?: return fail("timeout")
 
             val service = gatt.discoverServices()
@@ -76,6 +78,7 @@ class BleClient(
 
             _state.value = ConnectionState.CONNECTED
             protocol.queryDeviceInfo()
+            protocol.syncCurrentTime()
             return true
         } catch (e: Exception) {
             return fail("exception ${e.stackTraceToString()}")
@@ -95,7 +98,7 @@ class BleClient(
         notifyChar?.getNotifications()
             ?.onEach {
                 val bytes = it.value
-                Timber.d("observeNotify ${it.value.toHexString()}")
+                Timber.d("observeNotify ${it.value.toHexString().uppercase()}")
                 onNotificationReceived?.invoke(bytes)
             }
             ?.catch {

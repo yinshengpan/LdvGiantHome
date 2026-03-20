@@ -44,7 +44,7 @@ fun TimePicker(
     ) {
         // Title
         Text(
-            text = "选择时间",
+            text = "Select Time",
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
@@ -55,7 +55,7 @@ fun TimePicker(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp),
+                .height(240.dp), // Match itemHeight(48) * visibleCount(5)
             verticalAlignment = Alignment.CenterVertically
         ) {
             WheelPicker(
@@ -97,7 +97,7 @@ fun TimePicker(
                 ),
                 shape = RoundedCornerShape(28.dp)
             ) {
-                Text(text = "取消", fontSize = 18.sp, fontWeight = FontWeight.Medium)
+                Text(text = "Cancel", fontSize = 18.sp, fontWeight = FontWeight.Medium)
             }
 
             Button(
@@ -106,12 +106,12 @@ fun TimePicker(
                     .weight(1f)
                     .height(56.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFD433FF), // Purple from screenshot
+                    containerColor = AppTheme.colors.primary, // Purple from screenshot
                     contentColor = Color.White
                 ),
                 shape = RoundedCornerShape(28.dp)
             ) {
-                Text(text = "确认", fontSize = 18.sp, fontWeight = FontWeight.Medium)
+                Text(text = "Confirm", fontSize = 18.sp, fontWeight = FontWeight.Medium)
             }
         }
     }

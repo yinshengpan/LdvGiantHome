@@ -159,3 +159,8 @@ fun Int.toSingleByteArray(): ByteArray {
 fun Byte.asInt(order: ByteOrder = ByteOrder.BIG_ENDIAN): Int {
     return byteArrayOf(this).toInt(order)
 }
+
+fun Int.toBinary8(): String {
+    return String.format("%8s", Integer.toBinaryString(this and 0xFF))
+        .replace(' ', '0')
+}

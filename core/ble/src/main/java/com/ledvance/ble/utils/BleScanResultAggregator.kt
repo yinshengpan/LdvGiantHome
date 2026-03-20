@@ -3,6 +3,7 @@ package com.ledvance.ble.utils
 import android.os.SystemClock
 import com.ledvance.ble.bean.ScannedDevice
 import com.ledvance.ble.constant.Constants
+import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResult
 
@@ -24,7 +25,7 @@ class BleScanResultAggregator {
         if (isConnectable) {
             devices[scanItem.device.address] = ScannedDevice(
                 name = name,
-                address = scanItem.device.address,
+                deviceId = DeviceId(scanItem.device.address),
                 rssi = rssi,
                 deviceType = DeviceType.fromName(name),
                 scanTime = SystemClock.elapsedRealtime()

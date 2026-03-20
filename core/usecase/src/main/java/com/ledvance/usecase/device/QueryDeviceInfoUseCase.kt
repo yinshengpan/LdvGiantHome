@@ -1,6 +1,7 @@
 package com.ledvance.usecase.device
 
 import com.ledvance.ble.core.DeviceRegistry
+import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceInfo
 import com.ledvance.usecase.base.FlowUseCase
 import com.ledvance.utils.ColorUtils
@@ -19,21 +20,22 @@ import kotlinx.coroutines.flow.map
 class QueryDeviceInfoUseCase(
     dispatcher: CoroutineDispatcher,
     private val deviceRegistry: DeviceRegistry,
-) : FlowUseCase<String, DeviceInfo>(dispatcher) {
-    override fun execute(parameter: String): Flow<DeviceInfo> {
+) : FlowUseCase<DeviceId, DeviceInfo>(dispatcher) {
+    override fun execute(parameter: DeviceId): Flow<DeviceInfo> {
         return deviceRegistry.devicesFlow.map {
-            it.filter { it.address == parameter }.map {
+            it.filter { it.deviceId == parameter }.map {
                 val rgbToHsv = ColorUtils.rgbToHsv(it.r, it.g, it.b)
                 DeviceInfo(
-                    address = it.address,
+                    deviceId = it.deviceId,
                     name = it.name ?: "",
                     isOnline = it.isOnline,
-                    switch = it.power,
+                    power = it.power,
+                    modeType = it.modeType,
                     mode = it.mode,
                     speed = it.speed,
                     h = rgbToHsv[0],
                     s = rgbToHsv[1],
-                    v = rgbToHsv[2],
+                    v = it.brightness, // v 转 RGB 是默认是 100
                     w = it.w,
                     brightness = it.brightness
                 )

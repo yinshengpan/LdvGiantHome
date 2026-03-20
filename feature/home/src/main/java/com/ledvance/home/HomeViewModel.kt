@@ -9,6 +9,7 @@ package com.ledvance.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ledvance.ble.core.ConnectionManager
+import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceUiItem
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceStateUseCase
@@ -42,7 +43,7 @@ internal class HomeViewModel @Inject constructor(
         if (dbDevices.isEmpty()) {
             HomeContract.UiState.Empty
         } else {
-            val onlineMap = deviceStateList.associate { it.address to it.isOnline }
+            val onlineMap = deviceStateList.associate { it.deviceId to it.isOnline }
             Timber.tag(TAG).d("onlineMap:$onlineMap")
             HomeContract.UiState.Success(
                 devices = dbDevices,
@@ -70,23 +71,23 @@ internal class HomeViewModel @Inject constructor(
         syncDeviceInfoUseCase(viewModelScope)
     }
 
-    override fun onSwitchChange(device: DeviceUiItem, switch: Boolean) {
+    override fun onSwitchChange(deviceId: DeviceId, switch: Boolean) {
         viewModelScope.launch {
-            deviceControlUseCase.switch(device.address, switch)
+            deviceControlUseCase.setPower(deviceId, switch)
         }
     }
 
-    override fun connectDevice(mac: String) {
-        connectionManager.requestConnect(mac)
+    override fun connectDevice(deviceId: DeviceId) {
+        connectionManager.requestConnect(deviceId)
     }
 
-    override fun disconnectDevice(mac: String) {
-        connectionManager.disconnect(mac)
+    override fun disconnectDevice(deviceId: DeviceId) {
+        connectionManager.disconnect(deviceId)
     }
 
     override fun connectDevices(devices: List<DeviceUiItem>) {
         devices.forEach {
-            connectionManager.requestConnect(it.address)
+            connectionManager.requestConnect(it.deviceId)
         }
     }
 }

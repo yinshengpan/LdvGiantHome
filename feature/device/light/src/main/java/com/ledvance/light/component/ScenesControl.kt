@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -60,7 +61,7 @@ fun ScenesControl(onClickScene: (Scene) -> Unit) {
         elevation = CardDefaults.cardElevation(8.dp),
         colors = CardDefaults.cardColors(containerColor = AppTheme.colors.screenBackground),
         shape = RoundedCornerShape(10.dp),
-        modifier = Modifier.padding(paddingValues = PaddingValues(20.dp)),
+        modifier = Modifier.padding(paddingValues = PaddingValues(vertical = 10.dp)),
     ) {
         Column(
             modifier = Modifier
@@ -96,6 +97,7 @@ fun ScenesControl(onClickScene: (Scene) -> Unit) {
                             .debouncedClickable(onClick = {
                                 onClickScene.invoke(it)
                             }),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Image(
                             painter = painterResource(R.mipmap.colorful_icon),

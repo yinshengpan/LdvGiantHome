@@ -29,7 +29,9 @@ import androidx.compose.ui.graphics.ColorMatrix
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceUiItem
+import com.ledvance.domain.bean.asMacAddress
 import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceSwitch
 import com.ledvance.ui.extensions.debouncedClickable
@@ -39,10 +41,10 @@ import com.ledvance.ui.theme.AppTheme
 @Composable
 internal fun HomeScreenContent(
     uiState: HomeContract.UiState.Success,
-    onSwitchChange: (DeviceUiItem, Boolean) -> Unit,
-    onConnectClick: (DeviceUiItem) -> Unit,
-    onDisconnectClick: (DeviceUiItem) -> Unit,
-    onDeviceClick: (DeviceUiItem) -> Unit,
+    onSwitchChange: (DeviceId, Boolean) -> Unit,
+    onConnectClick: (DeviceId) -> Unit,
+    onDisconnectClick: (DeviceId) -> Unit,
+    onDeviceClick: (DeviceId) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -53,12 +55,12 @@ internal fun HomeScreenContent(
     ) {
         items(
             items = uiState.devices,
-            key = { it.address },
+            key = { it.deviceId.asMacAddress() },
             span = { GridItemSpan(1) }) { device ->
             DeviceItem(
                 device = device,
-                isOnline = uiState.onlineMap[device.address] ?: false,
-                switch = device.switch,
+                isOnline = uiState.onlineMap[device.deviceId] ?: false,
+                switch = device.power,
                 onSwitchChange = onSwitchChange,
                 onConnectClick = onConnectClick,
                 onDisconnectClick = onDisconnectClick,
@@ -73,10 +75,10 @@ fun DeviceItem(
     device: DeviceUiItem,
     isOnline: Boolean,
     switch: Boolean,
-    onSwitchChange: (DeviceUiItem, Boolean) -> Unit,
-    onConnectClick: (DeviceUiItem) -> Unit,
-    onDisconnectClick: (DeviceUiItem) -> Unit,
-    onClick: (DeviceUiItem) -> Unit
+    onSwitchChange: (DeviceId, Boolean) -> Unit,
+    onConnectClick: (DeviceId) -> Unit,
+    onDisconnectClick: (DeviceId) -> Unit,
+    onClick: (DeviceId) -> Unit
 ) {
     val colorFilter = remember {
         ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0F) })
@@ -91,7 +93,7 @@ fun DeviceItem(
                 .fillMaxWidth()
                 .height(134.dp)
                 .clip(RoundedCornerShape(10.dp))
-                .debouncedClickable(onClick = { onClick.invoke(device) })
+                .debouncedClickable(onClick = { onClick.invoke(device.deviceId) })
         ) {
             Row(modifier = Modifier.fillMaxWidth()) {
                 Image(
@@ -114,7 +116,7 @@ fun DeviceItem(
                 } else {
                     LedvanceSwitch(
                         checked = switch,
-                        onCheckedChange = { onSwitchChange.invoke(device, it) },
+                        onCheckedChange = { onSwitchChange.invoke(device.deviceId, it) },
                         modifier = Modifier.padding(top = 10.dp, end = 10.dp),
                     )
                 }

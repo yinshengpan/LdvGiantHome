@@ -26,7 +26,7 @@ fun SpeedControl(speed: Int,onSpeedChange: (Int) -> Unit) {
         elevation = CardDefaults.cardElevation(8.dp),
         colors = CardDefaults.cardColors(containerColor = AppTheme.colors.screenBackground),
         shape = RoundedCornerShape(10.dp),
-        modifier = Modifier.padding(paddingValues = PaddingValues(20.dp)),
+        modifier = Modifier.padding(paddingValues = PaddingValues(vertical = 20.dp)),
     ) {
         Column(
             modifier = Modifier
@@ -39,7 +39,11 @@ fun SpeedControl(speed: Int,onSpeedChange: (Int) -> Unit) {
                 color = AppTheme.colors.title,
                 modifier = Modifier.fillMaxWidth()
             )
-            SpeedSlider(speed = speed, onSpeedChange = onSpeedChange)
+            SpeedSlider(
+                speed = speed,
+                modifier = Modifier.padding(top = 10.dp),
+                onSpeedChange = onSpeedChange,
+            )
         }
     }
 }

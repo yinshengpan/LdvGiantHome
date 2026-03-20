@@ -7,8 +7,8 @@ package com.ledvance.domain.bean
  * Describe : DeviceUiItem
  */
 data class DeviceUiItem(
+    val deviceId: DeviceId,
     val name: String,
-    val address: String,
-    val switch: Boolean,
+    val power: Boolean,
     val deviceType: DeviceType,
 )

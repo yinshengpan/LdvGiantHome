@@ -7,7 +7,7 @@ package com.ledvance.domain.bean
  * Describe : DeviceState
  */
 data class DeviceState(
-    val address: String,
+    val deviceId: DeviceId,
     val isOnline: Boolean,
     val switch: Boolean,
 )

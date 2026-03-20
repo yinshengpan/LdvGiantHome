@@ -20,7 +20,7 @@ class GetDeviceStateUseCase(
 ) : FlowUseCaseWithoutParameter<List<DeviceState>>(dispatcher) {
     override fun execute(parameter: Unit): Flow<List<DeviceState>> {
         return deviceRegistry.devicesFlow.map {
-            it.map { device -> (DeviceState(address = device.address, isOnline = device.isOnline, switch = device.power)) }
+            it.map { device -> (DeviceState(deviceId = device.deviceId, isOnline = device.isOnline, switch = device.power)) }
         }.distinctUntilChanged()
     }
 }

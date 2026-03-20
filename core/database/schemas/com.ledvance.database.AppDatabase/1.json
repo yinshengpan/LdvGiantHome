@@ -2,15 +2,15 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "662aa9a4144e389af256d5363b3a5036",
+    "identityHash": "7a67df5e0a2d9e5db8a33ce1b11027e4",
     "entities": [
       {
         "tableName": "devices",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`address` TEXT NOT NULL, `name` TEXT NOT NULL, `device_type` INTEGER NOT NULL, `switch_state` INTEGER NOT NULL, `work_mode` TEXT NOT NULL, `hue` INTEGER NOT NULL, `sat` INTEGER NOT NULL, `value` INTEGER NOT NULL, `cct` INTEGER NOT NULL, `brightness` INTEGER NOT NULL, `speed` INTEGER NOT NULL, PRIMARY KEY(`address`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` TEXT NOT NULL, `name` TEXT NOT NULL, `device_type` INTEGER NOT NULL, `power` INTEGER NOT NULL, `mode_type` INTEGER NOT NULL, `mode` INTEGER NOT NULL, `brightness` INTEGER NOT NULL, `speed` INTEGER NOT NULL, `r` INTEGER NOT NULL, `g` INTEGER NOT NULL, `b` INTEGER NOT NULL, `w` INTEGER NOT NULL, PRIMARY KEY(`device_id`))",
         "fields": [
           {
-            "fieldPath": "address",
-            "columnName": "address",
+            "fieldPath": "deviceId",
+            "columnName": "device_id",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -27,38 +27,20 @@
             "notNull": true
           },
           {
-            "fieldPath": "switch",
-            "columnName": "switch_state",
+            "fieldPath": "power",
+            "columnName": "power",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "workMode",
-            "columnName": "work_mode",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "hue",
-            "columnName": "hue",
+            "fieldPath": "modeType",
+            "columnName": "mode_type",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "sat",
-            "columnName": "sat",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "value",
-            "columnName": "value",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "cct",
-            "columnName": "cct",
+            "fieldPath": "mode",
+            "columnName": "mode",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -73,19 +55,92 @@
             "columnName": "speed",
             "affinity": "INTEGER",
             "notNull": true
+          },
+          {
+            "fieldPath": "r",
+            "columnName": "r",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "g",
+            "columnName": "g",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "b",
+            "columnName": "b",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "w",
+            "columnName": "w",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
           "autoGenerate": false,
           "columnNames": [
-            "address"
+            "device_id"
+          ]
+        }
+      },
+      {
+        "tableName": "device_timers",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` TEXT NOT NULL, `timer_type` TEXT NOT NULL, `enabled` INTEGER NOT NULL, `hour` INTEGER NOT NULL, `minute` INTEGER NOT NULL, `week_cycle` INTEGER NOT NULL, PRIMARY KEY(`device_id`, `timer_type`))",
+        "fields": [
+          {
+            "fieldPath": "deviceId",
+            "columnName": "device_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "timerType",
+            "columnName": "timer_type",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "enabled",
+            "columnName": "enabled",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "hour",
+            "columnName": "hour",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "minute",
+            "columnName": "minute",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "weekCycle",
+            "columnName": "week_cycle",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "device_id",
+            "timer_type"
           ]
         }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '662aa9a4144e389af256d5363b3a5036')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7a67df5e0a2d9e5db8a33ce1b11027e4')"
     ]
   }
 }

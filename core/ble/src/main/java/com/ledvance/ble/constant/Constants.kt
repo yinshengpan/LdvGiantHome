@@ -18,7 +18,7 @@ object Constants {
     internal const val START_FLAG: Byte = 0x68.toByte()
     internal const val MAX_DATA_LEN = 250
     internal const val DEFAULT_PART_SIZE = 200 // per doc default
-    internal const val FRAME_INTERVAL_MS = 60L // ≥50ms, pick 60ms safety margin
+    internal const val FRAME_INTERVAL_MS = 100L // ≥50ms, pick 60ms safety margin
 
     val tripCurrentRange = IntRange(1, 1000)
 }

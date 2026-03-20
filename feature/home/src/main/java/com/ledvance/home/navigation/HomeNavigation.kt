@@ -2,6 +2,7 @@ package com.ledvance.home.navigation
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation3.runtime.EntryProviderScope
+import com.ledvance.domain.bean.DeviceId
 import com.ledvance.home.HomeScreen
 import com.ledvance.ui.navigation.NavigationRoute
 import com.ledvance.ui.navigation.PageLifecycleLogger
@@ -22,7 +23,7 @@ fun SnapshotStateList<Any>.navigateToHome() {
 
 fun EntryProviderScope<Any>.homeScreen(
     onNavigateToAddNewDevice: () -> Unit,
-    onNavigateToControlPanel: (String) -> Unit
+    onNavigateToControlPanel: (DeviceId) -> Unit
 ) {
     entry<HomeRoute> {
         PageLifecycleLogger("HomeRoute")

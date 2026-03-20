@@ -2,15 +2,20 @@ package com.ledvance.usecase.di
 
 import com.ledvance.ble.core.DeviceRegistry
 import com.ledvance.database.repo.DeviceRepo
+import com.ledvance.database.repo.TimerRepo
 import com.ledvance.domain.di.Dispatcher
 import com.ledvance.domain.di.Dispatchers
 import com.ledvance.usecase.device.AddDeviceUseCase
+import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetAllDeviceIdUseCase
 import com.ledvance.usecase.device.GetDeviceStateUseCase
+import com.ledvance.usecase.device.GetDeviceTimersUseCase
 import com.ledvance.usecase.device.GetDeviceUseCase
 import com.ledvance.usecase.device.GetDevicesUseCase
 import com.ledvance.usecase.device.QueryDeviceInfoUseCase
 import com.ledvance.usecase.device.SyncDeviceInfoUseCase
+import com.ledvance.usecase.device.SyncDeviceTimerUseCase
+import com.ledvance.usecase.device.UpdateDeviceTimerUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -66,6 +71,14 @@ internal object DeviceModule {
 
     @Provides
     @ViewModelScoped
+    fun providesSyncDeviceTimerUseCase(
+        @Dispatcher(Dispatchers.IO) dispatcher: CoroutineDispatcher,
+        deviceRegistry: DeviceRegistry,
+        timerRepo: TimerRepo,
+    ) = SyncDeviceTimerUseCase(dispatcher, deviceRegistry, timerRepo)
+
+    @Provides
+    @ViewModelScoped
     fun providesQueryDeviceInfoUseCase(
         @Dispatcher(Dispatchers.IO) dispatcher: CoroutineDispatcher,
         deviceRegistry: DeviceRegistry,
@@ -77,4 +90,19 @@ internal object DeviceModule {
         @Dispatcher(Dispatchers.IO) dispatcher: CoroutineDispatcher,
         deviceRepo: DeviceRepo,
     ) = GetAllDeviceIdUseCase(dispatcher, deviceRepo)
+
+    @Provides
+    @ViewModelScoped
+    fun providesGetDeviceTimersUseCase(
+        @Dispatcher(Dispatchers.IO) dispatcher: CoroutineDispatcher,
+        timerRepo: TimerRepo,
+    ) = GetDeviceTimersUseCase(dispatcher, timerRepo)
+
+    @Provides
+    @ViewModelScoped
+    fun providesUpdateDeviceTimerUseCase(
+        @Dispatcher(Dispatchers.IO) dispatcher: CoroutineDispatcher,
+        timerRepo: TimerRepo,
+        deviceControlUseCase: DeviceControlUseCase,
+    ) = UpdateDeviceTimerUseCase(dispatcher, timerRepo, deviceControlUseCase)
 }

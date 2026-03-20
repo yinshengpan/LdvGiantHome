@@ -22,6 +22,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.LifecycleResumeEffect
+import com.ledvance.domain.bean.DeviceId
 import com.ledvance.ui.state.rememberBluetoothBusinessState
 import com.ledvance.utils.BluetoothManager
 
@@ -29,7 +30,7 @@ import com.ledvance.utils.BluetoothManager
 internal fun HomeScreen(
     viewModel: HomeContract = hiltViewModel<HomeViewModel>(),
     onToAddNewDevice: () -> Unit,
-    onNavigateToControlPanel: (String) -> Unit,
+    onNavigateToControlPanel: (DeviceId) -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val bluetoothEnableState by BluetoothManager.bluetoothEnableState.collectAsStateWithLifecycle()
@@ -60,17 +61,17 @@ internal fun HomeScreen(
                 }
                 HomeScreenContent(
                     uiState = successUiState,
-                    onSwitchChange = { device, switch ->
-                        viewModel.onSwitchChange(device, switch)
+                    onSwitchChange = { deviceId, switch ->
+                        viewModel.onSwitchChange(deviceId, switch)
                     },
                     onConnectClick = {
-                        viewModel.connectDevice(it.address)
+                        viewModel.connectDevice(it)
                     },
                     onDisconnectClick = {
-                        viewModel.disconnectDevice(it.address)
+                        viewModel.disconnectDevice(it)
                     },
                     onDeviceClick = {
-                        onNavigateToControlPanel(it.address)
+                        onNavigateToControlPanel(it)
                     },
                 )
             }

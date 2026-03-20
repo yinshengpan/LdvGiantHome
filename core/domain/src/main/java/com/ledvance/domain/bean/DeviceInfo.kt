@@ -7,10 +7,11 @@ package com.ledvance.domain.bean
  * Describe : DeviceInfo
  */
 data class DeviceInfo(
-    val address: String,
+    val deviceId: DeviceId,
     val name: String,
     val isOnline: Boolean,
-    val switch: Boolean,
+    val power: Boolean,
+    val modeType: Int = 0,
     val mode: Int = 0,
     val speed: Int = 50,
     val h: Int = 255,

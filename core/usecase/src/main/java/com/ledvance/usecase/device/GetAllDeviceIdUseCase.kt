@@ -1,6 +1,7 @@
 package com.ledvance.usecase.device
 
 import com.ledvance.database.repo.DeviceRepo
+import com.ledvance.domain.bean.DeviceId
 import com.ledvance.usecase.base.FlowUseCaseWithoutParameter
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -15,8 +16,8 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 class GetAllDeviceIdUseCase(
     dispatcher: CoroutineDispatcher,
     private val deviceRepo: DeviceRepo
-) : FlowUseCaseWithoutParameter<List<String>>(dispatcher) {
-    override fun execute(parameter: Unit): Flow<List<String>> {
+) : FlowUseCaseWithoutParameter<List<DeviceId>>(dispatcher) {
+    override fun execute(parameter: Unit): Flow<List<DeviceId>> {
         return deviceRepo.getDeviceIdListFlow().distinctUntilChanged()
     }
 }

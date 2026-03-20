@@ -1,6 +1,7 @@
 package com.ledvance.home
 
 import androidx.compose.runtime.Immutable
+import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceUiItem
 import kotlinx.coroutines.flow.StateFlow
 
@@ -20,7 +21,7 @@ internal interface HomeContract {
         @Immutable
         data class Success(
             val devices: List<DeviceUiItem>,
-            val onlineMap: Map<String, Boolean>,
+            val onlineMap: Map<DeviceId, Boolean>,
         ) : UiState
 
         @Immutable
@@ -29,8 +30,8 @@ internal interface HomeContract {
 
     val uiState: StateFlow<UiState>
 
-    fun onSwitchChange(device: DeviceUiItem, switch: Boolean)
-    fun connectDevice(mac: String)
-    fun disconnectDevice(mac: String)
+    fun onSwitchChange(deviceId: DeviceId, switch: Boolean)
+    fun connectDevice(deviceId: DeviceId)
+    fun disconnectDevice(deviceId: DeviceId)
     fun connectDevices(devices: List<DeviceUiItem>)
 }

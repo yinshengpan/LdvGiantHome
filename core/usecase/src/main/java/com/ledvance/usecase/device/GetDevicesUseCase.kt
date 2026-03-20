@@ -29,8 +29,8 @@ class GetDevicesUseCase(
 internal fun DeviceEntity.toDeviceUiItem(): DeviceUiItem {
     return DeviceUiItem(
         name = name,
-        address = address,
-        switch = switch,
+        deviceId = deviceId,
+        power = power,
         deviceType = deviceType
     )
 }

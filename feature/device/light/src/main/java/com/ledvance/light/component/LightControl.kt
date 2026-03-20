@@ -58,7 +58,7 @@ fun LightControl(
         colors = CardDefaults.cardColors(containerColor = AppTheme.colors.screenBackground),
         shape = RoundedCornerShape(10.dp),
         modifier = Modifier
-            .padding(paddingValues = PaddingValues(20.dp))
+            .padding(paddingValues = PaddingValues(vertical = 10.dp))
             .then(modifier),
     ) {
         Column(

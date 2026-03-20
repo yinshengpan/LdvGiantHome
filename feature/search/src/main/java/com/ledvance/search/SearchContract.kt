@@ -2,6 +2,7 @@ package com.ledvance.search
 
 import androidx.compose.runtime.Immutable
 import com.ledvance.ble.bean.ScannedDevice
+import com.ledvance.domain.bean.DeviceId
 import com.ledvance.vivares.directeasy.core.ui.util.OneTimeAction
 import com.ledvance.vivares.directeasy.core.ui.util.OneTimeActionConsumerContract
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +17,7 @@ internal interface SearchContract :
     OneTimeActionConsumerContract<SearchContract.SearchOneTimeAction> {
 
     sealed interface SearchOneTimeAction : OneTimeAction {
-        data class AddDeviceSuccess(val address: String) : SearchOneTimeAction
+        data class AddDeviceSuccess(val deviceId: DeviceId) : SearchOneTimeAction
     }
 
     @Immutable

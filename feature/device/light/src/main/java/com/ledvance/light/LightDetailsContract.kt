@@ -1,9 +1,13 @@
 package com.ledvance.light
 
 import androidx.compose.runtime.Immutable
+import com.ledvance.domain.bean.DeviceType
+import com.ledvance.domain.bean.TimerUiItem
+import com.ledvance.domain.bean.TimerType
 import com.ledvance.domain.bean.WorkMode
 import com.ledvance.domain.bean.command.scenes.Scene
 import kotlinx.coroutines.flow.StateFlow
+import java.time.DayOfWeek
 
 /**
  * @author : jason yin
@@ -21,7 +25,8 @@ internal interface LightDetailsContract {
         @Immutable
         data class Success(
             val deviceName: String,
-            val switch: Boolean,
+            val deviceType: DeviceType,
+            val power: Boolean,
             val workMode: WorkMode,
             val colourModeHue: Int,
             val colourModeSat: Int,
@@ -29,6 +34,8 @@ internal interface LightDetailsContract {
             val whiteModeCct: Int,
             val whiteModeBrightness: Int,
             val speed: Int,
+            val onTimer: TimerUiItem,
+            val offTimer: TimerUiItem,
         ) : UiState
 
         @Immutable
@@ -49,4 +56,8 @@ internal interface LightDetailsContract {
     fun onClickScene(scene: Scene)
     fun onModeChange(modeId: Int)
     fun onSpeedChange(speed: Int)
+
+    fun onTimerSwitchChange(timerType: TimerType, enabled: Boolean)
+    fun onTimerTimeChange(timerType: TimerType, hour: Int, minute: Int)
+    fun onTimerRepeatChange(timerType: TimerType, days: Set<DayOfWeek>)
 }

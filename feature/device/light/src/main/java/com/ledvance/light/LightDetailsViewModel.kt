@@ -2,11 +2,17 @@ package com.ledvance.light
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ledvance.domain.bean.DeviceId
+import com.ledvance.domain.bean.TimerType
+import com.ledvance.domain.bean.TimerUiItem
 import com.ledvance.domain.bean.WorkMode
 import com.ledvance.domain.bean.command.scenes.Scene
 import com.ledvance.usecase.device.DeviceControlUseCase
+import com.ledvance.usecase.device.GetDeviceTimersUseCase
 import com.ledvance.usecase.device.GetDeviceUseCase
 import com.ledvance.usecase.device.QueryDeviceInfoUseCase
+import com.ledvance.usecase.device.SyncDeviceTimerUseCase
+import com.ledvance.usecase.device.UpdateDeviceTimerUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -21,6 +27,7 @@ import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.DayOfWeek
 
 /**
  * @author : jason yin
@@ -31,34 +38,43 @@ import kotlinx.coroutines.launch
 @OptIn(FlowPreview::class)
 @HiltViewModel(assistedFactory = LightDetailsViewModel.Factory::class)
 internal class LightDetailsViewModel @AssistedInject constructor(
-    @Assisted private val address: String,
+    @Assisted private val deviceId: DeviceId,
     private val queryDeviceInfoUseCase: QueryDeviceInfoUseCase,
     private val getDeviceUseCase: GetDeviceUseCase,
     private val deviceControlUseCase: DeviceControlUseCase,
+    private val getDeviceTimersUseCase: GetDeviceTimersUseCase,
+    private val updateDeviceTimerUseCase: UpdateDeviceTimerUseCase,
+    private val syncDeviceTimerUseCase: SyncDeviceTimerUseCase,
 ) : ViewModel(), LightDetailsContract {
 
     @AssistedFactory
     interface Factory {
-        fun create(address: String): LightDetailsViewModel
+        fun create(deviceId: DeviceId): LightDetailsViewModel
     }
 
     private val screenState = MutableStateFlow(ScreenState())
     private val commandFlow = MutableStateFlow<Command?>(null)
     override val uiState: StateFlow<LightDetailsContract.UiState> = combine(
-        flow = getDeviceUseCase(address),
-        flow2 = queryDeviceInfoUseCase(address),
-        flow3 = screenState
-    ) { device, deviceInfo, screenState ->
+        flow = getDeviceUseCase(deviceId),
+        flow2 = queryDeviceInfoUseCase(deviceId),
+        flow3 = getDeviceTimersUseCase(deviceId),
+        flow4 = screenState
+    ) { device, deviceInfo, timers, screenState ->
+        val onTimer = timers.find { it.timerType == TimerType.ON } ?: TimerUiItem(TimerType.ON)
+        val offTimer = timers.find { it.timerType == TimerType.OFF } ?: TimerUiItem(TimerType.OFF)
         LightDetailsContract.UiState.Success(
             deviceName = device.name,
-            switch = device.switch,
+            deviceType = device.deviceType,
+            power = device.power,
             workMode = screenState.workMode,
             colourModeHue = screenState.colourModeHue.takeIf { it != -1 } ?: deviceInfo.h,
             colourModeSat = screenState.colourModeSat.takeIf { it != -1 } ?: deviceInfo.s,
             colourModeBrightness = screenState.colourModeBrightness.takeIf { it != -1 } ?: deviceInfo.v,
             whiteModeCct = screenState.whiteModeCct.takeIf { it != -1 } ?: deviceInfo.w,
             whiteModeBrightness = screenState.whiteModeBrightness.takeIf { it != -1 } ?: deviceInfo.brightness,
-            speed = screenState.speed.takeIf { it != -1 } ?: deviceInfo.speed
+            speed = screenState.speed.takeIf { it != -1 } ?: deviceInfo.speed,
+            onTimer = onTimer,
+            offTimer = offTimer,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -67,35 +83,43 @@ internal class LightDetailsViewModel @AssistedInject constructor(
     )
 
     init {
+        syncDeviceTimerUseCase(
+            parameter = SyncDeviceTimerUseCase.Param(
+                deviceId = deviceId,
+                scope = viewModelScope
+            )
+        )
         viewModelScope.launch {
-            deviceControlUseCase.queryDeviceInfo(address)
+            deviceControlUseCase.queryDeviceInfo(deviceId)
+            deviceControlUseCase.syncDeviceTime(deviceId)
+            deviceControlUseCase.queryTimer(deviceId)
         }
         viewModelScope.launch {
             commandFlow.sample(300).collectLatest {
                 it ?: return@collectLatest
                 when (it) {
                     is Command.ColourModeHs -> {
-                        deviceControlUseCase.setColourModeHS(address, it.hue, it.sat)
+                        deviceControlUseCase.setColourModeHS(deviceId, it.hue, it.sat)
                     }
 
                     is Command.ColourModeBrightness -> {
-                        deviceControlUseCase.setColourModeBrightness(address, it.brightness)
+                        deviceControlUseCase.setColourModeBrightness(deviceId, it.brightness)
                     }
 
                     is Command.WhiteModeCct -> {
-                        deviceControlUseCase.setWhiteModeCCT(address, it.cct)
+                        deviceControlUseCase.setWhiteModeCCT(deviceId, it.cct)
                     }
 
                     is Command.WhiteModeBrightness -> {
-                        deviceControlUseCase.setWhiteModeBrightness(address, it.brightness)
+                        deviceControlUseCase.setWhiteModeBrightness(deviceId, it.brightness)
                     }
 
                     is Command.Mode -> {
-                        deviceControlUseCase.setScene(address, it.modeId.toByte())
+                        deviceControlUseCase.setScene(deviceId, it.modeId.toByte())
                     }
 
                     is Command.Speed -> {
-                        deviceControlUseCase.setSpeed(address, it.speed)
+                        deviceControlUseCase.setSpeed(deviceId, it.speed)
                     }
                 }
             }
@@ -104,7 +128,7 @@ internal class LightDetailsViewModel @AssistedInject constructor(
 
     override fun onSwitchChange(switch: Boolean) {
         viewModelScope.launch {
-            deviceControlUseCase.switch(address, switch)
+            deviceControlUseCase.setPower(deviceId, switch)
         }
     }
 
@@ -147,7 +171,7 @@ internal class LightDetailsViewModel @AssistedInject constructor(
 
     override fun onClickScene(scene: Scene) {
         viewModelScope.launch {
-            deviceControlUseCase.setScene(address, scene.command)
+            deviceControlUseCase.setScene(deviceId, scene.command)
         }
     }
 
@@ -158,6 +182,31 @@ internal class LightDetailsViewModel @AssistedInject constructor(
 
     override fun onModeChange(modeId: Int) {
         commandFlow.tryEmit(Command.Mode(modeId))
+    }
+
+    override fun onTimerSwitchChange(timerType: TimerType, enabled: Boolean) {
+        updateTimer(timerType) { it.copy(enabled = enabled) }
+    }
+
+    override fun onTimerTimeChange(timerType: TimerType, hour: Int, minute: Int) {
+        updateTimer(timerType) { it.copy(hour = hour, minute = minute) }
+    }
+
+    override fun onTimerRepeatChange(timerType: TimerType, days: Set<DayOfWeek>) {
+        updateTimer(timerType) { it.copy(days = days) }
+    }
+
+    private fun updateTimer(timerType: TimerType, transform: (TimerUiItem) -> TimerUiItem) {
+        val currentState = uiState.value as? LightDetailsContract.UiState.Success ?: return
+        val timer = (if (timerType == TimerType.ON) currentState.onTimer else currentState.offTimer)
+        viewModelScope.launch {
+            updateDeviceTimerUseCase(
+                parameter = UpdateDeviceTimerUseCase.Param(
+                    deviceId = deviceId,
+                    timer = transform(timer)
+                )
+            )
+        }
     }
 
     private data class ScreenState(

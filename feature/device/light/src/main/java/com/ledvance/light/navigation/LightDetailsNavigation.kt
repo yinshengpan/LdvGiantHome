@@ -2,6 +2,7 @@ package com.ledvance.light.navigation
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation3.runtime.EntryProviderScope
+import com.ledvance.domain.bean.DeviceId
 import com.ledvance.light.LightDetailsScreen
 import com.ledvance.ui.navigation.NavigationRoute
 import com.ledvance.ui.navigation.PageLifecycleLogger
@@ -14,10 +15,10 @@ import kotlinx.serialization.Serializable
  * Describe : LightDetailsNavigation
  */
 @Serializable
-data class LightDetailsRoute(val address: String) : NavigationRoute
+data class LightDetailsRoute(val deviceId: DeviceId) : NavigationRoute
 
-fun SnapshotStateList<Any>.navigateToLightDetails(address: String) {
-    add(LightDetailsRoute(address))
+fun SnapshotStateList<Any>.navigateToLightDetails(deviceId: DeviceId) {
+    add(LightDetailsRoute(deviceId))
 }
 
 fun EntryProviderScope<Any>.lightDetailsScreen(
@@ -26,7 +27,7 @@ fun EntryProviderScope<Any>.lightDetailsScreen(
     entry<LightDetailsRoute> {
         PageLifecycleLogger("LightDetailsRoute")
         LightDetailsScreen(
-            address = it.address,
+            deviceId = it.deviceId,
             onBackClick = onBackClick
         )
     }

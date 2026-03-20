@@ -52,7 +52,7 @@ class BleRepository @Inject constructor(
         .map {
             Timber.tag(TAG).d("scanDevices() >>>>>> ${it.device.name}")
             aggregator.aggregateDevices(it)
-                .distinctBy { it.address }.also { devices ->
+                .distinctBy { it.deviceId }.also { devices ->
                     deviceRegistry.onScanResult(devices)
                 }
         }

@@ -1,5 +1,8 @@
 package com.ledvance.ble.bean
 
+import com.ledvance.domain.bean.DeviceId
+import com.ledvance.domain.bean.DeviceTimer
+
 /**
  * @author : jason yin
  * Email : j.yin@ledvance.com
@@ -7,7 +10,7 @@ package com.ledvance.ble.bean
  * Describe : BleDeviceState
  */
 data class BleDeviceState(
-    val address: String,
+    val deviceId: DeviceId,
     val name: String?,
     val rssi: Int,
 
@@ -21,13 +24,17 @@ data class BleDeviceState(
     val protocolType: ProtocolType,
 
     val power: Boolean = true,
+    val modeType: Int = 1,
     val mode: Int = 0,
     val speed: Int = 50,
     val brightness: Int = 100,
     val r: Int = 255,
     val g: Int = 255,
     val b: Int = 255,
-    val w: Int = 0
+    val w: Int = 0,
+
+    val onTimer: DeviceTimer? = null,
+    val offTimer: DeviceTimer? = null,
 )
 
 enum class ConnectionState {

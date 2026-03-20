@@ -1,5 +1,6 @@
 package com.ledvance.ble.bean
 
+import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
 import kotlinx.serialization.Serializable
 
@@ -11,8 +12,8 @@ import kotlinx.serialization.Serializable
  */
 @Serializable
 data class ScannedDevice(
+    val deviceId: DeviceId,
     val name: String,
-    val address: String,
     val rssi: Int = 0,
     val deviceType: DeviceType = DeviceType.Table,
     val scanTime: Long = 0,
