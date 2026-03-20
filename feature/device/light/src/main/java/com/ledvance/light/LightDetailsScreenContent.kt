@@ -13,6 +13,7 @@ import com.ledvance.domain.bean.TimerType
 import com.ledvance.domain.bean.WorkMode
 import com.ledvance.domain.bean.command.scenes.Scene
 import com.ledvance.light.component.LightControl
+import com.ledvance.light.component.MusicModeControl
 import com.ledvance.light.component.ScenesControl
 import com.ledvance.light.component.SpeedControl
 import com.ledvance.light.component.TimerControl
@@ -75,5 +76,7 @@ internal fun LightDetailsScreenContent(
             onTimerTimeChange = onTimerTimeChange,
             onTimerRepeatChange = onTimerRepeatChange,
         )
+
+        MusicModeControl()
     }
 }
