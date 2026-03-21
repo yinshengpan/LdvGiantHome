@@ -67,7 +67,7 @@ fun TimePicker(
                 onSelectionChanged = { selectedHour = it },
                 label = { it.toString().padStart(2, '0') }
             )
-
+            Spacer(modifier = Modifier.width(20.dp))
             WheelPicker(
                 modifier = Modifier.weight(1f),
                 items = minutes,

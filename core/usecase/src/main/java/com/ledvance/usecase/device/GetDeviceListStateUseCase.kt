@@ -1,9 +1,8 @@
 package com.ledvance.usecase.device
 
 import com.ledvance.ble.core.DeviceRegistry
-import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceState
-import com.ledvance.usecase.base.FlowUseCase
+import com.ledvance.usecase.base.FlowUseCaseWithoutParameter
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -13,17 +12,15 @@ import kotlinx.coroutines.flow.map
  * @author : jason yin
  * Email : j.yin@ledvance.com
  * Created date 3/19/26 14:10
- * Describe : GetDeviceStateUseCase
+ * Describe : GetDeviceListStateUseCase
  */
-class GetDeviceStateUseCase(
+class GetDeviceListStateUseCase(
     dispatcher: CoroutineDispatcher,
     private val deviceRegistry: DeviceRegistry
-) : FlowUseCase<DeviceId, DeviceState?>(dispatcher) {
-    override fun execute(parameter: DeviceId): Flow<DeviceState?> {
+) : FlowUseCaseWithoutParameter<List<DeviceState>>(dispatcher) {
+    override fun execute(parameter: Unit): Flow<List<DeviceState>> {
         return deviceRegistry.devicesFlow.map {
-            it.filter { it.deviceId == parameter }
-                .map { device -> (DeviceState(deviceId = device.deviceId, isOnline = device.isOnline, switch = device.power)) }
-                .firstOrNull()
+            it.map { device -> (DeviceState(deviceId = device.deviceId, isOnline = device.isOnline, switch = device.power)) }
         }.distinctUntilChanged()
     }
 }

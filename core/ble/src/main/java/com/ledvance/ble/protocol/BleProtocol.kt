@@ -3,8 +3,10 @@ package com.ledvance.ble.protocol
 import com.ledvance.domain.bean.TimerType
 import com.ledvance.domain.bean.command.BrightnessType
 import com.ledvance.domain.bean.command.ColourType
+import com.ledvance.domain.bean.command.ModeId
 import com.ledvance.domain.bean.command.ModeType
 import com.ledvance.domain.bean.command.OnOffType
+import com.ledvance.domain.bean.command.scenes.Scene
 
 /**
  * @author : jason yin
@@ -16,11 +18,11 @@ interface BleProtocol {
     suspend fun queryDeviceInfo()
     suspend fun setBrightness(target: BrightnessType, brightness: Int)
     suspend fun setSpeed(speed: Int)
-    suspend fun setMode(modeType: ModeType, modeId: Int)
+    suspend fun setMode(modeId: ModeId)
     suspend fun setPower(power: Boolean, onOffType: OnOffType = OnOffType.ALL)
     suspend fun setHSV(h: Int, s: Int)
     suspend fun setCCT(cct: Int)
-    suspend fun setScene(sceneId: Byte)
+    suspend fun setScene(sceneId: Scene)
     suspend fun setColor(type: ColourType, param1: Int, param2: Int, param3: Int)
     suspend fun setMicRhythmEffect(effect: Int)
     suspend fun setMicSensitivity(sensitivity: Int)

@@ -48,25 +48,6 @@ class DeviceRepo @Inject constructor(
         }
     }
 
-    /** 同步设备基础状态（RGBW、亮度、模式类型、模式号、速度）*/
-    suspend fun syncBaseInfo(
-        deviceId: DeviceId,
-        power: Boolean,
-        modeType: Int,
-        mode: Int,
-        brightness: Int,
-        speed: Int,
-        r: Int, g: Int, b: Int, w: Int
-    ) = withContext(Dispatchers.IO) {
-        tryCatch {
-            deviceDao.updateBaseInfo(
-                DeviceBaseUpdateEntity(
-                    deviceId, power, modeType, mode, brightness, speed, r, g, b, w
-                )
-            )
-        }
-    }
-
     suspend fun syncBaseInfoList(list: List<DeviceBaseUpdateEntity>) = withContext(Dispatchers.IO) {
         tryCatch {
             deviceDao.updateBaseInfoList(list)

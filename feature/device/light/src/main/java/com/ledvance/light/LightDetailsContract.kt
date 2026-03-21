@@ -5,6 +5,8 @@ import com.ledvance.domain.bean.DeviceType
 import com.ledvance.domain.bean.TimerUiItem
 import com.ledvance.domain.bean.TimerType
 import com.ledvance.domain.bean.WorkMode
+import com.ledvance.domain.bean.command.ModeId
+import com.ledvance.domain.bean.command.ModeType
 import com.ledvance.domain.bean.command.scenes.Scene
 import kotlinx.coroutines.flow.StateFlow
 import java.time.DayOfWeek
@@ -26,6 +28,7 @@ internal interface LightDetailsContract {
         data class Success(
             val deviceName: String,
             val deviceType: DeviceType,
+            val isOnline: Boolean,
             val power: Boolean,
             val workMode: WorkMode,
             val colourModeHue: Int,
@@ -36,6 +39,8 @@ internal interface LightDetailsContract {
             val speed: Int,
             val onTimer: TimerUiItem,
             val offTimer: TimerUiItem,
+            val modeType: ModeType?,
+            val modeId: ModeId?,
         ) : UiState
 
         @Immutable
@@ -53,8 +58,8 @@ internal interface LightDetailsContract {
 
     fun onWhiteModeCctChange(cct: Int)
     fun onWhiteModeBrightnessChange(brightness: Int)
-    fun onClickScene(scene: Scene)
-    fun onModeChange(modeId: Int)
+    fun onSceneChange(scene: Scene)
+    fun onModeIdChange(modeId: ModeId)
     fun onSpeedChange(speed: Int)
 
     fun onTimerSwitchChange(timerType: TimerType, enabled: Boolean)

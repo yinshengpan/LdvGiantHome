@@ -11,8 +11,10 @@ import androidx.compose.ui.unit.dp
 import com.ledvance.domain.bean.DeviceType
 import com.ledvance.domain.bean.TimerType
 import com.ledvance.domain.bean.WorkMode
+import com.ledvance.domain.bean.command.ModeId
 import com.ledvance.domain.bean.command.scenes.Scene
 import com.ledvance.light.component.LightControl
+import com.ledvance.light.component.ModeControl
 import com.ledvance.light.component.MusicModeControl
 import com.ledvance.light.component.ScenesControl
 import com.ledvance.light.component.SpeedControl
@@ -34,11 +36,12 @@ internal fun LightDetailsScreenContent(
     onColourModeBrightnessChange: (Int) -> Unit,
     onWhiteModeCctChange: (Int) -> Unit,
     onWhiteModeBrightnessChange: (Int) -> Unit,
-    onClickScene: (Scene) -> Unit,
+    onSceneChange: (Scene) -> Unit,
     onSpeedChange: (Int) -> Unit,
     onTimerSwitchChange: (TimerType, Boolean) -> Unit,
     onTimerTimeChange: (TimerType, Int, Int) -> Unit,
     onTimerRepeatChange: (TimerType, Set<DayOfWeek>) -> Unit,
+    onModeIdChange: (ModeId) -> Unit,
 ) {
     val scrollState = rememberScrollState()
     Column(
@@ -64,7 +67,7 @@ internal fun LightDetailsScreenContent(
         )
 
         if (uiState.deviceType == DeviceType.Table) {
-            ScenesControl(onClickScene = onClickScene)
+            ScenesControl(onSceneChange = onSceneChange)
         }
 
         SpeedControl(uiState.speed, onSpeedChange = onSpeedChange)
@@ -78,5 +81,10 @@ internal fun LightDetailsScreenContent(
         )
 
         MusicModeControl()
+
+        ModeControl(
+            selectedModeId = uiState.modeId,
+            onModeChange = onModeIdChange
+        )
     }
 }

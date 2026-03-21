@@ -6,6 +6,8 @@ import com.ledvance.ble.bean.ProtocolType
 import com.ledvance.ble.bean.ScannedDevice
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceTimer
+import com.ledvance.domain.bean.command.ModeId
+import com.ledvance.domain.bean.command.ModeType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import timber.log.Timber
@@ -93,8 +95,8 @@ class DeviceRegistry @Inject constructor() {
             power = power,
             r = r, g = g, b = b, w = w,
             brightness = brightness,
-            modeType = modeType,
-            mode = mode,
+            modeType = ModeType.fromInt(modeType),
+            modeId = ModeId.fromInt(mode),
             speed = speed,
             lastActiveTime = now()
         )

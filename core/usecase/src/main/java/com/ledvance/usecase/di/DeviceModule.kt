@@ -8,11 +8,11 @@ import com.ledvance.domain.di.Dispatchers
 import com.ledvance.usecase.device.AddDeviceUseCase
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetAllDeviceIdUseCase
+import com.ledvance.usecase.device.GetDeviceListStateUseCase
 import com.ledvance.usecase.device.GetDeviceStateUseCase
 import com.ledvance.usecase.device.GetDeviceTimersUseCase
 import com.ledvance.usecase.device.GetDeviceUseCase
 import com.ledvance.usecase.device.GetDevicesUseCase
-import com.ledvance.usecase.device.QueryDeviceInfoUseCase
 import com.ledvance.usecase.device.SyncDeviceInfoUseCase
 import com.ledvance.usecase.device.SyncDeviceTimerUseCase
 import com.ledvance.usecase.device.UpdateDeviceTimerUseCase
@@ -56,6 +56,13 @@ internal object DeviceModule {
 
     @Provides
     @ViewModelScoped
+    fun providesGetDeviceListStateUseCase(
+        @Dispatcher(Dispatchers.IO) dispatcher: CoroutineDispatcher,
+        deviceRegistry: DeviceRegistry,
+    ) = GetDeviceListStateUseCase(dispatcher, deviceRegistry)
+
+    @Provides
+    @ViewModelScoped
     fun providesGetDeviceStateUseCase(
         @Dispatcher(Dispatchers.IO) dispatcher: CoroutineDispatcher,
         deviceRegistry: DeviceRegistry,
@@ -76,13 +83,6 @@ internal object DeviceModule {
         deviceRegistry: DeviceRegistry,
         timerRepo: TimerRepo,
     ) = SyncDeviceTimerUseCase(dispatcher, deviceRegistry, timerRepo)
-
-    @Provides
-    @ViewModelScoped
-    fun providesQueryDeviceInfoUseCase(
-        @Dispatcher(Dispatchers.IO) dispatcher: CoroutineDispatcher,
-        deviceRegistry: DeviceRegistry,
-    ) = QueryDeviceInfoUseCase(dispatcher, deviceRegistry)
 
     @Provides
     @ViewModelScoped

@@ -3,6 +3,8 @@ package com.ledvance.database.model
 import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
 import com.ledvance.domain.bean.DeviceId
+import com.ledvance.domain.bean.command.ModeId
+import com.ledvance.domain.bean.command.ModeType
 
 /**
  * @author : jason yin
@@ -17,19 +19,19 @@ data class DeviceBaseUpdateEntity(
     @ColumnInfo(name = "power")
     val power: Boolean,
     @ColumnInfo(name = "mode_type")
-    val modeType: Int,
-    @ColumnInfo(name = "mode")
-    val mode: Int,
-    @ColumnInfo(name = "brightness")
-    val brightness: Int,
+    val modeType: ModeType? = null,
+    @ColumnInfo(name = "mode_id")
+    val modeId: ModeId? = null,
     @ColumnInfo(name = "speed")
     val speed: Int,
-    @ColumnInfo(name = "r")
-    val r: Int,
-    @ColumnInfo(name = "g")
-    val g: Int,
-    @ColumnInfo(name = "b")
-    val b: Int,
-    @ColumnInfo(name = "w")
-    val w: Int,
+    @ColumnInfo(name = "h")
+    val h: Int,
+    @ColumnInfo(name = "s")
+    val s: Int,
+    @ColumnInfo(name = "v")
+    val v: Int,
+    @ColumnInfo(name = "cct")
+    val cct: Int,
+    @ColumnInfo(name = "brightness")
+    val brightness: Int,
 )

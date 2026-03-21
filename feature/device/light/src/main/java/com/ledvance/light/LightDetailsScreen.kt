@@ -47,11 +47,12 @@ internal fun LightDetailsScreen(
                     onColourModeBrightnessChange = { brightness -> viewModel.onColourModeBrightnessChange(brightness) },
                     onWhiteModeCctChange = { cct -> viewModel.onWhiteModeCctChange(cct) },
                     onWhiteModeBrightnessChange = { brightness -> viewModel.onWhiteModeBrightnessChange(brightness) },
-                    onClickScene = { viewModel.onClickScene(it) },
+                    onSceneChange = { viewModel.onSceneChange(it) },
                     onSpeedChange = { viewModel.onSpeedChange(it) },
                     onTimerTimeChange = { timerType, hour, minutes -> viewModel.onTimerTimeChange(timerType, hour, minutes) },
                     onTimerRepeatChange = { timerType, days -> viewModel.onTimerRepeatChange(timerType, days) },
-                    onTimerSwitchChange = { timerType, switch -> viewModel.onTimerSwitchChange(timerType, switch) }
+                    onTimerSwitchChange = { timerType, switch -> viewModel.onTimerSwitchChange(timerType, switch) },
+                    onModeIdChange = { modeId -> viewModel.onModeIdChange(modeId) },
                 )
             }
         }

@@ -10,6 +10,7 @@ import com.ledvance.database.model.DeviceBaseUpdateEntity
 import com.ledvance.database.model.DeviceEntity
 import com.ledvance.database.model.DevicePowerUpdateEntity
 import com.ledvance.domain.bean.DeviceId
+import com.ledvance.domain.bean.WorkMode
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -40,6 +41,24 @@ interface DeviceDao {
 
     @Query("UPDATE devices SET power = :power WHERE device_id = :deviceId")
     suspend fun updateDevicePower(deviceId: DeviceId, power: Boolean)
+
+    @Query("UPDATE devices SET h = :h, s = :s WHERE device_id = :deviceId")
+    suspend fun updateDeviceHs(deviceId: DeviceId, h: Int, s: Int)
+
+    @Query("UPDATE devices SET v = :v WHERE device_id = :deviceId")
+    suspend fun updateDeviceV(deviceId: DeviceId, v: Int)
+
+    @Query("UPDATE devices SET cct = :cct WHERE device_id = :deviceId")
+    suspend fun updateDeviceCct(deviceId: DeviceId, cct: Int)
+
+    @Query("UPDATE devices SET brightness = :brightness WHERE device_id = :deviceId")
+    suspend fun updateDeviceBrightness(deviceId: DeviceId, brightness: Int)
+
+    @Query("UPDATE devices SET speed = :speed WHERE device_id = :deviceId")
+    suspend fun updateDeviceSpeed(deviceId: DeviceId, speed: Int)
+
+    @Query("UPDATE devices SET work_mode = :workMode WHERE device_id = :deviceId")
+    suspend fun updateDeviceWorkMode(deviceId: DeviceId, workMode: WorkMode)
 
     @Update(entity = DeviceEntity::class)
     suspend fun updateDevicePowerList(list: List<DevicePowerUpdateEntity>)

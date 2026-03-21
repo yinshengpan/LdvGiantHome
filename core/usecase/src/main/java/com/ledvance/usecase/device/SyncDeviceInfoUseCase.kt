@@ -4,6 +4,7 @@ import com.ledvance.ble.core.DeviceRegistry
 import com.ledvance.database.model.DeviceBaseUpdateEntity
 import com.ledvance.database.repo.DeviceRepo
 import com.ledvance.usecase.base.UseCase
+import com.ledvance.utils.ColorUtils
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -27,17 +28,18 @@ class SyncDeviceInfoUseCase(
     override fun execute(parameter: CoroutineScope): Job {
         return deviceRegistry.devicesFlow.map {
             it.map { device ->
+                val rgbToHsv = ColorUtils.rgbToHsv(device.r, device.g, device.b)
                 DeviceBaseUpdateEntity(
                     deviceId = device.deviceId,
                     power = device.power,
                     modeType = device.modeType,
-                    mode = device.mode,
+                    modeId = device.modeId,
                     brightness = device.brightness,
                     speed = device.speed,
-                    r = device.r,
-                    g = device.g,
-                    b = device.b,
-                    w = device.w,
+                    h = rgbToHsv[0],
+                    s = rgbToHsv[1],
+                    v = device.brightness,
+                    cct = device.w,
                 )
             }
         }

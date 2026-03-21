@@ -5,6 +5,8 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.ledvance.database.converter.DeviceIdConverter
 import com.ledvance.database.converter.DeviceTypeConverter
+import com.ledvance.database.converter.ModeIdConverter
+import com.ledvance.database.converter.ModeTypeConverter
 import com.ledvance.database.converter.StringListConverter
 import com.ledvance.database.converter.TimerTypeConverter
 import com.ledvance.database.converter.WorkModeConverter
@@ -31,6 +33,8 @@ import com.ledvance.database.model.TimerEntity
         WorkModeConverter::class,
         DeviceIdConverter::class,
         TimerTypeConverter::class,
+        ModeIdConverter::class,
+        ModeTypeConverter::class,
     ]
 )
 abstract class AppDatabase : RoomDatabase() {

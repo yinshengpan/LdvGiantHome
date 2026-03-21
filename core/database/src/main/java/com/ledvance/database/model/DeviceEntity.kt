@@ -5,6 +5,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
+import com.ledvance.domain.bean.WorkMode
+import com.ledvance.domain.bean.command.ModeId
+import com.ledvance.domain.bean.command.ModeType
 
 /**
  * @author : jason yin
@@ -20,22 +23,24 @@ data class DeviceEntity(
     val name: String,
     @ColumnInfo(name = "device_type")
     val deviceType: DeviceType,
+    @ColumnInfo(name = "work_mode")
+    val workMode: WorkMode = WorkMode.Colour,
     @ColumnInfo(name = "power")
     val power: Boolean = true,
     @ColumnInfo(name = "mode_type")
-    val modeType: Int = 1,
-    @ColumnInfo(name = "mode")
-    val mode: Int = 0,
-    @ColumnInfo(name = "brightness")
-    val brightness: Int = 100,
+    val modeType: ModeType? = null,
+    @ColumnInfo(name = "mode_id")
+    val modeId: ModeId? = null,
     @ColumnInfo(name = "speed")
     val speed: Int = 100,
-    @ColumnInfo(name = "r")
-    val r: Int = 255,
-    @ColumnInfo(name = "g")
-    val g: Int = 255,
-    @ColumnInfo(name = "b")
-    val b: Int = 255,
-    @ColumnInfo(name = "w")
-    val w: Int = 0,
+    @ColumnInfo(name = "h")
+    val h: Int = 360,
+    @ColumnInfo(name = "s")
+    val s: Int = 100,
+    @ColumnInfo(name = "v")
+    val v: Int = 100,
+    @ColumnInfo(name = "cct")
+    val cct: Int = 100,
+    @ColumnInfo(name = "brightness")
+    val brightness: Int = 100,
 )

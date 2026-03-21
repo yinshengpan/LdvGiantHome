@@ -44,7 +44,7 @@ import com.ledvance.ui.theme.AppTheme
  * Describe : ScenesControl
  */
 @Composable
-fun ScenesControl(onClickScene: (Scene) -> Unit) {
+fun ScenesControl(onSceneChange: (Scene) -> Unit) {
     val allScenesSegment = remember { ScenesSegment.allScenesSegment }
     var selectedSceneSegment by remember {
         mutableStateOf<IRadioGroupItem<TableSceneType>>(ScenesSegment.Natural)
@@ -95,7 +95,7 @@ fun ScenesControl(onClickScene: (Scene) -> Unit) {
                         modifier = Modifier
                             .padding(10.dp)
                             .debouncedClickable(onClick = {
-                                onClickScene.invoke(it)
+                                onSceneChange.invoke(it)
                             }),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {

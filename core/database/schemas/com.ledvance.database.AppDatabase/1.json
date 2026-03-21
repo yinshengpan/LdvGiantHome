@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7a67df5e0a2d9e5db8a33ce1b11027e4",
+    "identityHash": "d9847d417b1ed3e74381ea496ec74d7b",
     "entities": [
       {
         "tableName": "devices",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` TEXT NOT NULL, `name` TEXT NOT NULL, `device_type` INTEGER NOT NULL, `power` INTEGER NOT NULL, `mode_type` INTEGER NOT NULL, `mode` INTEGER NOT NULL, `brightness` INTEGER NOT NULL, `speed` INTEGER NOT NULL, `r` INTEGER NOT NULL, `g` INTEGER NOT NULL, `b` INTEGER NOT NULL, `w` INTEGER NOT NULL, PRIMARY KEY(`device_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` TEXT NOT NULL, `name` TEXT NOT NULL, `device_type` INTEGER NOT NULL, `work_mode` TEXT NOT NULL, `power` INTEGER NOT NULL, `mode_type` INTEGER, `mode_id` INTEGER, `speed` INTEGER NOT NULL, `h` INTEGER NOT NULL, `s` INTEGER NOT NULL, `v` INTEGER NOT NULL, `cct` INTEGER NOT NULL, `brightness` INTEGER NOT NULL, PRIMARY KEY(`device_id`))",
         "fields": [
           {
             "fieldPath": "deviceId",
@@ -27,6 +27,12 @@
             "notNull": true
           },
           {
+            "fieldPath": "workMode",
+            "columnName": "work_mode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
             "fieldPath": "power",
             "columnName": "power",
             "affinity": "INTEGER",
@@ -35,20 +41,12 @@
           {
             "fieldPath": "modeType",
             "columnName": "mode_type",
-            "affinity": "INTEGER",
-            "notNull": true
+            "affinity": "INTEGER"
           },
           {
-            "fieldPath": "mode",
-            "columnName": "mode",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "brightness",
-            "columnName": "brightness",
-            "affinity": "INTEGER",
-            "notNull": true
+            "fieldPath": "modeId",
+            "columnName": "mode_id",
+            "affinity": "INTEGER"
           },
           {
             "fieldPath": "speed",
@@ -57,26 +55,32 @@
             "notNull": true
           },
           {
-            "fieldPath": "r",
-            "columnName": "r",
+            "fieldPath": "h",
+            "columnName": "h",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "g",
-            "columnName": "g",
+            "fieldPath": "s",
+            "columnName": "s",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "b",
-            "columnName": "b",
+            "fieldPath": "v",
+            "columnName": "v",
             "affinity": "INTEGER",
             "notNull": true
           },
           {
-            "fieldPath": "w",
-            "columnName": "w",
+            "fieldPath": "cct",
+            "columnName": "cct",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "brightness",
+            "columnName": "brightness",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -140,7 +144,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7a67df5e0a2d9e5db8a33ce1b11027e4')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd9847d417b1ed3e74381ea496ec74d7b')"
     ]
   }
 }

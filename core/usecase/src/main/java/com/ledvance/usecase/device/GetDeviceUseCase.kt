@@ -1,8 +1,9 @@
 package com.ledvance.usecase.device
 
+import com.ledvance.database.model.DeviceEntity
 import com.ledvance.database.repo.DeviceRepo
 import com.ledvance.domain.bean.DeviceId
-import com.ledvance.domain.bean.DeviceUiItem
+import com.ledvance.domain.bean.DeviceInfo
 import com.ledvance.usecase.base.FlowUseCase
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
@@ -19,11 +20,29 @@ import kotlinx.coroutines.flow.map
 class GetDeviceUseCase(
     dispatcher: CoroutineDispatcher,
     private val deviceRepo: DeviceRepo
-) : FlowUseCase<DeviceId, DeviceUiItem>(dispatcher) {
-    override fun execute(parameter: DeviceId): Flow<DeviceUiItem> {
+) : FlowUseCase<DeviceId, DeviceInfo>(dispatcher) {
+    override fun execute(parameter: DeviceId): Flow<DeviceInfo> {
         return deviceRepo.getDeviceFlow(parameter)
-            .map { it?.toDeviceUiItem() }
+            .map { it?.toDeviceInfo() }
             .filterNotNull()
             .distinctUntilChanged()
     }
+}
+
+internal fun DeviceEntity.toDeviceInfo(): DeviceInfo {
+    return DeviceInfo(
+        deviceId = deviceId,
+        deviceType = deviceType,
+        workMode = workMode,
+        name = name,
+        power = power,
+        modeType = modeType,
+        modeId = modeId,
+        speed = speed,
+        h = h,
+        s = s,
+        v = v,
+        cct = cct,
+        brightness = brightness
+    )
 }

@@ -2,6 +2,8 @@ package com.ledvance.ble.bean
 
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceTimer
+import com.ledvance.domain.bean.command.ModeId
+import com.ledvance.domain.bean.command.ModeType
 
 /**
  * @author : jason yin
@@ -24,8 +26,8 @@ data class BleDeviceState(
     val protocolType: ProtocolType,
 
     val power: Boolean = true,
-    val modeType: Int = 1,
-    val mode: Int = 0,
+    val modeType: ModeType? = null,
+    val modeId: ModeId? = null,
     val speed: Int = 50,
     val brightness: Int = 100,
     val r: Int = 255,

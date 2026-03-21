@@ -6,9 +6,11 @@ import com.ledvance.domain.bean.TimerType
 import com.ledvance.domain.bean.command.BrightnessType
 import com.ledvance.domain.bean.command.ColourType
 import com.ledvance.domain.bean.command.CommandType
+import com.ledvance.domain.bean.command.ModeId
 import com.ledvance.domain.bean.command.ModeType
 import com.ledvance.domain.bean.command.OnOff
 import com.ledvance.domain.bean.command.OnOffType
+import com.ledvance.domain.bean.command.scenes.Scene
 import com.ledvance.domain.bean.command.timer.TimerDayOfWeek
 import com.ledvance.utils.ColorUtils
 import com.ledvance.utils.extensions.toTimeInfo
@@ -56,8 +58,8 @@ class GiantProtocol(
         client.write(buildCommand(CommandType.SetSpeed.command, speed.toByte()))
     }
 
-    override suspend fun setMode(modeType: ModeType, modeId: Int) = queue.execute {
-        client.write(buildCommand(CommandType.SetModeOrScene.command, modeType.command, modeId.toByte()))
+    override suspend fun setMode(modeId: ModeId) = queue.execute {
+        client.write(buildCommand(CommandType.SetModeOrScene.command, ModeType.Classic.command, modeId.command))
     }
 
     override suspend fun setPower(power: Boolean, onOffType: OnOffType) = queue.execute {
@@ -83,8 +85,8 @@ class GiantProtocol(
         ))
     }
 
-    override suspend fun setScene(sceneId: Byte) = queue.execute {
-        client.write(buildCommand(CommandType.SetModeOrScene.command, ModeType.Scene.command, sceneId))
+    override suspend fun setScene(sceneId: Scene) = queue.execute {
+        client.write(buildCommand(CommandType.SetModeOrScene.command, ModeType.Scene.command, sceneId.command))
     }
 
     override suspend fun setColor(type: ColourType, param1: Int, param2: Int, param3: Int) = queue.execute {

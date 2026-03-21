@@ -12,7 +12,7 @@ import com.ledvance.ble.core.ConnectionManager
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceUiItem
 import com.ledvance.usecase.device.DeviceControlUseCase
-import com.ledvance.usecase.device.GetDeviceStateUseCase
+import com.ledvance.usecase.device.GetDeviceListStateUseCase
 import com.ledvance.usecase.device.GetDevicesUseCase
 import com.ledvance.usecase.device.SyncDeviceInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,13 +32,13 @@ internal class HomeViewModel @Inject constructor(
     private val getDevicesUseCase: GetDevicesUseCase,
     private val deviceControlUseCase: DeviceControlUseCase,
     private val connectionManager: ConnectionManager,
-    private val getDeviceStateUseCase: GetDeviceStateUseCase,
+    private val getDeviceListStateUseCase: GetDeviceListStateUseCase,
     private val syncDeviceInfoUseCase: SyncDeviceInfoUseCase,
 ) : ViewModel(), HomeContract {
     private val TAG = "HomeViewModel"
     override val uiState: StateFlow<HomeContract.UiState> = combine(
         getDevicesUseCase(),
-        getDeviceStateUseCase()
+        getDeviceListStateUseCase()
     ) { dbDevices, deviceStateList ->
         if (dbDevices.isEmpty()) {
             HomeContract.UiState.Empty

@@ -16,7 +16,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -37,8 +39,10 @@ fun <T> WheelPicker(
     visibleItemsCount: Int = 5,
     highlightColor: Color = Color(0xFFBC00FF),
     textColor: Color = Color.White,
+    textSize: TextUnit = 20.sp,
     highlightShape: RoundedCornerShape = RoundedCornerShape(12.dp),
-    onSelectionChanged: (T) -> Unit,
+    onSelectionChanged: (T) -> Unit = {},
+    onPickCompleted: (T) -> Unit = {},
     label: (T) -> String
 ) {
     val listState = rememberLazyListState(initialIndex)
@@ -52,7 +56,7 @@ fun <T> WheelPicker(
             val layoutInfo = listState.layoutInfo
             val visibleItems = layoutInfo.visibleItemsInfo
             if (visibleItems.isEmpty()) return@derivedStateOf initialIndex
-            
+
             val containerCenter = (layoutInfo.viewportEndOffset + layoutInfo.viewportStartOffset) / 2
             visibleItems.minByOrNull { kotlin.math.abs((it.offset + it.size / 2) - containerCenter) }?.index ?: 0
         }
@@ -61,6 +65,19 @@ fun <T> WheelPicker(
     LaunchedEffect(centerIndex) {
         if (centerIndex in items.indices) {
             onSelectionChanged(items[centerIndex])
+        }
+    }
+
+    val hasScrolled = remember { mutableStateOf(false) }
+
+    LaunchedEffect(listState.isScrollInProgress) {
+        if (listState.isScrollInProgress) {
+            hasScrolled.value = true
+        } else if (hasScrolled.value) {
+            hasScrolled.value = false
+            if (centerIndex in items.indices) {
+                onPickCompleted(items[centerIndex])
+            }
         }
     }
 
@@ -75,7 +92,6 @@ fun <T> WheelPicker(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(itemHeight)
-                .padding(horizontal = 8.dp)
                 .background(
                     color = highlightColor,
                     shape = highlightShape
@@ -91,7 +107,7 @@ fun <T> WheelPicker(
             items(items.size) { index ->
                 val item = items[index]
                 val distance = kotlin.math.abs(index - centerIndex)
-                
+
                 val alpha = when (distance) {
                     0 -> 1.0f
                     1 -> 0.7f
@@ -114,9 +130,12 @@ fun <T> WheelPicker(
                     Text(
                         text = label(item),
                         color = if (distance == 0) textColor else textColor.copy(alpha = alpha),
-                        fontSize = 20.sp,
+                        fontSize = textSize,
                         fontWeight = if (distance == 0) FontWeight.Bold else FontWeight.Normal,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
+                            .padding(horizontal = 30.dp)
                             .graphicsLayer(
                                 scaleX = scale,
                                 scaleY = scale

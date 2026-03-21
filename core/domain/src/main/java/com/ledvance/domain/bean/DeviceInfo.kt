@@ -1,5 +1,8 @@
 package com.ledvance.domain.bean
 
+import com.ledvance.domain.bean.command.ModeId
+import com.ledvance.domain.bean.command.ModeType
+
 /**
  * @author : jason yin
  * Email : j.yin@ledvance.com
@@ -8,15 +11,16 @@ package com.ledvance.domain.bean
  */
 data class DeviceInfo(
     val deviceId: DeviceId,
+    val deviceType: DeviceType,
+    val workMode: WorkMode,
     val name: String,
-    val isOnline: Boolean,
     val power: Boolean,
-    val modeType: Int = 0,
-    val mode: Int = 0,
+    val modeType: ModeType? = null,
+    val modeId: ModeId? = null,
     val speed: Int = 50,
     val h: Int = 255,
     val s: Int = 255,
     val v: Int = 255,
-    val w: Int = 0,
+    val cct: Int = 0,
     val brightness: Int = 100,
 )
