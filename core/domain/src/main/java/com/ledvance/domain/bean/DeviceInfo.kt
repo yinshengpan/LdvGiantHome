@@ -1,5 +1,6 @@
 package com.ledvance.domain.bean
 
+import com.ledvance.domain.bean.command.LineSequence
 import com.ledvance.domain.bean.command.ModeId
 import com.ledvance.domain.bean.command.ModeType
 
@@ -13,6 +14,7 @@ data class DeviceInfo(
     val deviceId: DeviceId,
     val deviceType: DeviceType,
     val workMode: WorkMode,
+    val lineSequence: LineSequence,
     val name: String,
     val power: Boolean,
     val modeType: ModeType? = null,

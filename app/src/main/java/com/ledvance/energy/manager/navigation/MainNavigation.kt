@@ -4,6 +4,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.net.toUri
@@ -21,6 +22,8 @@ import com.ledvance.light.navigation.lightDetailsScreen
 import com.ledvance.light.navigation.navigateToLightDetails
 import com.ledvance.search.navigation.navigateToSearch
 import com.ledvance.search.navigation.searchScreen
+import com.ledvance.setting.navigation.navigateToSetting
+import com.ledvance.setting.navigation.settingScreen
 import com.ledvance.ui.navigation.NavigationRoute
 import com.ledvance.ui.navigation.PageLifecycleLogger
 import com.ledvance.ui.theme.AppTheme
@@ -38,7 +41,7 @@ fun MainNavigation(appState: LedvanceAppState) {
     val backStack = rememberMutableStateListOf<NavigationRoute>(HomeRoute)
     NavDisplay(
         backStack = backStack,
-        onBack = { backStack.removeLastOrNull() },
+        onBack = { backStack.back() },
         entryDecorators = listOf(
             rememberSaveableStateHolderNavEntryDecorator(),
             rememberViewModelStoreNavEntryDecorator(),
@@ -69,18 +72,27 @@ fun MainNavigation(appState: LedvanceAppState) {
             )
 
             searchScreen(onBackClick = {
-                backStack.removeLastOrNull()
+                backStack.back()
             })
 
-            lightDetailsScreen(onBackClick = {
-                backStack.removeLastOrNull()
+            lightDetailsScreen(
+                onNavigateToSetting = {
+                    backStack.navigateToSetting(it)
+                },
+                onBackClick = {
+                    backStack.back()
+                },
+            )
+
+            settingScreen(onBackClick = {
+                backStack.back()
             })
 
             entry<OpenSourceLicensesRoute> {
                 PageLifecycleLogger("OpenSourceLicensesRoute")
                 LicensesScreen(
                     onBack = {
-                        backStack.removeLastOrNull()
+                        backStack.back()
                     },
                     onClickLicense = {
                         when {
@@ -103,10 +115,14 @@ fun MainNavigation(appState: LedvanceAppState) {
             entry<LicenseContentRoute> {
                 PageLifecycleLogger("LicenseContentRoute")
                 LicenseContentScreen(license = it.license) {
-                    backStack.removeLastOrNull()
+                    backStack.back()
                 }
             }
         }
     )
 }
 
+
+fun SnapshotStateList<Any>.back() {
+    removeLastOrNull()
+}

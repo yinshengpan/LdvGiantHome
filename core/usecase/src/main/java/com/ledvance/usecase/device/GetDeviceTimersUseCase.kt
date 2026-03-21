@@ -6,10 +6,14 @@ import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.TimerUiItem
 import com.ledvance.domain.bean.command.timer.toTimerRepeat
 import com.ledvance.domain.bean.toDisplayText
+import com.ledvance.domain.di.Dispatcher
+import com.ledvance.domain.di.Dispatchers
 import com.ledvance.usecase.base.FlowUseCase
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 /**
  * @author : jason yin
@@ -17,8 +21,9 @@ import kotlinx.coroutines.flow.map
  * Created date 3/20/26 15:30
  * Describe : GetDeviceTimersUseCase
  */
-class GetDeviceTimersUseCase(
-    dispatcher: CoroutineDispatcher,
+@ViewModelScoped
+class GetDeviceTimersUseCase @Inject constructor(
+    @Dispatcher(Dispatchers.IO) dispatcher: CoroutineDispatcher,
     private val timerRepo: TimerRepo,
 ) : FlowUseCase<DeviceId, List<TimerUiItem>>(dispatcher) {
     @SuppressLint("DefaultLocale")

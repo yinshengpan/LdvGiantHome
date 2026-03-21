@@ -2,6 +2,7 @@ package com.ledvance.setting.navigation
 
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation3.runtime.EntryProviderScope
+import com.ledvance.domain.bean.DeviceId
 import com.ledvance.setting.SettingScreen
 import com.ledvance.ui.navigation.NavigationRoute
 import com.ledvance.ui.navigation.PageLifecycleLogger
@@ -14,19 +15,20 @@ import kotlinx.serialization.Serializable
  * Describe : SettingNavigation
  */
 @Serializable
-data object SettingRoute : NavigationRoute
+data class SettingRoute(val deviceId: DeviceId) : NavigationRoute
 
-fun SnapshotStateList<Any>.navigateToSetting() {
-    add(SettingRoute)
+fun SnapshotStateList<Any>.navigateToSetting(deviceId: DeviceId) {
+    add(SettingRoute(deviceId))
 }
 
 fun EntryProviderScope<Any>.settingScreen(
-    onNavigateToAddNewDevice: () -> Unit,
+    onBackClick: () -> Unit,
 ) {
     entry<SettingRoute> {
         PageLifecycleLogger("SettingRoute")
         SettingScreen(
-            onToAddNewDevice = onNavigateToAddNewDevice
+            deviceId = it.deviceId,
+            onBackClick = onBackClick
         )
     }
 }

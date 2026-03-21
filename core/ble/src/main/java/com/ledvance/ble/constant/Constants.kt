@@ -15,10 +15,10 @@ object Constants {
     internal val WRITE_CHAR_UUID: UUID = UUID.fromString("0000FFF3-0000-1000-8000-00805F9B34FB")
     internal val NOTIFY_CHAR_UUID: UUID = UUID.fromString("0000FFF4-0000-1000-8000-00805F9B34FB")
 
-    internal const val START_FLAG: Byte = 0x68.toByte()
-    internal const val MAX_DATA_LEN = 250
-    internal const val DEFAULT_PART_SIZE = 200 // per doc default
-    internal const val FRAME_INTERVAL_MS = 100L // ≥50ms, pick 60ms safety margin
+    // Device Information Service
+    internal val DEVICE_INFO_SERVICE_UUID: UUID = UUID.fromString("0000180A-0000-1000-8000-00805F9B34FB")
+    internal val FIRMWARE_REVISION_UUID: UUID = UUID.fromString("00002A26-0000-1000-8000-00805F9B34FB")
 
-    val tripCurrentRange = IntRange(1, 1000)
+    internal const val DEFAULT_PART_SIZE = 240
+    internal const val FRAME_INTERVAL_MS = 100L // ≥50ms, pick 60ms safety margin
 }

@@ -5,6 +5,7 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.ledvance.database.converter.DeviceIdConverter
 import com.ledvance.database.converter.DeviceTypeConverter
+import com.ledvance.database.converter.LineSequenceConverter
 import com.ledvance.database.converter.ModeIdConverter
 import com.ledvance.database.converter.ModeTypeConverter
 import com.ledvance.database.converter.StringListConverter
@@ -35,6 +36,7 @@ import com.ledvance.database.model.TimerEntity
         TimerTypeConverter::class,
         ModeIdConverter::class,
         ModeTypeConverter::class,
+        LineSequenceConverter::class,
     ]
 )
 abstract class AppDatabase : RoomDatabase() {

@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "d9847d417b1ed3e74381ea496ec74d7b",
+    "identityHash": "7c9252c5ab2998e0f96e7475baa756f9",
     "entities": [
       {
         "tableName": "devices",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` TEXT NOT NULL, `name` TEXT NOT NULL, `device_type` INTEGER NOT NULL, `work_mode` TEXT NOT NULL, `power` INTEGER NOT NULL, `mode_type` INTEGER, `mode_id` INTEGER, `speed` INTEGER NOT NULL, `h` INTEGER NOT NULL, `s` INTEGER NOT NULL, `v` INTEGER NOT NULL, `cct` INTEGER NOT NULL, `brightness` INTEGER NOT NULL, PRIMARY KEY(`device_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` TEXT NOT NULL, `name` TEXT NOT NULL, `device_type` INTEGER NOT NULL, `work_mode` TEXT NOT NULL, `power` INTEGER NOT NULL, `line_sequence` INTEGER NOT NULL, `mode_type` INTEGER, `mode_id` INTEGER, `speed` INTEGER NOT NULL, `h` INTEGER NOT NULL, `s` INTEGER NOT NULL, `v` INTEGER NOT NULL, `cct` INTEGER NOT NULL, `brightness` INTEGER NOT NULL, `firmware_version` TEXT NOT NULL, PRIMARY KEY(`device_id`))",
         "fields": [
           {
             "fieldPath": "deviceId",
@@ -35,6 +35,12 @@
           {
             "fieldPath": "power",
             "columnName": "power",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lineSequence",
+            "columnName": "line_sequence",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -82,6 +88,12 @@
             "fieldPath": "brightness",
             "columnName": "brightness",
             "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "firmwareVersion",
+            "columnName": "firmware_version",
+            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -144,7 +156,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd9847d417b1ed3e74381ea496ec74d7b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7c9252c5ab2998e0f96e7475baa756f9')"
     ]
   }
 }

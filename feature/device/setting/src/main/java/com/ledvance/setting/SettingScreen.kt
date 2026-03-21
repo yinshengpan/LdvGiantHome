@@ -2,9 +2,12 @@ package com.ledvance.setting
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ledvance.domain.bean.DeviceId
 import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceScreen
 import com.ledvance.ui.theme.AppTheme
@@ -17,18 +20,27 @@ import com.ledvance.ui.theme.AppTheme
  */
 @Composable
 internal fun SettingScreen(
-    viewModel: SettingContract = hiltViewModel<SettingViewModel>(),
-    onToAddNewDevice: () -> Unit,
+    deviceId: DeviceId,
+    viewModel: SettingContract = hiltViewModel<SettingViewModel, SettingViewModel.Factory>(creationCallback = {
+        it.create(deviceId = deviceId)
+    }),
+    onBackClick: () -> Unit,
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LedvanceScreen(
         topBarContainerColor = AppTheme.colors.primaryBackground,
         topBarContentColor = AppTheme.colors.primaryContent,
         horizontalAlignment = Alignment.CenterHorizontally,
-        actionIconPainter = painterResource(R.drawable.ic_add),
-        onActionPressed = onToAddNewDevice,
+        onBackPressed = onBackClick,
         verticalArrangement = Arrangement.Center,
-        title = "Ldv Giant Home",
+        title = "Setting",
     ) {
-
+        when (uiState) {
+            SettingContract.UiState.Error -> {}
+            SettingContract.UiState.Loading -> {}
+            is SettingContract.UiState.Success -> {
+                SettingScreenContent(uiState as SettingContract.UiState.Success)
+            }
+        }
     }
 }

@@ -2,11 +2,15 @@ package com.ledvance.usecase.device
 
 import com.ledvance.ble.core.DeviceRegistry
 import com.ledvance.domain.bean.DeviceState
+import com.ledvance.domain.di.Dispatcher
+import com.ledvance.domain.di.Dispatchers
 import com.ledvance.usecase.base.FlowUseCaseWithoutParameter
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 /**
  * @author : jason yin
@@ -14,8 +18,9 @@ import kotlinx.coroutines.flow.map
  * Created date 3/19/26 14:10
  * Describe : GetDeviceListStateUseCase
  */
-class GetDeviceListStateUseCase(
-    dispatcher: CoroutineDispatcher,
+@ViewModelScoped
+class GetDeviceListStateUseCase @Inject constructor(
+    @Dispatcher(Dispatchers.IO) dispatcher: CoroutineDispatcher,
     private val deviceRegistry: DeviceRegistry
 ) : FlowUseCaseWithoutParameter<List<DeviceState>>(dispatcher) {
     override fun execute(parameter: Unit): Flow<List<DeviceState>> {

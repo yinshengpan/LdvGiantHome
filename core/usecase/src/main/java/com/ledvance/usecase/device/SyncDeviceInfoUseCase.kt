@@ -3,8 +3,11 @@ package com.ledvance.usecase.device
 import com.ledvance.ble.core.DeviceRegistry
 import com.ledvance.database.model.DeviceBaseUpdateEntity
 import com.ledvance.database.repo.DeviceRepo
+import com.ledvance.domain.di.Dispatcher
+import com.ledvance.domain.di.Dispatchers
 import com.ledvance.usecase.base.UseCase
 import com.ledvance.utils.ColorUtils
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -13,6 +16,7 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import javax.inject.Inject
 
 /**
  * @author : jason yin
@@ -20,8 +24,9 @@ import kotlinx.coroutines.flow.onEach
  * Created date 3/19/26 14:30
  * Describe : SyncDeviceInfoUseCase
  */
-class SyncDeviceInfoUseCase(
-    private val dispatcher: CoroutineDispatcher,
+@ViewModelScoped
+class SyncDeviceInfoUseCase @Inject constructor(
+    @Dispatcher(Dispatchers.IO) private val dispatcher: CoroutineDispatcher,
     private val deviceRegistry: DeviceRegistry,
     private val deviceRepo: DeviceRepo,
 ) : UseCase<CoroutineScope, Job>() {

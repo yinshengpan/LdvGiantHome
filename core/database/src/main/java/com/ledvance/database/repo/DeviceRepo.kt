@@ -5,6 +5,8 @@ import com.ledvance.database.model.DeviceBaseUpdateEntity
 import com.ledvance.database.model.DeviceEntity
 import com.ledvance.database.model.DevicePowerUpdateEntity
 import com.ledvance.domain.bean.DeviceId
+import com.ledvance.domain.bean.WorkMode
+import com.ledvance.domain.bean.command.LineSequence
 import com.ledvance.utils.extensions.tryCatch
 import com.ledvance.utils.extensions.tryCatchReturn
 import kotlinx.coroutines.Dispatchers
@@ -37,6 +39,38 @@ class DeviceRepo @Inject constructor(
 
     suspend fun updateDevicePower(deviceId: DeviceId, power: Boolean) = withContext(Dispatchers.IO) {
         tryCatch { deviceDao.updateDevicePower(deviceId, power) }
+    }
+
+    suspend fun updateDeviceHs(deviceId: DeviceId, h: Int, s: Int) = withContext(Dispatchers.IO) {
+        tryCatch { deviceDao.updateDeviceHs(deviceId, h, s) }
+    }
+
+    suspend fun updateDeviceV(deviceId: DeviceId, v: Int) = withContext(Dispatchers.IO) {
+        tryCatch { deviceDao.updateDeviceV(deviceId, v) }
+    }
+
+    suspend fun updateDeviceCct(deviceId: DeviceId, cct: Int) = withContext(Dispatchers.IO) {
+        tryCatch { deviceDao.updateDeviceCct(deviceId, cct) }
+    }
+
+    suspend fun updateDeviceBrightness(deviceId: DeviceId, brightness: Int) = withContext(Dispatchers.IO) {
+        tryCatch { deviceDao.updateDeviceBrightness(deviceId, brightness) }
+    }
+
+    suspend fun updateDeviceSpeed(deviceId: DeviceId, speed: Int) = withContext(Dispatchers.IO) {
+        tryCatch { deviceDao.updateDeviceSpeed(deviceId, speed) }
+    }
+
+    suspend fun updateDeviceWorkMode(deviceId: DeviceId, workMode: WorkMode) = withContext(Dispatchers.IO) {
+        tryCatch { deviceDao.updateDeviceWorkMode(deviceId, workMode) }
+    }
+
+    suspend fun updateDeviceLineSequence(deviceId: DeviceId, lineSequence: LineSequence) = withContext(Dispatchers.IO) {
+        tryCatch { deviceDao.updateDeviceLineSequence(deviceId, lineSequence) }
+    }
+
+    suspend fun updateDeviceFirmwareVersion(deviceId: DeviceId, firmwareVersion: String) = withContext(Dispatchers.IO) {
+        tryCatch { deviceDao.updateDeviceFirmwareVersion(deviceId, firmwareVersion) }
     }
 
     suspend fun updateDevicePower(list: List<Pair<DeviceId, Boolean>>) = withContext(Dispatchers.IO) {

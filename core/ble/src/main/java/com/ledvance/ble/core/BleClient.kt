@@ -53,39 +53,59 @@ class BleClient(
     val isConnected: Boolean
         get() = _state.value == ConnectionState.CONNECTED
 
-    suspend fun connect() : Boolean{
+    suspend fun connect(): Boolean {
+        Timber.tag(TAG).d("--> START connect(deviceId=$deviceId)")
         try {
             _state.value = ConnectionState.CONNECTING
+            val macAddress = deviceId.asMacAddress()
+            Timber.tag(TAG).d("connect: attempting to connect to $macAddress")
             val gatt = withTimeoutOrNull(15_000) {
-                bleRepository.connectDevice(deviceId.asMacAddress(), scope)
-            } ?: return fail("timeout")
+                bleRepository.connectDevice(macAddress, scope)
+            } ?: run {
+                Timber.tag(TAG).e("connect: connection timeout")
+                return fail("timeout")
+            }
 
+            Timber.tag(TAG).d("connect: connection established, discovering services...")
             val service = gatt.discoverServices()
                 .findService(Constants.SERVICE_UUID)
-                ?: return fail("service not found")
+                ?: run {
+                    Timber.tag(TAG).e("connect: main service not found (${Constants.SERVICE_UUID})")
+                    return fail("service not found")
+                }
 
             writeChar = service.findCharacteristic(Constants.WRITE_CHAR_UUID)
-                ?: return fail("rx not found")
+                ?: run {
+                    Timber.tag(TAG).e("connect: write characteristic not found")
+                    return fail("rx not found")
+                }
 
             notifyChar = service.findCharacteristic(Constants.NOTIFY_CHAR_UUID)
-                ?: return fail("tx not found")
+                ?: run {
+                    Timber.tag(TAG).e("connect: notify characteristic not found")
+                    return fail("tx not found")
+                }
 
+            Timber.tag(TAG).d("connect: requesting MTU 517...")
             tryCatch { gatt.requestMtu(517) }
 
             this.gatt = gatt
-
             observeNotify()
 
             _state.value = ConnectionState.CONNECTED
+            Timber.tag(TAG).d("connect: fully initialized, syncing device info/time")
             protocol.queryDeviceInfo()
             protocol.syncCurrentTime()
+            Timber.tag(TAG).d("<-- END connect: success")
             return true
         } catch (e: Exception) {
+            Timber.tag(TAG).e(e, "connect: exception occurred")
             return fail("exception ${e.stackTraceToString()}")
         }
     }
 
     fun disconnect() {
+        Timber.tag(TAG).d("disconnect(deviceId=$deviceId)")
         gatt?.disconnect()
         gatt?.close()
         gatt = null
@@ -95,28 +115,80 @@ class BleClient(
     }
 
     private suspend fun observeNotify() {
+        Timber.tag(TAG).d("observeNotify: starting notification stream")
         notifyChar?.getNotifications()
             ?.onEach {
                 val bytes = it.value
-                Timber.d("observeNotify ${it.value.toHexString().uppercase()}")
+                Timber.tag(TAG).d("onNotificationReceived: ${bytes.toHexString().uppercase()}")
                 onNotificationReceived?.invoke(bytes)
             }
             ?.catch {
-                Timber.tag(TAG).e(it, "getNotifications")
+                Timber.tag(TAG).e(it, "observeNotify: stream error")
             }
             ?.launchIn(scope)
     }
 
     @SuppressLint("MissingPermission")
-    suspend fun write(data: ByteArray, writeType: BleWriteType = BleWriteType.NO_RESPONSE) {
+    suspend fun write(data: ByteArray, writeType: BleWriteType = BleWriteType.NO_RESPONSE): Boolean {
         delay(Constants.FRAME_INTERVAL_MS)
-        Timber.tag(TAG).d("write ${data.toHexString()}")
-        tryCatch { writeChar?.write(DataByteArray(data), writeType) }
+        val dataStr = data.toHexString().uppercase()
+        Timber.tag(TAG).d("write: $dataStr (type=$writeType)")
+        try {
+            writeChar?.write(DataByteArray(data), writeType)
+            return true
+        } catch (e: Throwable) {
+            Timber.tag(TAG).e(e, "write failed: $dataStr")
+            return false
+        }
     }
 
     private fun fail(msg: String): Boolean {
-        Timber.tag(TAG).e(msg)
+        Timber.tag(TAG).e("fail: $msg")
         _state.value = ConnectionState.FAILED
         return false
+    }
+
+    @SuppressLint("MissingPermission")
+    suspend fun readFirmwareVersion(): String? {
+        Timber.tag(TAG).d("--> START readFirmwareVersion")
+        return try {
+            val service = gatt?.discoverServices()?.findService(Constants.DEVICE_INFO_SERVICE_UUID)
+            val char = service?.findCharacteristic(Constants.FIRMWARE_REVISION_UUID)
+            val bytes = char?.read()?.value
+            val version = bytes?.let { String(it) }
+            Timber.tag(TAG).d("<-- END readFirmwareVersion: success version=$version")
+            version
+        } catch (e: Exception) {
+            Timber.tag(TAG).e(e, "<-- END readFirmwareVersion: failed")
+            null
+        }
+    }
+
+    suspend fun updateFirmware(firmwareData: ByteArray): Boolean {
+        val totalSize = firmwareData.size
+        Timber.tag(TAG).d("--> START updateFirmware: totalSize=$totalSize")
+        val chunkSize = Constants.DEFAULT_PART_SIZE
+        return try {
+            for (i in firmwareData.indices step chunkSize) {
+                val end = minOf(i + chunkSize, totalSize)
+                val chunk = firmwareData.copyOfRange(i, end)
+                var success = false
+                var retryCount = 0
+                while (!success) {
+                    success = write(chunk)
+                    if (!success) {
+                        retryCount++
+                        Timber.tag(TAG).w("updateFirmware: write failed at offset $i, retry #$retryCount")
+                    }
+                }
+                val progress = (end * 100 / totalSize)
+                Timber.tag(TAG).v("updateFirmware: progress $progress% ($end/$totalSize)")
+            }
+            Timber.tag(TAG).d("<-- END updateFirmware: completed successfully")
+            true
+        } catch (e: Exception) {
+            Timber.tag(TAG).e(e, "<-- END updateFirmware: failed")
+            false
+        }
     }
 }

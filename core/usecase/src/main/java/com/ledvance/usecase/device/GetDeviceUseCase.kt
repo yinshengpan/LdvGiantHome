@@ -4,12 +4,16 @@ import com.ledvance.database.model.DeviceEntity
 import com.ledvance.database.repo.DeviceRepo
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceInfo
+import com.ledvance.domain.di.Dispatcher
+import com.ledvance.domain.di.Dispatchers
 import com.ledvance.usecase.base.FlowUseCase
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 /**
  * @author : jason yin
@@ -17,8 +21,9 @@ import kotlinx.coroutines.flow.map
  * Created date 3/19/26 15:33
  * Describe : GetDeviceUseCase
  */
-class GetDeviceUseCase(
-    dispatcher: CoroutineDispatcher,
+@ViewModelScoped
+class GetDeviceUseCase @Inject constructor(
+    @Dispatcher(Dispatchers.IO) dispatcher: CoroutineDispatcher,
     private val deviceRepo: DeviceRepo
 ) : FlowUseCase<DeviceId, DeviceInfo>(dispatcher) {
     override fun execute(parameter: DeviceId): Flow<DeviceInfo> {
@@ -34,6 +39,7 @@ internal fun DeviceEntity.toDeviceInfo(): DeviceInfo {
         deviceId = deviceId,
         deviceType = deviceType,
         workMode = workMode,
+        lineSequence = lineSequence,
         name = name,
         power = power,
         modeType = modeType,

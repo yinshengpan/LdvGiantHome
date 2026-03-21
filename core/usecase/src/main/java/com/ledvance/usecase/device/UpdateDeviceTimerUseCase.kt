@@ -6,8 +6,11 @@ import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.TimerUiItem
 import com.ledvance.domain.bean.command.timer.TimerRepeat
 import com.ledvance.domain.bean.command.timer.toByte
+import com.ledvance.domain.di.Dispatcher
+import com.ledvance.domain.di.Dispatchers
 import com.ledvance.usecase.base.SuspendUseCase
 import com.ledvance.utils.extensions.toBinary8
+import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import timber.log.Timber
 import javax.inject.Inject
@@ -18,8 +21,9 @@ import javax.inject.Inject
  * Created date 3/20/26 15:35
  * Describe : UpdateDeviceTimerUseCase
  */
-class UpdateDeviceTimerUseCase(
-    dispatcher: CoroutineDispatcher,
+@ViewModelScoped
+class UpdateDeviceTimerUseCase @Inject constructor(
+    @Dispatcher(Dispatchers.IO) dispatcher: CoroutineDispatcher,
     private val timerRepo: TimerRepo,
     private val deviceControlUseCase: DeviceControlUseCase
 ) : SuspendUseCase<UpdateDeviceTimerUseCase.Param, Unit>(dispatcher) {

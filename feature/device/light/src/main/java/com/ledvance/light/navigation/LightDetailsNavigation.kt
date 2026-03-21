@@ -22,13 +22,15 @@ fun SnapshotStateList<Any>.navigateToLightDetails(deviceId: DeviceId) {
 }
 
 fun EntryProviderScope<Any>.lightDetailsScreen(
+    onNavigateToSetting: (DeviceId) -> Unit,
     onBackClick: () -> Unit,
 ) {
     entry<LightDetailsRoute> {
         PageLifecycleLogger("LightDetailsRoute")
         LightDetailsScreen(
             deviceId = it.deviceId,
-            onBackClick = onBackClick
+            onNavigateToSetting = onNavigateToSetting,
+            onBackClick = onBackClick,
         )
     }
 }

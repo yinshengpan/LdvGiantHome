@@ -12,6 +12,7 @@ import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceStateUseCase
 import com.ledvance.usecase.device.GetDeviceTimersUseCase
 import com.ledvance.usecase.device.GetDeviceUseCase
+import com.ledvance.usecase.device.SyncDeviceFirmwareUseCase
 import com.ledvance.usecase.device.SyncDeviceTimerUseCase
 import com.ledvance.usecase.device.UpdateDeviceTimerUseCase
 import dagger.assisted.Assisted
@@ -46,6 +47,7 @@ internal class LightDetailsViewModel @AssistedInject constructor(
     private val getDeviceTimersUseCase: GetDeviceTimersUseCase,
     private val updateDeviceTimerUseCase: UpdateDeviceTimerUseCase,
     private val syncDeviceTimerUseCase: SyncDeviceTimerUseCase,
+    private val syncDeviceFirmwareUseCase: SyncDeviceFirmwareUseCase,
 ) : ViewModel(), LightDetailsContract {
 
     @AssistedFactory
@@ -97,6 +99,7 @@ internal class LightDetailsViewModel @AssistedInject constructor(
             deviceControlUseCase.queryDeviceInfo(deviceId)
             deviceControlUseCase.syncDeviceTime(deviceId)
             deviceControlUseCase.queryTimer(deviceId)
+            syncDeviceFirmwareUseCase(deviceId)
         }
         viewModelScope.launch {
             commandFlow.sample(300).collectLatest {
@@ -120,6 +123,10 @@ internal class LightDetailsViewModel @AssistedInject constructor(
 
                     is Command.Speed -> {
                         deviceControlUseCase.setSpeed(deviceId, it.speed)
+                    }
+
+                    is Command.Mode -> {
+                        deviceControlUseCase.setMode(deviceId, it.modeId)
                     }
                 }
             }
@@ -181,9 +188,7 @@ internal class LightDetailsViewModel @AssistedInject constructor(
     }
 
     override fun onModeIdChange(modeId: ModeId) {
-        viewModelScope.launch {
-            deviceControlUseCase.setMode(deviceId, modeId)
-        }
+        commandFlow.tryEmit(Command.Mode(modeId))
     }
 
     override fun onTimerSwitchChange(timerType: TimerType, enabled: Boolean) {
@@ -227,5 +232,6 @@ internal class LightDetailsViewModel @AssistedInject constructor(
         data class WhiteModeCct(val cct: Int) : Command
         data class WhiteModeBrightness(val brightness: Int) : Command
         data class Speed(val speed: Int) : Command
+        data class Mode(val modeId: ModeId) : Command
     }
 }

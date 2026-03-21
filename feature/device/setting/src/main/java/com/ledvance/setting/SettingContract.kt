@@ -1,6 +1,7 @@
 package com.ledvance.setting
 
 import androidx.compose.runtime.Immutable
+import com.ledvance.domain.bean.command.LineSequence
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -17,11 +18,24 @@ internal interface SettingContract {
         data object Loading : UiState
 
         @Immutable
-        data object Success : UiState
+        data class Success(
+            val isOnline: Boolean,
+            val deviceName: String,
+            val deviceMacAddress: String,
+            val deviceTypeName: String,
+            val deviceIconResId: Int,
+            val lineSequence: LineSequence,
+            val firmwareVersion: String,
+            val latestFirmwareVersion: String
+        ) : UiState
 
         @Immutable
         data object Error : UiState
     }
 
     val uiState: StateFlow<UiState>
+
+    fun resetDevice()
+    fun setLineSequence(lineSequence: LineSequence)
+    fun upgradeFirmware()
 }
