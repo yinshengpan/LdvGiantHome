@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
  * Describe : HomeContract
  */
 internal interface HomeContract {
+
     @Immutable
     sealed interface UiState {
 
@@ -21,6 +22,7 @@ internal interface HomeContract {
         @Immutable
         data class Success(
             val devices: List<DeviceUiItem>,
+             val commandLoading: Boolean = false,
         ) : UiState
 
         @Immutable

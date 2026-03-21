@@ -50,6 +50,7 @@ internal class LightDetailsViewModel @AssistedInject constructor(
     private val syncDeviceFirmwareUseCase: SyncDeviceFirmwareUseCase,
 ) : ViewModel(), LightDetailsContract {
 
+
     @AssistedFactory
     interface Factory {
         fun create(deviceId: DeviceId): LightDetailsViewModel
@@ -81,6 +82,7 @@ internal class LightDetailsViewModel @AssistedInject constructor(
             offTimer = offTimer,
             modeType = device.modeType,
             modeId = device.modeId,
+            commandLoading = screenState.commandLoading,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -135,7 +137,12 @@ internal class LightDetailsViewModel @AssistedInject constructor(
 
     override fun onSwitchChange(switch: Boolean) {
         viewModelScope.launch {
-            deviceControlUseCase.setPower(deviceId, switch)
+            screenState.update { it.copy(commandLoading = true) }
+            val success = deviceControlUseCase.setPower(deviceId, switch)
+            if (!success) {
+                SnackbarManager.showGenericError()
+            }
+            screenState.update { it.copy(commandLoading = false) }
         }
     }
 
@@ -178,7 +185,12 @@ internal class LightDetailsViewModel @AssistedInject constructor(
 
     override fun onSceneChange(scene: Scene) {
         viewModelScope.launch {
-            deviceControlUseCase.setScene(deviceId, scene)
+            screenState.update { it.copy(commandLoading = true) }
+            val success = deviceControlUseCase.setScene(deviceId, scene)
+            if (!success) {
+                SnackbarManager.showGenericError()
+            }
+            screenState.update { it.copy(commandLoading = false) }
         }
     }
 
@@ -207,18 +219,28 @@ internal class LightDetailsViewModel @AssistedInject constructor(
         val currentState = uiState.value as? LightDetailsContract.UiState.Success ?: return
         val timer = (if (timerType == TimerType.ON) currentState.onTimer else currentState.offTimer)
         viewModelScope.launch {
-            updateDeviceTimerUseCase(
+            screenState.update { it.copy(commandLoading = true) }
+            val success = updateDeviceTimerUseCase(
                 parameter = UpdateDeviceTimerUseCase.Param(
                     deviceId = deviceId,
                     timer = transform(timer)
                 )
             )
+            if (success.isFailure || !success.getOrDefault(false)) {
+                SnackbarManager.showGenericError()
+            }
+            screenState.update { it.copy(commandLoading = false) }
         }
     }
 
     override fun onReconnect() {
         viewModelScope.launch {
-            deviceControlUseCase.onReconnect(deviceId)
+            screenState.update { it.copy(commandLoading = true) }
+            val success = deviceControlUseCase.onReconnect(deviceId)
+            if (!success) {
+                SnackbarManager.showGenericError()
+            }
+            screenState.update { it.copy(commandLoading = false) }
         }
     }
 
@@ -230,6 +252,7 @@ internal class LightDetailsViewModel @AssistedInject constructor(
         val whiteModeCct: Int = -1,
         val whiteModeBrightness: Int = -1,
         val speed: Int = -1,
+        val commandLoading: Boolean = false,
     )
 
     sealed interface Command {

@@ -80,4 +80,5 @@
     <string name="version">"Version"</string>
     <string name="wrong_qr_code_dialog_content">"This QR code is not the product SN. Please scan the SN label printed on the box."</string>
     <string name="wrong_qr_code_dialog_title">"Wrong QR Code Detected"</string>
+    <string name="command_failed" translatable="false">"Command execution failed"</string>
 </resources>

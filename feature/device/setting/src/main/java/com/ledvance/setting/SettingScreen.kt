@@ -18,6 +18,7 @@ import com.ledvance.ui.component.LedvanceScreen
 import com.ledvance.ui.component.OfflineBanner
 import com.ledvance.ui.dialog.LedvanceDialog
 import com.ledvance.ui.theme.AppTheme
+import com.ledvance.vivares.directeasy.core.ui.util.OneTimeActionEffect
 
 /**
  * @author : jason yin
@@ -40,6 +41,14 @@ internal fun SettingScreen(
     var showResetDialog by remember { mutableStateOf(false) }
     var showUpgradeDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
+
+    viewModel.OneTimeActionEffect {
+        when (it) {
+            SettingContract.SettingOneTimeAction.DeleteSuccess -> {
+                onDeleteSuccess()
+            }
+        }
+    }
 
     LedvanceScreen(
         topBarContainerColor = AppTheme.colors.primaryBackground,
@@ -123,7 +132,6 @@ internal fun SettingScreen(
             onConfirm = {
                 viewModel.deleteDevice()
                 showDeleteDialog = false
-                onDeleteSuccess()
             }
         )
     }

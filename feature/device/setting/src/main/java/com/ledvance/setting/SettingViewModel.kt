@@ -9,11 +9,14 @@ import com.ledvance.domain.bean.command.LineSequence
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceStateUseCase
 import com.ledvance.usecase.device.GetDeviceUseCase
+import com.ledvance.vivares.directeasy.core.ui.util.OneTimeActionPublisherContract
+import com.ledvance.vivares.directeasy.core.ui.util.createDefaultMutableActionFlow
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
@@ -34,7 +37,11 @@ internal class SettingViewModel @AssistedInject constructor(
     private val getDeviceUseCase: GetDeviceUseCase,
     private val deviceControlUseCase: DeviceControlUseCase,
     private val deleteDeviceUseCase: com.ledvance.usecase.device.DeleteDeviceUseCase,
-) : ViewModel(), SettingContract {
+) : ViewModel(), SettingContract,
+    OneTimeActionPublisherContract<SettingContract.SettingOneTimeAction> {
+
+    override val mutableActionFlow: MutableSharedFlow<SettingContract.SettingOneTimeAction> =
+        createDefaultMutableActionFlow()
 
     @AssistedFactory
     interface Factory {
@@ -46,7 +53,7 @@ internal class SettingViewModel @AssistedInject constructor(
         flow2 = getDeviceStateUseCase(deviceId)
     ) { device, deviceState ->
         SettingContract.UiState.Success(
-            isOnline = deviceState?.isOnline ?: false,
+            isOnline = deviceState.isOnline,
             deviceName = device.name,
             deviceMacAddress = deviceId.asMacAddress(),
             deviceTypeName = device.deviceType.getDisplayName(),
@@ -86,6 +93,7 @@ internal class SettingViewModel @AssistedInject constructor(
     override fun deleteDevice() {
         viewModelScope.launch {
             deleteDeviceUseCase(deviceId)
+            publish(SettingContract.SettingOneTimeAction.DeleteSuccess)
         }
     }
 

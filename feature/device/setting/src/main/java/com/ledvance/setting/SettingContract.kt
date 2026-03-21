@@ -2,6 +2,8 @@ package com.ledvance.setting
 
 import androidx.compose.runtime.Immutable
 import com.ledvance.domain.bean.command.LineSequence
+import com.ledvance.vivares.directeasy.core.ui.util.OneTimeAction
+import com.ledvance.vivares.directeasy.core.ui.util.OneTimeActionConsumerContract
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -10,7 +12,13 @@ import kotlinx.coroutines.flow.StateFlow
  * Created date 3/18/26 10:36
  * Describe : SettingContract
  */
-internal interface SettingContract {
+internal interface SettingContract :
+    OneTimeActionConsumerContract<SettingContract.SettingOneTimeAction> {
+
+    sealed interface SettingOneTimeAction : OneTimeAction {
+        data object DeleteSuccess : SettingOneTimeAction
+    }
+
     @Immutable
     sealed interface UiState {
 

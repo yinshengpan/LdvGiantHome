@@ -33,8 +33,8 @@ internal class SearchViewModel @Inject constructor(
 ) : ViewModel(), SearchContract,
     OneTimeActionPublisherContract<SearchContract.SearchOneTimeAction> {
 
-    override val mutableActionFlow: MutableSharedFlow<SearchContract.SearchOneTimeAction>
-        get() = createDefaultMutableActionFlow()
+    override val mutableActionFlow: MutableSharedFlow<SearchContract.SearchOneTimeAction> =
+        createDefaultMutableActionFlow()
 
     override val uiState: StateFlow<SearchContract.UiState> = combine(
         flow = bleSearchUseCase.scanDeviceListFlow,

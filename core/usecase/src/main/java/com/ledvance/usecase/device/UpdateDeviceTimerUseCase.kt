@@ -26,9 +26,9 @@ class UpdateDeviceTimerUseCase @Inject constructor(
     @Dispatcher(Dispatchers.IO) dispatcher: CoroutineDispatcher,
     private val timerRepo: TimerRepo,
     private val deviceControlUseCase: DeviceControlUseCase
-) : SuspendUseCase<UpdateDeviceTimerUseCase.Param, Unit>(dispatcher) {
+) : SuspendUseCase<UpdateDeviceTimerUseCase.Param, Boolean>(dispatcher) {
     private val TAG = "UpdateDeviceTimerUseCas"
-    override suspend fun execute(parameter: Param) {
+    override suspend fun execute(parameter: Param): Boolean {
         with(parameter) {
             val weekCycle = TimerRepeat(enabled = timer.enabled, days = timer.days.toSet()).toByte().toInt() and 0xFF
             Timber.tag(TAG).d("execute() $deviceId ${weekCycle.toBinary8()}")
@@ -43,7 +43,7 @@ class UpdateDeviceTimerUseCase @Inject constructor(
                 )
             )
 
-            deviceControlUseCase.setTimer(
+            return deviceControlUseCase.setTimer(
                 deviceId = deviceId,
                 timerType = timer.timerType,
                 hour = timer.hour,

@@ -6,6 +6,7 @@ package com.ledvance.home
  * Created date 3/18/26 10:37
  * Describe : HomeViewModel
  */
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ledvance.ble.core.ConnectionManager
@@ -17,6 +18,7 @@ import com.ledvance.usecase.device.GetDevicesUseCase
 import com.ledvance.usecase.device.SyncDeviceInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -37,11 +39,14 @@ internal class HomeViewModel @Inject constructor(
     private val syncDeviceInfoUseCase: SyncDeviceInfoUseCase,
     private val deleteDeviceUseCase: com.ledvance.usecase.device.DeleteDeviceUseCase,
 ) : ViewModel(), HomeContract {
+
     private val TAG = "HomeViewModel"
+    private val commandLoading = MutableStateFlow(false)
     override val uiState: StateFlow<HomeContract.UiState> = combine(
         getDevicesUseCase(),
-        getDeviceListStateUseCase()
-    ) { dbDevices, deviceStateList ->
+        getDeviceListStateUseCase(),
+        commandLoading
+    ) { dbDevices, deviceStateList, loading ->
         if (dbDevices.isEmpty()) {
             HomeContract.UiState.Empty
         } else {
@@ -50,7 +55,7 @@ internal class HomeViewModel @Inject constructor(
             val mergedDevices = dbDevices.map { device ->
                 device.copy(isOnline = onlineMap[device.deviceId] ?: false)
             }
-            HomeContract.UiState.Success(devices = mergedDevices)
+            HomeContract.UiState.Success(devices = mergedDevices, commandLoading = loading)
         }
     }
         .onStart {
@@ -98,7 +103,12 @@ internal class HomeViewModel @Inject constructor(
 
     override fun onSwitchChange(deviceId: DeviceId, switch: Boolean) {
         viewModelScope.launch {
-            deviceControlUseCase.setPower(deviceId, switch)
+            commandLoading.value = true
+            val success = deviceControlUseCase.setPower(deviceId, switch)
+            if (!success) {
+                SnackbarManager.showGenericError()
+            }
+            commandLoading.value = false
         }
     }
 
@@ -123,7 +133,12 @@ internal class HomeViewModel @Inject constructor(
 
     override fun onDeleteDevice(deviceId: DeviceId) {
         viewModelScope.launch {
-            deleteDeviceUseCase(deviceId)
+            commandLoading.value = true
+            val result = runCatching { deleteDeviceUseCase(deviceId) }
+            if (result.isFailure) {
+                SnackbarManager.showGenericError()
+            }
+            commandLoading.value = false
         }
     }
 }

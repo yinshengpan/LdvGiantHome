@@ -18,6 +18,7 @@ import java.time.DayOfWeek
  * Describe : LightDetailsContract
  */
 internal interface LightDetailsContract {
+
     @Immutable
     sealed interface UiState {
 
@@ -41,6 +42,7 @@ internal interface LightDetailsContract {
             val offTimer: TimerUiItem,
             val modeType: ModeType?,
             val modeId: ModeId?,
+            val commandLoading: Boolean = false,
         ) : UiState
 
         @Immutable

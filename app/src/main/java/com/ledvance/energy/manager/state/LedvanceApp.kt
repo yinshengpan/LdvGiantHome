@@ -1,5 +1,6 @@
 package com.ledvance.energy.manager.state
 
+import android.annotation.SuppressLint
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -14,8 +15,12 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import com.ledvance.energy.manager.navigation.MainNavigation
 import com.ledvance.energy.manager.navigation.MainNavigationScaffold
 import com.ledvance.energy.manager.navigation.TopLevelDestination
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.platform.LocalContext
+import com.ledvance.ui.component.showToast
 import com.ledvance.ui.theme.AppTheme
 import com.ledvance.ui.theme.LocalSnackBarHostState
+import kotlinx.coroutines.flow.collectLatest
 
 /**
  * @author : jason yin
@@ -23,12 +28,24 @@ import com.ledvance.ui.theme.LocalSnackBarHostState
  * Created date 2023/11/22 16:04
  * Describe : LedvanceApp
  */
+@SuppressLint("LocalContextGetResourceValueCall")
 @Composable
 fun LedvanceApp(
     appState: LedvanceAppState = rememberLedvanceAppState(),
 ) {
+    val snackbarHostState = LocalSnackBarHostState.current
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        SnackbarManager.messages.collectLatest { message ->
+            val text = when (message) {
+                is SnackbarMessage.Resource -> context.getString(message.resId)
+                is SnackbarMessage.Text -> message.value
+            }
+            snackbarHostState.showToast(text)
+        }
+    }
     MainNavigationScaffold(
-        snackbarHost = { SnackbarHost(LocalSnackBarHostState.current) }
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) {
         MainNavigation(appState = appState)
     }
