@@ -33,6 +33,7 @@ internal class SettingViewModel @AssistedInject constructor(
     private val getDeviceStateUseCase: GetDeviceStateUseCase,
     private val getDeviceUseCase: GetDeviceUseCase,
     private val deviceControlUseCase: DeviceControlUseCase,
+    private val deleteDeviceUseCase: com.ledvance.usecase.device.DeleteDeviceUseCase,
 ) : ViewModel(), SettingContract {
 
     @AssistedFactory
@@ -79,6 +80,12 @@ internal class SettingViewModel @AssistedInject constructor(
     override fun onReconnect() {
         viewModelScope.launch {
             deviceControlUseCase.onReconnect(deviceId)
+        }
+    }
+
+    override fun deleteDevice() {
+        viewModelScope.launch {
+            deleteDeviceUseCase(deviceId)
         }
     }
 

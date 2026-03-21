@@ -84,9 +84,15 @@ fun MainNavigation(appState: LedvanceAppState) {
                 },
             )
 
-            settingScreen(onBackClick = {
-                backStack.back()
-            })
+            settingScreen(
+                onBackClick = {
+                    backStack.back()
+                },
+                onDeleteSuccess = {
+                    backStack.clear()
+                    backStack.add(HomeRoute)
+                }
+            )
 
             entry<OpenSourceLicensesRoute> {
                 PageLifecycleLogger("OpenSourceLicensesRoute")

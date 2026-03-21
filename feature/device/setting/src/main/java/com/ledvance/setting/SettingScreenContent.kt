@@ -1,10 +1,12 @@
 package com.ledvance.setting
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -33,11 +36,25 @@ import com.ledvance.ui.theme.AppTheme
  * Created date 3/18/26 15:35
  * Describe : SettingScreenContent
  */
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import com.ledvance.ui.component.LedvanceButton
+
 @Composable
-internal fun SettingScreenContent(uiState: SettingContract.UiState.Success) {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(horizontal = 20.dp)) {
+internal fun SettingScreenContent(
+    uiState: SettingContract.UiState.Success,
+    onLineSequenceClick: () -> Unit,
+    onResetClick: () -> Unit,
+    onUpgradeClick: () -> Unit,
+    onDeleteClick: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 20.dp)
+    ) {
         TitleItem("Basic Information")
         CardLayout {
             ContentItem(
@@ -68,15 +85,11 @@ internal fun SettingScreenContent(uiState: SettingContract.UiState.Success) {
                 title = "Line Sequence",
                 content = uiState.lineSequence.title,
                 showDivider = true,
-                onContentClick = {
-
-                }
+                onContentClick = onLineSequenceClick
             )
             ContentItem(
                 title = "Reset",
-                onContentClick = {
-
-                }
+                onContentClick = onResetClick
             )
         }
 
@@ -91,11 +104,19 @@ internal fun SettingScreenContent(uiState: SettingContract.UiState.Success) {
                 title = "Latest Version",
                 content = uiState.firmwareVersion,
                 showDivider = true,
-                onContentClick = {
-
-                }
+                onContentClick = onUpgradeClick
             )
         }
+
+        Spacer(modifier = Modifier.height(20.dp))
+        
+        LedvanceButton(
+            text = "Delete Device",
+            modifier = Modifier
+                .fillMaxWidth(),
+            onClick = onDeleteClick
+        )
+        Spacer(modifier = Modifier.height(50.dp))
     }
 }
 
@@ -126,7 +147,10 @@ private fun ContentItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp)
-            .height(54.dp),
+            .height(54.dp)
+            .debouncedClickable(enable = onContentClick != null, onClick = {
+                onContentClick?.invoke()
+            }),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -154,9 +178,6 @@ private fun ContentItem(
                     text = content,
                     style = AppTheme.typography.bodyMedium,
                     color = AppTheme.colors.body,
-                    modifier = Modifier.debouncedClickable(enable = onContentClick != null, onClick = {
-                        onContentClick?.invoke()
-                    })
                 )
             }
         }

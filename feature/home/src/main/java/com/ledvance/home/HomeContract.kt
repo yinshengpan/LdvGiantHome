@@ -34,4 +34,5 @@ internal interface HomeContract {
     fun disconnectDevice(deviceId: DeviceId)
     fun connectDevices(devices: List<DeviceUiItem>)
     fun disconnectAllDevices()
+    fun onDeleteDevice(deviceId: DeviceId)
 }

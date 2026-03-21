@@ -20,7 +20,7 @@ enum class DeviceType(val type: Int) {
             }
         }
         fun fromType(type: Int): DeviceType {
-            return entries.find { it.type == type } ?: DeviceType.Table
+            return entries.find { it.type == type } ?: Table
         }
     }
 }

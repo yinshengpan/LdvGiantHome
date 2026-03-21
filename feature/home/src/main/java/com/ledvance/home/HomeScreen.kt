@@ -9,21 +9,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ledvance.ui.R
-import com.ledvance.ui.component.LedvanceScreen
-import com.ledvance.ui.theme.AppTheme
-
-/**
- * @author : jason yin
- * Email : j.yin@ledvance.com
- * Created date 3/18/26 10:53
- * Describe : HomeScreen
- */
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.ledvance.domain.bean.DeviceId
+import com.ledvance.ui.component.LedvanceScreen
+import com.ledvance.ui.dialog.LedvanceDialog
 import com.ledvance.ui.state.rememberBluetoothBusinessState
+import com.ledvance.ui.theme.AppTheme
 import com.ledvance.utils.BluetoothManager
 
 @Composable
@@ -37,6 +31,7 @@ internal fun HomeScreen(
     var bluetoothPermission by remember { mutableStateOf(false) }
     val bluetoothBusinessState = rememberBluetoothBusinessState()
     var isResumed by remember { mutableStateOf(false) }
+    var deviceToDelete by remember { mutableStateOf<DeviceId?>(null) }
 
     LifecycleResumeEffect(Unit) {
         bluetoothPermission = bluetoothBusinessState.hasAllow()
@@ -82,8 +77,23 @@ internal fun HomeScreen(
                     onDeviceClick = {
                         onNavigateToControlPanel(it)
                     },
+                    onDeleteClick = {
+                        deviceToDelete = it
+                    }
                 )
             }
         }
+    }
+
+    if (deviceToDelete != null) {
+        LedvanceDialog(
+            title = "Delete Device",
+            message = "Are you sure you want to delete this device? This action cannot be undone.",
+            onCancel = { deviceToDelete = null },
+            onConfirm = {
+                viewModel.onDeleteDevice(deviceToDelete!!)
+                deviceToDelete = null
+            }
+        )
     }
 }

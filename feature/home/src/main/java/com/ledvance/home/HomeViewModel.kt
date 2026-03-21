@@ -35,6 +35,7 @@ internal class HomeViewModel @Inject constructor(
     private val connectionManager: ConnectionManager,
     private val getDeviceListStateUseCase: GetDeviceListStateUseCase,
     private val syncDeviceInfoUseCase: SyncDeviceInfoUseCase,
+    private val deleteDeviceUseCase: com.ledvance.usecase.device.DeleteDeviceUseCase,
 ) : ViewModel(), HomeContract {
     private val TAG = "HomeViewModel"
     override val uiState: StateFlow<HomeContract.UiState> = combine(
@@ -118,5 +119,11 @@ internal class HomeViewModel @Inject constructor(
     override fun disconnectAllDevices() {
         Timber.tag(TAG).d("disconnectAllDevices")
         connectionManager.disconnectAll()
+    }
+
+    override fun onDeleteDevice(deviceId: DeviceId) {
+        viewModelScope.launch {
+            deleteDeviceUseCase(deviceId)
+        }
     }
 }

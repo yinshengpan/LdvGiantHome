@@ -23,12 +23,14 @@ fun SnapshotStateList<Any>.navigateToSetting(deviceId: DeviceId) {
 
 fun EntryProviderScope<Any>.settingScreen(
     onBackClick: () -> Unit,
+    onDeleteSuccess: () -> Unit,
 ) {
     entry<SettingRoute> {
         PageLifecycleLogger("SettingRoute")
         SettingScreen(
             deviceId = it.deviceId,
-            onBackClick = onBackClick
+            onBackClick = onBackClick,
+            onDeleteSuccess = onDeleteSuccess
         )
     }
 }

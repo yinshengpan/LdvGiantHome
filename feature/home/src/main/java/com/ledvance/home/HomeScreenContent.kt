@@ -45,6 +45,7 @@ internal fun HomeScreenContent(
     onConnectClick: (DeviceId) -> Unit,
     onDisconnectClick: (DeviceId) -> Unit,
     onDeviceClick: (DeviceId) -> Unit,
+    onDeleteClick: (DeviceId) -> Unit,
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -64,7 +65,8 @@ internal fun HomeScreenContent(
                 onSwitchChange = onSwitchChange,
                 onConnectClick = onConnectClick,
                 onDisconnectClick = onDisconnectClick,
-                onClick = onDeviceClick
+                onClick = onDeviceClick,
+                onDeleteClick = onDeleteClick
             )
         }
     }
@@ -78,7 +80,8 @@ fun DeviceItem(
     onSwitchChange: (DeviceId, Boolean) -> Unit,
     onConnectClick: (DeviceId) -> Unit,
     onDisconnectClick: (DeviceId) -> Unit,
-    onClick: (DeviceId) -> Unit
+    onClick: (DeviceId) -> Unit,
+    onDeleteClick: (DeviceId) -> Unit
 ) {
     val colorFilter = remember {
         ColorFilter.colorMatrix(ColorMatrix().apply { setToSaturation(0F) })
@@ -121,14 +124,29 @@ fun DeviceItem(
                     )
                 }
             }
-            Text(
-                text = device.name,
-                maxLines = 2,
-                color = AppTheme.colors.title,
-                overflow = TextOverflow.Ellipsis,
-                style = AppTheme.typography.bodyMedium,
-                modifier = Modifier.padding(top = 20.dp, start = 10.dp, end = 10.dp)
-            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp, start = 10.dp, end = 10.dp),
+                verticalAlignment = androidx.compose.ui.Alignment.CenterVertically
+            ) {
+                Text(
+                    text = device.name,
+                    maxLines = 2,
+                    color = AppTheme.colors.title,
+                    overflow = TextOverflow.Ellipsis,
+                    style = AppTheme.typography.bodyMedium,
+                    modifier = Modifier.weight(1f)
+                )
+                Icon(
+                    painter = painterResource(R.drawable.ic_delete),
+                    contentDescription = "delete",
+                    modifier = Modifier
+                        .size(20.dp)
+                        .debouncedClickable { onDeleteClick.invoke(device.deviceId) },
+                    tint = AppTheme.colors.dialogNegative
+                )
+            }
         }
     }
 }
