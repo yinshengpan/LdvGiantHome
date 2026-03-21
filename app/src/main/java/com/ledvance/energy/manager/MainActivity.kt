@@ -18,9 +18,7 @@ import androidx.tracing.trace
 import com.ledvance.energy.manager.model.DarkThemeMode
 import com.ledvance.energy.manager.state.LedvanceApp
 import com.ledvance.energy.manager.utils.DataStoreKeys
-import com.ledvance.energy.manager.utils.LanguageUtils
 import com.ledvance.ui.theme.LedvanceTheme
-import com.ledvance.utils.AppContext
 import com.ledvance.utils.extensions.getInt
 import com.ledvance.utils.extensions.isSystemInDarkTheme
 import com.ledvance.utils.extensions.setStatusBarsIcons

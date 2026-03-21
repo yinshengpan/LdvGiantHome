@@ -12,7 +12,6 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.ledvance.energy.manager.extensions.launchCustomChromeTab
-import com.ledvance.energy.manager.screen.LanguageScreen
 import com.ledvance.energy.manager.screen.LicenseContentScreen
 import com.ledvance.energy.manager.screen.LicensesScreen
 import com.ledvance.energy.manager.state.LedvanceAppState
@@ -76,13 +75,6 @@ fun MainNavigation(appState: LedvanceAppState) {
             lightDetailsScreen(onBackClick = {
                 backStack.removeLastOrNull()
             })
-
-            entry<LanguageRoute> {
-                PageLifecycleLogger("LanguageRoute")
-                LanguageScreen(onBack = {
-                    backStack.removeLastOrNull()
-                })
-            }
 
             entry<OpenSourceLicensesRoute> {
                 PageLifecycleLogger("OpenSourceLicensesRoute")
