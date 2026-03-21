@@ -38,4 +38,5 @@ internal interface SettingContract {
     fun resetDevice()
     fun setLineSequence(lineSequence: LineSequence)
     fun upgradeFirmware()
+    fun onReconnect()
 }

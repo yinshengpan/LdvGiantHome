@@ -9,5 +9,4 @@ package com.ledvance.domain.bean
 data class DeviceState(
     val deviceId: DeviceId,
     val isOnline: Boolean,
-    val switch: Boolean,
 )

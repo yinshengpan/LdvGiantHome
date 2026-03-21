@@ -22,6 +22,7 @@ import kotlinx.coroutines.withTimeoutOrNull
 import no.nordicsemi.android.kotlin.ble.client.main.callback.ClientBleGatt
 import no.nordicsemi.android.kotlin.ble.client.main.service.ClientBleGattCharacteristic
 import no.nordicsemi.android.kotlin.ble.core.data.BleWriteType
+import no.nordicsemi.android.kotlin.ble.core.data.GattConnectionState
 import no.nordicsemi.android.kotlin.ble.core.data.util.DataByteArray
 import timber.log.Timber
 
@@ -34,7 +35,8 @@ import timber.log.Timber
 class BleClient(
     private val deviceId: DeviceId,
     private val bleRepository: BleRepository,
-    private val onNotificationReceived: ((ByteArray) -> Unit)? = null
+    private val onNotificationReceived: ((ByteArray) -> Unit)? = null,
+    private val onConnectChange: ((DeviceId, ConnectionState) -> Unit)? = null
 ) {
 
     private val TAG = "BleClient"
@@ -57,6 +59,7 @@ class BleClient(
         Timber.tag(TAG).d("--> START connect(deviceId=$deviceId)")
         try {
             _state.value = ConnectionState.CONNECTING
+            onConnectChange?.invoke(deviceId, ConnectionState.CONNECTING)
             val macAddress = deviceId.asMacAddress()
             Timber.tag(TAG).d("connect: attempting to connect to $macAddress")
             val gatt = withTimeoutOrNull(15_000) {
@@ -91,8 +94,10 @@ class BleClient(
 
             this.gatt = gatt
             observeNotify()
+            observeConnectionState()
 
             _state.value = ConnectionState.CONNECTED
+            onConnectChange?.invoke(deviceId, ConnectionState.CONNECTED)
             Timber.tag(TAG).d("connect: fully initialized, syncing device info/time")
             protocol.queryDeviceInfo()
             protocol.syncCurrentTime()
@@ -112,6 +117,7 @@ class BleClient(
         writeChar = null
         notifyChar = null
         _state.value = ConnectionState.DISCONNECTED
+        onConnectChange?.invoke(deviceId, ConnectionState.DISCONNECTED)
     }
 
     private suspend fun observeNotify() {
@@ -128,13 +134,41 @@ class BleClient(
             ?.launchIn(scope)
     }
 
+    private fun observeConnectionState() {
+        gatt?.connectionStateWithStatus?.onEach { status ->
+            Timber.tag(TAG).i("observeConnectionState: device $deviceId status $status")
+            val newState = when (status?.state) {
+                GattConnectionState.STATE_DISCONNECTED -> ConnectionState.DISCONNECTED
+                GattConnectionState.STATE_CONNECTING -> ConnectionState.CONNECTING
+                GattConnectionState.STATE_CONNECTED -> ConnectionState.CONNECTED
+                GattConnectionState.STATE_DISCONNECTING -> ConnectionState.DISCONNECTED
+                null -> ConnectionState.DISCONNECTED
+            }
+            if (_state.value != newState) {
+                _state.value = newState
+                if (newState == ConnectionState.DISCONNECTED) {
+                    writeChar = null
+                    notifyChar = null
+                }
+                onConnectChange?.invoke(deviceId, newState)
+            }
+        }?.catch {
+            Timber.tag(TAG).e(it, "observeConnectionState: error")
+        }?.launchIn(scope)
+    }
+
     @SuppressLint("MissingPermission")
     suspend fun write(data: ByteArray, writeType: BleWriteType = BleWriteType.NO_RESPONSE): Boolean {
         delay(Constants.FRAME_INTERVAL_MS)
+        val snapshot = writeChar
+        if (snapshot == null) {
+            Timber.tag(TAG).e("write failed: writeChar is null for device $deviceId")
+            return false
+        }
         val dataStr = data.toHexString().uppercase()
         Timber.tag(TAG).d("write: $dataStr (type=$writeType)")
         try {
-            writeChar?.write(DataByteArray(data), writeType)
+            snapshot.write(DataByteArray(data), writeType)
             return true
         } catch (e: Throwable) {
             Timber.tag(TAG).e(e, "write failed: $dataStr")
@@ -145,13 +179,14 @@ class BleClient(
     private fun fail(msg: String): Boolean {
         Timber.tag(TAG).e("fail: $msg")
         _state.value = ConnectionState.FAILED
+        onConnectChange?.invoke(deviceId, ConnectionState.FAILED)
         return false
     }
 
     @SuppressLint("MissingPermission")
-    suspend fun readFirmwareVersion(): String? {
+    suspend fun readFirmwareVersion(): String? = commandQueue.execute {
         Timber.tag(TAG).d("--> START readFirmwareVersion")
-        return try {
+        try {
             val service = gatt?.discoverServices()?.findService(Constants.DEVICE_INFO_SERVICE_UUID)
             val char = service?.findCharacteristic(Constants.FIRMWARE_REVISION_UUID)
             val bytes = char?.read()?.value

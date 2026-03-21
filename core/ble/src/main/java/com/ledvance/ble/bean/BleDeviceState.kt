@@ -13,10 +13,8 @@ import com.ledvance.domain.bean.command.ModeType
  */
 data class BleDeviceState(
     val deviceId: DeviceId,
-    val name: String?,
     val rssi: Int,
 
-    val isOnline: Boolean,
     val isConnected: Boolean,
     val connectionState: ConnectionState,
 
@@ -25,7 +23,7 @@ data class BleDeviceState(
 
     val protocolType: ProtocolType,
 
-    val power: Boolean = true,
+    val power: Boolean = false,
     val modeType: ModeType? = null,
     val modeId: ModeId? = null,
     val speed: Int = 50,

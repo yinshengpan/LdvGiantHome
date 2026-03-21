@@ -21,7 +21,6 @@ internal interface HomeContract {
         @Immutable
         data class Success(
             val devices: List<DeviceUiItem>,
-            val onlineMap: Map<DeviceId, Boolean>,
         ) : UiState
 
         @Immutable
@@ -34,4 +33,5 @@ internal interface HomeContract {
     fun connectDevice(deviceId: DeviceId)
     fun disconnectDevice(deviceId: DeviceId)
     fun connectDevices(devices: List<DeviceUiItem>)
+    fun disconnectAllDevices()
 }

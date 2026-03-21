@@ -13,6 +13,7 @@ import com.ledvance.domain.bean.command.OnOff
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -42,6 +43,8 @@ class ConnectionManager @Inject constructor(
     private val bleRepository: BleRepository,
 ) {
 
+    private val TAG = "ConnectionManager"
+
     private val scope = CoroutineScope(Dispatchers.IO)
 
     private val connectionMap = mutableMapOf<DeviceId, BleClient>()
@@ -62,15 +65,25 @@ class ConnectionManager @Inject constructor(
     private fun connect(deviceId: DeviceId) {
         registry.updateConnection(deviceId, ConnectionState.CONNECTING)
 
-        val client = BleClient(deviceId, bleRepository) { bytes ->
-            handleNotification(deviceId, bytes)
-        }
+        val client = BleClient(
+            deviceId = deviceId,
+            bleRepository = bleRepository,
+            onNotificationReceived = { bytes ->
+                handleNotification(deviceId, bytes)
+            },
+            onConnectChange = { id, state ->
+                Timber.tag(TAG).i("Device $id $state remotely")
+                if (state == ConnectionState.DISCONNECTED || state == ConnectionState.FAILED) {
+                    connectionMap.remove(id)
+                }
+                registry.updateConnection(id, state)
+            }
+        )
         connectionMap[deviceId] = client
 
         scope.launch {
             try {
                 client.connect()
-                registry.updateConnection(deviceId, ConnectionState.CONNECTED)
             } catch (e: Exception) {
                 connectionMap.remove(deviceId)
                 registry.updateConnection(deviceId, ConnectionState.FAILED)
@@ -103,15 +116,15 @@ class ConnectionManager @Inject constructor(
      */
     private fun parseQueryDeviceInfo(deviceId: DeviceId, bytes: ByteArray) {
         if (bytes.size != 14) return
-        val power      = bytes[3] == OnOff.On.command
-        val r          = bytes[4].toInt() and 0xFF
-        val g          = bytes[5].toInt() and 0xFF
-        val b          = bytes[6].toInt() and 0xFF
-        val w          = bytes[7].toInt() and 0xFF
+        val power = bytes[3] == OnOff.On.command
+        val r = bytes[4].toInt() and 0xFF
+        val g = bytes[5].toInt() and 0xFF
+        val b = bytes[6].toInt() and 0xFF
+        val w = bytes[7].toInt() and 0xFF
         val brightness = bytes[8].toInt() and 0xFF
-        val modeType   = bytes[9].toInt() and 0xFF
-        val modeId     = bytes[10].toInt() and 0xFF
-        val speed      = bytes[11].toInt() and 0xFF
+        val modeType = bytes[9].toInt() and 0xFF
+        val modeId = bytes[10].toInt() and 0xFF
+        val speed = bytes[11].toInt() and 0xFF
         registry.updateDeviceInfo(deviceId, power, r, g, b, w, brightness, modeType, modeId, speed)
     }
 
@@ -131,10 +144,10 @@ class ConnectionManager @Inject constructor(
      */
     private fun parseGetTimingInfo(deviceId: DeviceId, bytes: ByteArray) {
         if (bytes.size != 13) return
-        val onSwitch  = bytes[3] == 0x01.toByte()
-        val onHour    = bytes[4].toInt() and 0xFF
-        val onMinute  = bytes[5].toInt() and 0xFF
-        val onCycle   = bytes[6].toInt() and 0xFF
+        val onSwitch = bytes[3] == 0x01.toByte()
+        val onHour = bytes[4].toInt() and 0xFF
+        val onMinute = bytes[5].toInt() and 0xFF
+        val onCycle = bytes[6].toInt() and 0xFF
         val onTimer = DeviceTimer(
             deviceId = deviceId,
             timerType = TimerType.ON,
@@ -144,9 +157,9 @@ class ConnectionManager @Inject constructor(
             weekCycle = onCycle,
         )
         val offSwitch = bytes[7] == 0x01.toByte()
-        val offHour   = bytes[8].toInt() and 0xFF
+        val offHour = bytes[8].toInt() and 0xFF
         val offMinute = bytes[9].toInt() and 0xFF
-        val offCycle  = bytes[10].toInt() and 0xFF
+        val offCycle = bytes[10].toInt() and 0xFF
         val offTimer = DeviceTimer(
             deviceId = deviceId,
             timerType = TimerType.OFF,
@@ -171,6 +184,14 @@ class ConnectionManager @Inject constructor(
     fun disconnect(deviceId: DeviceId) {
         connectionMap.remove(deviceId)?.disconnect()
         registry.updateConnection(deviceId, ConnectionState.DISCONNECTED)
+    }
+
+    fun disconnectAll() {
+        connectionMap.forEach { (deviceId, client) ->
+            client.disconnect()
+            registry.updateConnection(deviceId, ConnectionState.DISCONNECTED)
+        }
+        connectionMap.clear()
     }
 
     fun getClient(deviceId: DeviceId): BleClient? = connectionMap[deviceId]

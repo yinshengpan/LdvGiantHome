@@ -65,4 +65,5 @@ internal interface LightDetailsContract {
     fun onTimerSwitchChange(timerType: TimerType, enabled: Boolean)
     fun onTimerTimeChange(timerType: TimerType, hour: Int, minute: Int)
     fun onTimerRepeatChange(timerType: TimerType, days: Set<DayOfWeek>)
+    fun onReconnect()
 }

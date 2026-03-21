@@ -146,6 +146,12 @@ class DeviceControlUseCase @Inject constructor(
         }
     }
 
+    suspend fun onReconnect(deviceId: DeviceId): Boolean {
+        return executionResult("onReconnect(deviceId=$deviceId)") {
+            ensureConnected(deviceId)
+        }
+    }
+
     suspend fun readFirmwareVersion(deviceId: DeviceId): String? {
         val callInfo = "readFirmwareVersion(deviceId=$deviceId)"
         Timber.tag(TAG).d("--> START $callInfo")
@@ -164,6 +170,7 @@ class DeviceControlUseCase @Inject constructor(
 
     private suspend fun ensureConnected(deviceId: DeviceId) {
         val device = registry.get(deviceId)
+        Timber.tag(TAG).d("ensureConnected($deviceId) isConnected = ${device?.isConnected}")
         if (device?.isConnected != true) {
             connectionManager.requestConnect(deviceId)
             waitConnected(deviceId)

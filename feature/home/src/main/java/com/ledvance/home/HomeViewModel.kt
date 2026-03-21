@@ -16,6 +16,7 @@ import com.ledvance.usecase.device.GetDeviceListStateUseCase
 import com.ledvance.usecase.device.GetDevicesUseCase
 import com.ledvance.usecase.device.SyncDeviceInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -45,17 +46,17 @@ internal class HomeViewModel @Inject constructor(
         } else {
             val onlineMap = deviceStateList.associate { it.deviceId to it.isOnline }
             Timber.tag(TAG).d("onlineMap:$onlineMap")
-            HomeContract.UiState.Success(
-                devices = dbDevices,
-                onlineMap = onlineMap,
-            )
+            val mergedDevices = dbDevices.map { device ->
+                device.copy(isOnline = onlineMap[device.deviceId] ?: false)
+            }
+            HomeContract.UiState.Success(devices = mergedDevices)
         }
     }
         .onStart {
             Timber.d("Loading home page")
         }
         .onEach {
-            Timber.d("Home page id loaded")
+            Timber.d("Home page is loaded")
         }
         .catch { error ->
             Timber.e(error, "Failed to load home page")
@@ -69,6 +70,29 @@ internal class HomeViewModel @Inject constructor(
 
     init {
         syncDeviceInfoUseCase(viewModelScope)
+        startAutoReconnect()
+    }
+
+    private fun startAutoReconnect() {
+        viewModelScope.launch {
+            while (true) {
+                delay(15_000)
+                val currentState = uiState.value
+                if (currentState is HomeContract.UiState.Success) {
+                    val connectedCount = currentState.devices.count { it.isOnline }
+                    if (connectedCount < 3) {
+                        val devicesToConnect = currentState.devices
+                            .filter { !it.isOnline }
+                            .take(3 - connectedCount)
+                        
+                        if (devicesToConnect.isNotEmpty()) {
+                            Timber.tag(TAG).d("Auto-reconnecting ${devicesToConnect.size} devices")
+                            connectDevices(devicesToConnect)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     override fun onSwitchChange(deviceId: DeviceId, switch: Boolean) {
@@ -89,5 +113,10 @@ internal class HomeViewModel @Inject constructor(
         devices.forEach {
             connectionManager.requestConnect(it.deviceId)
         }
+    }
+
+    override fun disconnectAllDevices() {
+        Timber.tag(TAG).d("disconnectAllDevices")
+        connectionManager.disconnectAll()
     }
 }

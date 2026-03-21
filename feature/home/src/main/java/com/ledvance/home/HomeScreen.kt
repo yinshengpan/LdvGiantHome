@@ -36,10 +36,22 @@ internal fun HomeScreen(
     val bluetoothEnableState by BluetoothManager.bluetoothEnableState.collectAsStateWithLifecycle()
     var bluetoothPermission by remember { mutableStateOf(false) }
     val bluetoothBusinessState = rememberBluetoothBusinessState()
+    var isResumed by remember { mutableStateOf(false) }
 
     LifecycleResumeEffect(Unit) {
         bluetoothPermission = bluetoothBusinessState.hasAllow()
-        onPauseOrDispose { }
+        isResumed = true
+        onPauseOrDispose {
+            isResumed = false
+        }
+    }
+
+    // 当前台 + 数据就绪时触发连接，无论谁先到达
+    LaunchedEffect(uiState, isResumed) {
+        val currentState = uiState
+        if (isResumed && currentState is HomeContract.UiState.Success) {
+            viewModel.connectDevices(currentState.devices.take(3))
+        }
     }
 
     LedvanceScreen(
@@ -56,9 +68,6 @@ internal fun HomeScreen(
             HomeContract.UiState.Loading -> {}
             is HomeContract.UiState.Success -> {
                 val successUiState = uiState as HomeContract.UiState.Success
-                LaunchedEffect(successUiState.devices) {
-                    viewModel.connectDevices(successUiState.devices.take(3))
-                }
                 HomeScreenContent(
                     uiState = successUiState,
                     onSwitchChange = { deviceId, switch ->

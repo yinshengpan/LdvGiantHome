@@ -17,20 +17,6 @@ class FirmwareUseCase @Inject constructor(
 ) {
     private val TAG = "FirmwareUseCase"
 
-    suspend fun readFirmwareVersion(deviceId: DeviceId): String? {
-        return try {
-            val client = connectionManager.getClient(deviceId)
-            if (client == null || !client.isConnected) {
-                Timber.tag(TAG).w("readFirmwareVersion: Device not connected")
-                return null
-            }
-            client.readFirmwareVersion()
-        } catch (e: Exception) {
-            Timber.tag(TAG).e(e, "readFirmwareVersion failed")
-            null
-        }
-    }
-
     suspend fun updateFirmware(deviceId: DeviceId, firmwareData: ByteArray): Boolean {
         return try {
             val client = connectionManager.getClient(deviceId)

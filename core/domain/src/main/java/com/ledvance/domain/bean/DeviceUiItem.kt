@@ -11,4 +11,5 @@ data class DeviceUiItem(
     val name: String,
     val power: Boolean,
     val deviceType: DeviceType,
+    val isOnline: Boolean = false,
 )

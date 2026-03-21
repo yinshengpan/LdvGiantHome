@@ -25,7 +25,7 @@ class GetDeviceListStateUseCase @Inject constructor(
 ) : FlowUseCaseWithoutParameter<List<DeviceState>>(dispatcher) {
     override fun execute(parameter: Unit): Flow<List<DeviceState>> {
         return deviceRegistry.devicesFlow.map {
-            it.map { device -> (DeviceState(deviceId = device.deviceId, isOnline = device.isOnline, switch = device.power)) }
+            it.map { device -> (DeviceState(deviceId = device.deviceId, isOnline = device.isConnected)) }
         }.distinctUntilChanged()
     }
 }

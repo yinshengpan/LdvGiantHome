@@ -68,7 +68,7 @@ internal class LightDetailsViewModel @AssistedInject constructor(
         LightDetailsContract.UiState.Success(
             deviceName = device.name,
             deviceType = device.deviceType,
-            isOnline = deviceState?.isOnline ?: false,
+            isOnline = deviceState.isOnline,
             power = device.power,
             workMode = screenState.workMode ?: device.workMode,
             colourModeHue = screenState.colourModeHue.takeIf { it != -1 } ?: device.h,
@@ -99,7 +99,7 @@ internal class LightDetailsViewModel @AssistedInject constructor(
             deviceControlUseCase.queryDeviceInfo(deviceId)
             deviceControlUseCase.syncDeviceTime(deviceId)
             deviceControlUseCase.queryTimer(deviceId)
-            syncDeviceFirmwareUseCase(deviceId)
+//            syncDeviceFirmwareUseCase(deviceId)
         }
         viewModelScope.launch {
             commandFlow.sample(300).collectLatest {
@@ -213,6 +213,12 @@ internal class LightDetailsViewModel @AssistedInject constructor(
                     timer = transform(timer)
                 )
             )
+        }
+    }
+
+    override fun onReconnect() {
+        viewModelScope.launch {
+            deviceControlUseCase.onReconnect(deviceId)
         }
     }
 

@@ -4,12 +4,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceScreen
+import com.ledvance.ui.component.OfflineBanner
 import com.ledvance.ui.theme.AppTheme
 
 /**
@@ -58,6 +60,13 @@ internal fun LightDetailsScreen(
                     onTimerRepeatChange = { timerType, days -> viewModel.onTimerRepeatChange(timerType, days) },
                     onTimerSwitchChange = { timerType, switch -> viewModel.onTimerSwitchChange(timerType, switch) },
                     onModeIdChange = { modeId -> viewModel.onModeIdChange(modeId) },
+                )
+
+                val isOnline = (uiState as LightDetailsContract.UiState.Success).isOnline
+                OfflineBanner(
+                    visible = !isOnline,
+                    onReconnectClick = { viewModel.onReconnect() },
+                    modifier = Modifier.align(Alignment.BottomCenter)
                 )
             }
         }

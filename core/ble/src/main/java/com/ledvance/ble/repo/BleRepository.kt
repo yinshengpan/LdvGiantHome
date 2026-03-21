@@ -52,9 +52,7 @@ class BleRepository @Inject constructor(
         .map {
             Timber.tag(TAG).d("scanDevices() >>>>>> ${it.device.name}")
             aggregator.aggregateDevices(it)
-                .distinctBy { it.deviceId }.also { devices ->
-                    deviceRegistry.onScanResult(devices)
-                }
+                .distinctBy { it.deviceId }
         }
 
     @RequiresPermission(value = Manifest.permission.BLUETOOTH_CONNECT, conditional = true)

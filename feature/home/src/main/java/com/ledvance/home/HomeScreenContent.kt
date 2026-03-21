@@ -59,7 +59,7 @@ internal fun HomeScreenContent(
             span = { GridItemSpan(1) }) { device ->
             DeviceItem(
                 device = device,
-                isOnline = uiState.onlineMap[device.deviceId] ?: false,
+                isOnline = device.isOnline,
                 switch = device.power,
                 onSwitchChange = onSwitchChange,
                 onConnectClick = onConnectClick,

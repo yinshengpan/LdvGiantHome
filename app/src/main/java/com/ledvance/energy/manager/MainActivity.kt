@@ -11,7 +11,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.tracing.trace
@@ -46,6 +49,19 @@ class MainActivity : AppCompatActivity() {
                 LedvanceApp()
             }
         }
+        observeAppLifecycle()
+    }
+
+    private fun observeAppLifecycle() {
+        ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {
+            override fun onStart(owner: LifecycleOwner) {
+                Timber.tag(TAG).i("App joined foregroun")
+            }
+
+            override fun onStop(owner: LifecycleOwner) {
+                Timber.tag(TAG).i("App went to background")
+            }
+        })
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

@@ -76,6 +76,12 @@ internal class SettingViewModel @AssistedInject constructor(
 
     }
 
+    override fun onReconnect() {
+        viewModelScope.launch {
+            deviceControlUseCase.onReconnect(deviceId)
+        }
+    }
+
     fun DeviceType.getDisplayName(): String {
         return when (this) {
             DeviceType.Table -> "Table lamp"

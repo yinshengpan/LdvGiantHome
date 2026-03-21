@@ -23,12 +23,12 @@ import javax.inject.Inject
 class GetDeviceStateUseCase @Inject constructor(
     @Dispatcher(Dispatchers.IO) dispatcher: CoroutineDispatcher,
     private val deviceRegistry: DeviceRegistry
-) : FlowUseCase<DeviceId, DeviceState?>(dispatcher) {
-    override fun execute(parameter: DeviceId): Flow<DeviceState?> {
+) : FlowUseCase<DeviceId, DeviceState>(dispatcher) {
+    override fun execute(parameter: DeviceId): Flow<DeviceState> {
         return deviceRegistry.devicesFlow.map {
             it.filter { it.deviceId == parameter }
-                .map { device -> (DeviceState(deviceId = device.deviceId, isOnline = device.isOnline, switch = device.power)) }
-                .firstOrNull()
+                .map { device -> (DeviceState(deviceId = device.deviceId, isOnline = device.isConnected)) }
+                .firstOrNull() ?: DeviceState(deviceId = parameter, isOnline = true)
         }.distinctUntilChanged()
     }
 }

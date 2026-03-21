@@ -3,7 +3,6 @@ package com.ledvance.ble.core
 import com.ledvance.ble.bean.BleDeviceState
 import com.ledvance.ble.bean.ConnectionState
 import com.ledvance.ble.bean.ProtocolType
-import com.ledvance.ble.bean.ScannedDevice
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceTimer
 import com.ledvance.domain.bean.command.ModeId
@@ -28,44 +27,12 @@ class DeviceRegistry @Inject constructor() {
     private val _devicesFlow = MutableStateFlow<List<BleDeviceState>>(emptyList())
     val devicesFlow: StateFlow<List<BleDeviceState>> = _devicesFlow
 
-    fun onScanResult(list: List<ScannedDevice>) {
-        val now = now()
-        var changed = false
-        list.forEach { scan ->
-            val deviceId = scan.deviceId
-            val old = deviceMap[deviceId]
-
-            val newState = old?.copy(
-                rssi = scan.rssi,
-                lastSeenTime = now,
-                isOnline = true
-            ) ?: BleDeviceState(
-                deviceId = deviceId,
-                name = scan.name,
-                rssi = scan.rssi,
-                isOnline = true,
-                isConnected = false,
-                connectionState = ConnectionState.DISCONNECTED,
-                lastSeenTime = now,
-                lastActiveTime = 0,
-                protocolType = ProtocolType.LEDVANCE
-            )
-
-            deviceMap[deviceId] = newState
-            changed = true
-        }
-
-        if (changed) emit()
-    }
-
     fun updateConnection(deviceId: DeviceId, state: ConnectionState) {
         val old = deviceMap[deviceId] ?: BleDeviceState(
             deviceId = deviceId,
-            name = null,
             rssi = 0,
-            isOnline = true,
             isConnected = false,
-            connectionState = ConnectionState.DISCONNECTED,
+            connectionState = ConnectionState.CONNECTING,
             lastSeenTime = now(),
             lastActiveTime = 0,
             protocolType = ProtocolType.LEDVANCE
@@ -73,7 +40,6 @@ class DeviceRegistry @Inject constructor() {
         deviceMap[deviceId] = old.copy(
             isConnected = state == ConnectionState.CONNECTED,
             connectionState = state,
-            isOnline = state == ConnectionState.CONNECTED || old.isOnline
         )
         emit()
     }
@@ -129,21 +95,6 @@ class DeviceRegistry @Inject constructor() {
         val old = deviceMap[deviceId] ?: return
         deviceMap[deviceId] = old.copy(lastActiveTime = now())
         emit()
-    }
-
-    fun offlineCheck() {
-        val now = now()
-        var changed = false
-
-        deviceMap.forEach { (mac, d) ->
-            val online = d.isConnected || (now - d.lastSeenTime < 15_000)
-            if (d.isOnline != online) {
-                deviceMap[mac] = d.copy(isOnline = online)
-                changed = true
-            }
-        }
-
-        if (changed) emit()
     }
 
     private fun emit() {
