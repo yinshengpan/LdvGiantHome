@@ -7,7 +7,7 @@ import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
-import com.ledvance.energy.manager.repo.LicensesRepo
+import com.ledvance.usecase.repo.LicensesRepo
 import com.ledvance.network.repo.FirmwareRepo
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject

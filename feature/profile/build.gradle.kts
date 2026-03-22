@@ -8,4 +8,6 @@ android {
 
 dependencies {
     implementation(projects.core.log)
+    implementation(projects.core.domain)
+    implementation(projects.core.usecase)
 }

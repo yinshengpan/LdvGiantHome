@@ -1,4 +1,6 @@
-package com.ledvance.energy.manager.screen
+package com.ledvance.profile.screen.licenses
+
+import com.ledvance.domain.bean.License
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -11,44 +13,30 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ledvance.energy.manager.model.License
-import com.ledvance.energy.manager.viewmodel.LicensesViewModel
-import com.ledvance.ui.R
-import com.ledvance.ui.component.LedvanceScreen
 import com.ledvance.ui.extensions.debouncedClickable
 import com.ledvance.ui.theme.AppTheme
 
 /**
  * @author : jason yin
  * Email : j.yin@ledvance.com
- * Created date 11/19/25 17:17
- * Describe : LicensesScreen
+ * Describe : LicensesScreenContent
  */
 @Composable
-fun LicensesScreen(
-    viewModel: LicensesViewModel = hiltViewModel(),
-    onBack: () -> Unit,
+internal fun LicensesScreenContent(
+    uiState: LicensesContract.UiState.Success,
     onClickLicense: (License) -> Unit
 ) {
-    val licenses by viewModel.licensesFlow.collectAsStateWithLifecycle()
-    LedvanceScreen(title = stringResource(R.string.open_source_licenses), onBackPressed = onBack) {
-        LazyColumn(modifier = Modifier.fillMaxWidth().padding(top = 15.dp)) {
-            items(licenses, key = { it.libUniqueId }) {
-                LicenseItem(it, onClickLicense)
-            }
+    LazyColumn(modifier = Modifier.fillMaxWidth().padding(top = 15.dp)) {
+        items(uiState.licenses, key = { it.libUniqueId }) {
+            LicenseItem(it, onClickLicense)
         }
     }
 }

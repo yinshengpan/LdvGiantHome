@@ -1,7 +1,7 @@
-package com.ledvance.energy.manager.repo
+package com.ledvance.usecase.repo
 
 import android.content.Context
-import com.ledvance.energy.manager.model.License
+import com.ledvance.domain.bean.License
 import com.ledvance.utils.extensions.tryCatchReturn
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.util.withContext

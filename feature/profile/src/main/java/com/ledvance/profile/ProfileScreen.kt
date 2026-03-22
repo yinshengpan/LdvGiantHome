@@ -33,11 +33,11 @@ internal fun ProfileScreen(onNavigateToLicenses: () -> Unit) {
                 }
             }
         )
-        ItemView(
-            itemIconResId = R.drawable.ic_license,
-            title = "Open Source Licenses",
-            showDivider = true,
-            onContentClick = onNavigateToLicenses,
-        )
+//        ItemView(
+//            itemIconResId = R.drawable.ic_license,
+//            title = "Open Source Licenses",
+//            showDivider = true,
+//            onContentClick = onNavigateToLicenses,
+//        )
     }
 }

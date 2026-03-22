@@ -20,13 +20,38 @@ fun SnapshotStateList<Any>.navigateToProfile() {
     add(ProfileRoute)
 }
 
-fun EntryProviderScope<Any>.profileScreen(
-    onNavigateToAddNewDevice: () -> Unit,
+fun EntryProviderScope<Any>.profileNavGraph(
+    backStack: SnapshotStateList<Any>,
+    onLaunchCustomChromeTab: (android.net.Uri) -> Unit
+) {
+    profileScreen(
+        onNavigateToLicenses = {
+            backStack.navigateToLicenses()
+        }
+    )
+
+    licensesScreen(
+        onBack = {
+            backStack.removeLastOrNull()
+        },
+        onLaunchCustomChromeTab = onLaunchCustomChromeTab,
+        onNavigateToLicenseContent = {
+            backStack.navigateToLicenseContent(it)
+        },
+    )
+
+    licenseContentScreen(onBack = {
+        backStack.removeLastOrNull()
+    })
+}
+
+internal fun EntryProviderScope<Any>.profileScreen(
+    onNavigateToLicenses: () -> Unit,
 ) {
     entry<ProfileRoute> {
         PageLifecycleLogger("ProfileRoute")
         ProfileScreen(
-            onNavigateToLicenses = onNavigateToAddNewDevice
+            onNavigateToLicenses = onNavigateToLicenses
         )
     }
 }

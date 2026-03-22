@@ -7,20 +7,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.net.toUri
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.ledvance.energy.manager.extensions.launchCustomChromeTab
-import com.ledvance.energy.manager.screen.LicenseContentScreen
-import com.ledvance.energy.manager.screen.LicensesScreen
 import com.ledvance.energy.manager.state.LedvanceAppState
 import com.ledvance.home.navigation.HomeRoute
 import com.ledvance.home.navigation.homeScreen
 import com.ledvance.light.navigation.lightNavGraph
 import com.ledvance.light.navigation.navigateToLightDetails
-import com.ledvance.profile.navigation.profileScreen
+import com.ledvance.profile.navigation.profileNavGraph
 import com.ledvance.search.navigation.navigateToSearch
 import com.ledvance.search.navigation.searchScreen
 import com.ledvance.setting.navigation.navigateToSetting
@@ -71,9 +68,14 @@ fun MainNavigation(appState: LedvanceAppState) {
                 }
             )
 
-            profileScreen(
-                onNavigateToAddNewDevice = {
-                    backStack.navigateToSearch()
+            profileNavGraph(
+                backStack = backStack,
+                onLaunchCustomChromeTab = {
+                    launchCustomChromeTab(
+                        context = context,
+                        uri = it,
+                        toolbarColor = chromeTabColor.toArgb()
+                    )
                 }
             )
 
@@ -100,37 +102,6 @@ fun MainNavigation(appState: LedvanceAppState) {
                     backStack.add(HomeRoute)
                 }
             )
-
-            entry<OpenSourceLicensesRoute> {
-                PageLifecycleLogger("OpenSourceLicensesRoute")
-                LicensesScreen(
-                    onBack = {
-                        backStack.back()
-                    },
-                    onClickLicense = {
-                        when {
-                            it.content.isNotEmpty() -> {
-                                backStack.add(LicenseContentRoute(it))
-                            }
-
-                            else -> {
-                                launchCustomChromeTab(
-                                    context = context,
-                                    uri = it.url.toUri(),
-                                    toolbarColor = chromeTabColor.toArgb()
-                                )
-                            }
-                        }
-                    },
-                )
-            }
-
-            entry<LicenseContentRoute> {
-                PageLifecycleLogger("LicenseContentRoute")
-                LicenseContentScreen(license = it.license) {
-                    backStack.back()
-                }
-            }
         }
     )
 }

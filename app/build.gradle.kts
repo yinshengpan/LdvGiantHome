@@ -35,6 +35,7 @@ dependencies {
     implementation(projects.core.network)
     implementation(projects.core.log)
     implementation(projects.core.domain)
+    implementation(projects.core.usecase)
 
     implementation(projects.feature.home)
     implementation(projects.feature.profile)

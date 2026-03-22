@@ -1,4 +1,4 @@
-package com.ledvance.energy.manager.model
+package com.ledvance.domain.bean
 
 import kotlinx.serialization.Serializable
 
