@@ -1,0 +1,40 @@
+package com.ledvance.light.screen.music
+
+import androidx.compose.runtime.Immutable
+import com.ledvance.domain.bean.command.DeviceMicRhythm
+import com.ledvance.light.bean.MusicSegment
+import kotlinx.coroutines.flow.StateFlow
+
+/**
+ * @author : jason yin
+ * Email : j.yin@ledvance.com
+ * Describe : MusicContract
+ */
+internal interface MusicContract {
+    @Immutable
+    sealed interface UiState {
+        @Immutable
+        data object Loading : UiState
+
+        @Immutable
+        data class Success(
+            val loading: Boolean,
+            val isOnline: Boolean,
+            val musicSegment: MusicSegment,
+            val musicSegmentList: List<MusicSegment>,
+            val deviceMicRhythm: DeviceMicRhythm,
+            val deviceMicRhythmList: List<DeviceMicRhythm>,
+            val deviceMicSensitivity: Int
+        ) : UiState
+
+        @Immutable
+        data object Error : UiState
+    }
+
+    val uiState: StateFlow<UiState>
+
+    fun onRhythmChange(deviceMicRhythm: DeviceMicRhythm)
+    fun onSensitivityChange(sensitivity: Int)
+    fun onMusicSegmentChange(musicSegment: MusicSegment)
+    fun onReconnect()
+}

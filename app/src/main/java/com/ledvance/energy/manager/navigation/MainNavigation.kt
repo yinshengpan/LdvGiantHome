@@ -18,13 +18,13 @@ import com.ledvance.energy.manager.screen.LicensesScreen
 import com.ledvance.energy.manager.state.LedvanceAppState
 import com.ledvance.home.navigation.HomeRoute
 import com.ledvance.home.navigation.homeScreen
-import com.ledvance.light.navigation.lightDetailsScreen
+import com.ledvance.light.navigation.lightNavGraph
 import com.ledvance.light.navigation.navigateToLightDetails
+import com.ledvance.profile.navigation.profileScreen
 import com.ledvance.search.navigation.navigateToSearch
 import com.ledvance.search.navigation.searchScreen
 import com.ledvance.setting.navigation.navigateToSetting
 import com.ledvance.setting.navigation.settingScreen
-import com.ledvance.ui.navigation.NavigationRoute
 import com.ledvance.ui.navigation.PageLifecycleLogger
 import com.ledvance.ui.theme.AppTheme
 
@@ -38,7 +38,7 @@ import com.ledvance.ui.theme.AppTheme
 fun MainNavigation(appState: LedvanceAppState) {
     val context = LocalContext.current
     val chromeTabColor = AppTheme.colors.screenBackground
-    val backStack = rememberMutableStateListOf<NavigationRoute>(HomeRoute)
+    val backStack = appState.backStack
     NavDisplay(
         backStack = backStack,
         onBack = { backStack.back() },
@@ -71,11 +71,18 @@ fun MainNavigation(appState: LedvanceAppState) {
                 }
             )
 
+            profileScreen(
+                onNavigateToAddNewDevice = {
+                    backStack.navigateToSearch()
+                }
+            )
+
             searchScreen(onBackClick = {
                 backStack.back()
             })
 
-            lightDetailsScreen(
+            lightNavGraph(
+                backStack = backStack,
                 onNavigateToSetting = {
                     backStack.navigateToSetting(it)
                 },

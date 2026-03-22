@@ -15,6 +15,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.ui.component.LedvanceScreen
+import com.ledvance.ui.component.LoadingOverlay
 import com.ledvance.ui.component.OfflineBanner
 import com.ledvance.ui.dialog.LedvanceDialog
 import com.ledvance.ui.theme.AppTheme
@@ -62,21 +63,21 @@ internal fun SettingScreen(
             SettingContract.UiState.Error -> {}
             SettingContract.UiState.Loading -> {}
             is SettingContract.UiState.Success -> {
-                val successState = uiState as SettingContract.UiState.Success
+                val state = uiState as SettingContract.UiState.Success
                 SettingScreenContent(
-                    uiState = successState,
+                    uiState = state,
                     onLineSequenceClick = { showLineSequencePicker = true },
                     onResetClick = { showResetDialog = true },
                     onUpgradeClick = { showUpgradeDialog = true },
                     onDeleteClick = { showDeleteDialog = true }
                 )
 
-                val isOnline = successState.isOnline
                 OfflineBanner(
-                    visible = !isOnline,
+                    visible = !state.isOnline,
                     onReconnectClick = { viewModel.onReconnect() },
                     modifier = Modifier.align(Alignment.BottomCenter)
                 )
+                LoadingOverlay(visible = state.loading)
             }
         }
     }

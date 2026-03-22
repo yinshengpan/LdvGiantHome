@@ -1,4 +1,4 @@
-package com.ledvance.light.component
+package com.ledvance.light.screen.mode
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -23,18 +22,18 @@ import com.ledvance.light.bean.ModeSegment
 import com.ledvance.ui.component.LedvanceRadioGroup
 import com.ledvance.ui.component.WheelPicker
 import com.ledvance.ui.theme.AppTheme
-import timber.log.Timber
 
 /**
  * @author : jason yin
  * Email : j.yin@ledvance.com
  * Created date 3/19/26 18:16
- * Describe : ModeControl
+ * Describe : ModeScreenContent
  */
 @Composable
-fun ModeControl(
+internal fun ModeScreenContent(
     selectedModeId: ModeId?,
-    onModeChange: (ModeId) -> Unit
+    onModeChange: (ModeId) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val allSegments = remember { ModeSegment.allModeSegment }
     var selectedSegment by remember {
@@ -45,29 +44,22 @@ fun ModeControl(
         derivedStateOf { ModeSegment.getModesBySegment(selectedSegment) }
     }
 
-    val initialIndex by remember(modes) {
+    val initialIndex = remember(modes, selectedModeId) {
         val index = modes.indexOfFirst { it == selectedModeId }
-        mutableIntStateOf(if (index != -1) index else 0)
+        if (index != -1) index else 0
     }
 
     Card(
         elevation = CardDefaults.cardElevation(8.dp),
         colors = CardDefaults.cardColors(containerColor = AppTheme.colors.screenBackground),
         shape = RoundedCornerShape(10.dp),
-        modifier = Modifier.padding(vertical = 20.dp)
+        modifier = modifier.padding(20.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(15.dp)
         ) {
-            Text(
-                text = "Mode",
-                style = AppTheme.typography.titleMedium,
-                color = AppTheme.colors.title,
-                modifier = Modifier.fillMaxWidth()
-            )
-
             LedvanceRadioGroup(
                 selectorItem = selectedSegment,
                 items = allSegments,

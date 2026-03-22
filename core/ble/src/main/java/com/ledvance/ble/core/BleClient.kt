@@ -110,14 +110,19 @@ class BleClient(
     }
 
     fun disconnect() {
-        Timber.tag(TAG).d("disconnect(deviceId=$deviceId)")
-        gatt?.disconnect()
-        gatt?.close()
-        gatt = null
-        writeChar = null
-        notifyChar = null
-        _state.value = ConnectionState.DISCONNECTED
-        onConnectChange?.invoke(deviceId, ConnectionState.DISCONNECTED)
+        Timber.tag(TAG).d("disconnect(deviceId=$deviceId) - gatt is null: ${gatt == null}")
+        try {
+            gatt?.disconnect()
+            gatt?.close()
+        } catch (e: Exception) {
+            Timber.tag(TAG).e(e, "Error during gatt disconnect/close")
+        } finally {
+            gatt = null
+            writeChar = null
+            notifyChar = null
+            _state.value = ConnectionState.DISCONNECTED
+            onConnectChange?.invoke(deviceId, ConnectionState.DISCONNECTED)
+        }
     }
 
     private suspend fun observeNotify() {

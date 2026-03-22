@@ -3,6 +3,8 @@
     <string name="available_charger_list">"Available Charger List"</string>
     <string name="available_energy_controller">"Available Load Shed"</string>
     <string name="cancel">"Cancel"</string>
+    <string name="tab_home">"Home"</string>
+    <string name="tab_profile">"Profile"</string>
     <string name="charger_list">"Charger List"</string>
     <string name="confirm">"Confirm"</string>
     <string name="connect_device_dialog_content">"To connect this device, please choose how you would like to retrieve its SN."</string>

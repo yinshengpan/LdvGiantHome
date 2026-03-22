@@ -63,7 +63,7 @@ enum class TableScenes(override val title: String, override val command: Byte) :
             TableSceneType.Life to getLifeScenes()
         )
 
-        fun getFestivalScenes(): List<Scene> {
+        private fun getFestivalScenes(): List<Scene> {
             return listOf(
                 Christmas,
                 Halloween,
@@ -73,7 +73,7 @@ enum class TableScenes(override val title: String, override val command: Byte) :
             )
         }
 
-        fun getLifeScenes(): List<Scene> {
+        private fun getLifeScenes(): List<Scene> {
             return listOf(
                 Work,
                 Read,
@@ -87,7 +87,7 @@ enum class TableScenes(override val title: String, override val command: Byte) :
             )
         }
 
-        fun getNaturalScenes(): List<Scene> {
+        private fun getNaturalScenes(): List<Scene> {
             return listOf(
                 SpringBreeze,
                 Forest,
@@ -111,7 +111,7 @@ enum class TableScenes(override val title: String, override val command: Byte) :
             )
         }
 
-        fun getSoothingScenes(): List<Scene> {
+        private fun getSoothingScenes(): List<Scene> {
             return listOf(
                 Sunrise,
                 Sunset,

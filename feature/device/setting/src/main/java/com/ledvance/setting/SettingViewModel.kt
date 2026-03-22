@@ -6,6 +6,7 @@ import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
 import com.ledvance.domain.bean.asMacAddress
 import com.ledvance.domain.bean.command.LineSequence
+import com.ledvance.domain.bean.command.scenes.Scene
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceStateUseCase
 import com.ledvance.usecase.device.GetDeviceUseCase
@@ -17,10 +18,12 @@ import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 /**
@@ -48,12 +51,16 @@ internal class SettingViewModel @AssistedInject constructor(
         fun create(deviceId: DeviceId): SettingViewModel
     }
 
+    private val screenState = MutableStateFlow(ScreenState())
+
     override val uiState: StateFlow<SettingContract.UiState> = combine(
         flow = getDeviceUseCase(deviceId),
-        flow2 = getDeviceStateUseCase(deviceId)
-    ) { device, deviceState ->
+        flow2 = getDeviceStateUseCase(deviceId),
+        flow3 = screenState,
+    ) { device, deviceState, state ->
         SettingContract.UiState.Success(
             isOnline = deviceState.isOnline,
+            loading = state.commandLoading,
             deviceName = device.name,
             deviceMacAddress = deviceId.asMacAddress(),
             deviceTypeName = device.deviceType.getDisplayName(),
@@ -86,7 +93,12 @@ internal class SettingViewModel @AssistedInject constructor(
 
     override fun onReconnect() {
         viewModelScope.launch {
-            deviceControlUseCase.onReconnect(deviceId)
+            screenState.update { it.copy(commandLoading = true) }
+            val success = deviceControlUseCase.onReconnect(deviceId)
+            if (!success) {
+                SnackbarManager.showGenericError()
+            }
+            screenState.update { it.copy(commandLoading = false) }
         }
     }
 
@@ -110,4 +122,8 @@ internal class SettingViewModel @AssistedInject constructor(
             DeviceType.Floor -> com.ledvance.ui.R.mipmap.pic_floorlamp
         }
     }
+
+    private data class ScreenState(
+        val commandLoading: Boolean = false,
+    )
 }

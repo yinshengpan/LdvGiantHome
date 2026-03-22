@@ -4,9 +4,9 @@ package com.ledvance.domain.bean.command
  * @author : jason yin
  * Email : j.yin@ledvance.com
  * Created date 3/19/26 18:25
- * Describe : DeviceMic
+ * Describe : DeviceMicRhythm
  */
-enum class DeviceMic(val title: String, override val command: Byte) : Command {
+enum class DeviceMicRhythm(val title: String, override val command: Byte) : Command {
     Energy1("Energy 1", 0x01),
     Energy2("Energy 2", 0x02),
     Rhythm1("Rhythm 1", 0x03),
@@ -18,6 +18,6 @@ enum class DeviceMic(val title: String, override val command: Byte) : Command {
     ;
 
     companion object {
-        val items = DeviceMic.entries.toList()
+        val items = DeviceMicRhythm.entries.toList()
     }
 }

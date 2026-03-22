@@ -30,10 +30,10 @@ import com.ledvance.ui.theme.AppTheme
  * @author : jason yin
  * Email : j.yin@ledvance.com
  * Created date 3/19/26 09:58
- * Describe : LightControl
+ * Describe : LightControlView
  */
 @Composable
-fun LightControl(
+fun LightControlView(
     switch: Boolean,
     colourModeHue: Int,
     colourModeSat: Int,

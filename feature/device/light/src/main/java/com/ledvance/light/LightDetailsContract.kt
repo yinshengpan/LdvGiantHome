@@ -8,6 +8,7 @@ import com.ledvance.domain.bean.WorkMode
 import com.ledvance.domain.bean.command.ModeId
 import com.ledvance.domain.bean.command.ModeType
 import com.ledvance.domain.bean.command.scenes.Scene
+import com.ledvance.light.component.CardFeature
 import kotlinx.coroutines.flow.StateFlow
 import java.time.DayOfWeek
 
@@ -37,11 +38,7 @@ internal interface LightDetailsContract {
             val colourModeBrightness: Int,
             val whiteModeCct: Int,
             val whiteModeBrightness: Int,
-            val speed: Int,
-            val onTimer: TimerUiItem,
-            val offTimer: TimerUiItem,
-            val modeType: ModeType?,
-            val modeId: ModeId?,
+            val cardFeatureList: List<CardFeature> = listOf(),
             val commandLoading: Boolean = false,
         ) : UiState
 
@@ -60,12 +57,6 @@ internal interface LightDetailsContract {
 
     fun onWhiteModeCctChange(cct: Int)
     fun onWhiteModeBrightnessChange(brightness: Int)
-    fun onSceneChange(scene: Scene)
-    fun onModeIdChange(modeId: ModeId)
-    fun onSpeedChange(speed: Int)
 
-    fun onTimerSwitchChange(timerType: TimerType, enabled: Boolean)
-    fun onTimerTimeChange(timerType: TimerType, hour: Int, minute: Int)
-    fun onTimerRepeatChange(timerType: TimerType, days: Set<DayOfWeek>)
     fun onReconnect()
 }

@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.ledvance.ble.core.ConnectionManager
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceUiItem
+import com.ledvance.usecase.device.DeleteDeviceUseCase
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceListStateUseCase
 import com.ledvance.usecase.device.GetDevicesUseCase
@@ -37,7 +38,7 @@ internal class HomeViewModel @Inject constructor(
     private val connectionManager: ConnectionManager,
     private val getDeviceListStateUseCase: GetDeviceListStateUseCase,
     private val syncDeviceInfoUseCase: SyncDeviceInfoUseCase,
-    private val deleteDeviceUseCase: com.ledvance.usecase.device.DeleteDeviceUseCase,
+    private val deleteDeviceUseCase: DeleteDeviceUseCase,
 ) : ViewModel(), HomeContract {
 
     private val TAG = "HomeViewModel"

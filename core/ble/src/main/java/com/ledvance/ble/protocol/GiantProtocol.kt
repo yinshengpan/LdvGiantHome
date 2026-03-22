@@ -14,6 +14,7 @@ import com.ledvance.domain.bean.command.OnOffType
 import com.ledvance.domain.bean.command.scenes.Scene
 import com.ledvance.domain.bean.command.timer.TimerDayOfWeek
 import com.ledvance.utils.ColorUtils
+import com.ledvance.utils.extensions.toBinary8
 import com.ledvance.utils.extensions.toTimeInfo
 import timber.log.Timber
 import java.time.LocalDateTime
@@ -133,7 +134,7 @@ class GiantProtocol(
     }
 
     override suspend fun setTimer(timerType: TimerType, hour: Int, min: Int, weekCycle: Int) = queue.execute {
-        Timber.tag(TAG).d("setTimer: timerType=$timerType, $hour:$min, cycle=$weekCycle")
+        Timber.tag(TAG).d("setTimer: timerType=$timerType, $hour:$min, cycle=${weekCycle.toBinary8()}")
         val state = if (timerType == TimerType.ON) OnOff.On.command else OnOff.Off.command
         client.write(buildCommand(CommandType.SetTimer.command, 0x01, state, hour.toByte(), min.toByte(), weekCycle.toByte()))
     }

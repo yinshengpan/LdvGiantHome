@@ -9,6 +9,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ledvance.domain.bean.DeviceId
+import com.ledvance.light.component.CardFeature
 import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceScreen
 import com.ledvance.ui.component.LoadingOverlay
@@ -27,6 +28,7 @@ internal fun LightDetailsScreen(
     viewModel: LightDetailsContract = hiltViewModel<LightDetailsViewModel, LightDetailsViewModel.Factory>(
         creationCallback = { it.create(deviceId = deviceId) }),
     onNavigateToSetting: (DeviceId) -> Unit,
+    onNavigateToFeature: (DeviceId, CardFeature) -> Unit,
     onBackClick: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -47,8 +49,9 @@ internal fun LightDetailsScreen(
             LightDetailsContract.UiState.Error -> {}
             LightDetailsContract.UiState.Loading -> {}
             is LightDetailsContract.UiState.Success -> {
+                val state = uiState as LightDetailsContract.UiState.Success
                 LightDetailsScreenContent(
-                    uiState = uiState as LightDetailsContract.UiState.Success,
+                    uiState = state,
                     onSwitchChange = { viewModel.onSwitchChange(it) },
                     onWorkModeChange = { viewModel.onWorkModeChange(it) },
                     onColourModeHsChange = { h, s -> viewModel.onColourModeHsChange(h, s) },
@@ -63,38 +66,16 @@ internal fun LightDetailsScreen(
                             brightness
                         )
                     },
-                    onSceneChange = { viewModel.onSceneChange(it) },
-                    onSpeedChange = { viewModel.onSpeedChange(it) },
-                    onTimerTimeChange = { timerType, hour, minutes ->
-                        viewModel.onTimerTimeChange(
-                            timerType,
-                            hour,
-                            minutes
-                        )
-                    },
-                    onTimerRepeatChange = { timerType, days ->
-                        viewModel.onTimerRepeatChange(
-                            timerType,
-                            days
-                        )
-                    },
-                    onTimerSwitchChange = { timerType, switch ->
-                        viewModel.onTimerSwitchChange(
-                            timerType,
-                            switch
-                        )
-                    },
-                    onModeIdChange = { modeId -> viewModel.onModeIdChange(modeId) },
+                    onNavigateToFeature = { feature ->
+                        onNavigateToFeature(deviceId, feature)
+                    }
                 )
-                val isOnline = (uiState as LightDetailsContract.UiState.Success).isOnline
+                LoadingOverlay(visible = state.commandLoading)
                 OfflineBanner(
-                    visible = !isOnline,
+                    visible = !state.isOnline,
                     onReconnectClick = { viewModel.onReconnect() },
                     modifier = Modifier.align(Alignment.BottomCenter)
                 )
-
-                val loading = (uiState as? LightDetailsContract.UiState.Success)?.commandLoading ?: false
-                LoadingOverlay(visible = loading)
             }
         }
     }

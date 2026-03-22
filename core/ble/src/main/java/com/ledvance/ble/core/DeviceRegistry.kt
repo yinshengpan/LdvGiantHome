@@ -28,6 +28,7 @@ class DeviceRegistry @Inject constructor() {
     val devicesFlow: StateFlow<List<BleDeviceState>> = _devicesFlow
 
     fun updateConnection(deviceId: DeviceId, state: ConnectionState) {
+        Timber.tag(TAG).d("updateConnection() deviceId = $deviceId, state = $state")
         val old = deviceMap[deviceId] ?: BleDeviceState(
             deviceId = deviceId,
             rssi = 0,

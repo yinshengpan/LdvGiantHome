@@ -7,9 +7,11 @@ import com.ledvance.database.repo.DeviceRepo
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.TimerType
 import com.ledvance.domain.bean.command.BrightnessType
+import com.ledvance.domain.bean.command.DeviceMicRhythm
 import com.ledvance.domain.bean.command.LineSequence
 import com.ledvance.domain.bean.command.ModeId
 import com.ledvance.domain.bean.command.scenes.Scene
+import com.ledvance.utils.extensions.toUnsignedInt
 import kotlinx.coroutines.delay
 import timber.log.Timber
 import javax.inject.Inject
@@ -110,6 +112,22 @@ class DeviceControlUseCase @Inject constructor(
         return executionResult("setLineSequence(deviceId=$deviceId, lineSequence=$lineSequence)") {
             ensureConnected(deviceId)
             getProtocol(deviceId).setLineSequence(lineSequence)
+            registry.updateActive(deviceId)
+        }
+    }
+
+    suspend fun setDeviceMicRhythm(deviceId: DeviceId, deviceMicRhythm: DeviceMicRhythm): Boolean {
+        return executionResult("setDeviceMicRhythm(deviceId=$deviceId, deviceMicRhythm=$deviceMicRhythm)") {
+            ensureConnected(deviceId)
+            getProtocol(deviceId).setMicRhythmEffect(deviceMicRhythm.command.toUnsignedInt())
+            registry.updateActive(deviceId)
+        }
+    }
+
+    suspend fun setDeviceMicSensitivity(deviceId: DeviceId, sensitivity: Int): Boolean {
+        return executionResult("setDeviceMicSensitivity(deviceId=$deviceId, sensitivity=$sensitivity)") {
+            ensureConnected(deviceId)
+            getProtocol(deviceId).setMicSensitivity(sensitivity)
             registry.updateActive(deviceId)
         }
     }

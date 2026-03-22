@@ -1,13 +1,13 @@
 package com.ledvance.profile
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.res.painterResource
-import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
+import com.ledvance.log.LogManager
 import com.ledvance.ui.R
-import com.ledvance.ui.component.LedvanceScreen
-import com.ledvance.ui.theme.AppTheme
+import com.ledvance.ui.component.ItemView
+import com.ledvance.ui.component.LedvancePrimaryScreen
+import kotlinx.coroutines.launch
 
 /**
  * @author : jason yin
@@ -16,19 +16,28 @@ import com.ledvance.ui.theme.AppTheme
  * Describe : ProfileScreen
  */
 @Composable
-internal fun ProfileScreen(
-    viewModel: ProfileContract = hiltViewModel<ProfileViewModel>(),
-    onToAddNewDevice: () -> Unit,
-) {
-    LedvanceScreen(
-        topBarContainerColor = AppTheme.colors.primaryBackground,
-        topBarContentColor = AppTheme.colors.primaryContent,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        actionIconPainter = painterResource(R.drawable.ic_add),
-        onActionPressed = onToAddNewDevice,
-        verticalArrangement = Arrangement.Center,
-        title = "Ldv Giant Home",
+internal fun ProfileScreen(onNavigateToLicenses: () -> Unit) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    LedvancePrimaryScreen(
+        title = "Personal Center",
     ) {
 
+        ItemView(
+            itemIconResId = R.drawable.ic_log,
+            title = "Share Logs",
+            showDivider = true,
+            onContentClick = {
+                scope.launch {
+                    LogManager.shareAppLog(context)
+                }
+            }
+        )
+        ItemView(
+            itemIconResId = R.drawable.ic_license,
+            title = "Open Source Licenses",
+            showDivider = true,
+            onContentClick = onNavigateToLicenses,
+        )
     }
 }

@@ -8,6 +8,8 @@ import com.ledvance.domain.di.Dispatchers
 import com.ledvance.usecase.base.SuspendUseCase
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -23,9 +25,14 @@ class DeleteDeviceUseCase @Inject constructor(
     private val connectionManager: ConnectionManager
 ) : SuspendUseCase<DeviceId, Unit>(dispatcher) {
     override suspend fun execute(parameter: DeviceId) {
+        Timber.tag("DeleteDeviceUseCase").d("Executing delete for $parameter")
         // 1. Disconnect the device if it's connected
         connectionManager.disconnect(parameter)
-        // 2. Delete from database
+        // 2. Wait a bit for the BLE stack to physically tear down the connection
+        // and for the device to start advertising again.
+        delay(1000) 
+        // 3. Delete from database
         deviceRepo.deleteDevice(parameter)
+        Timber.tag("DeleteDeviceUseCase").d("Successfully deleted $parameter from DB")
     }
 }

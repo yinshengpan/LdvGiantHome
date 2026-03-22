@@ -37,6 +37,7 @@ dependencies {
     implementation(projects.core.domain)
 
     implementation(projects.feature.home)
+    implementation(projects.feature.profile)
     implementation(projects.feature.search)
     implementation(projects.feature.device.light)
     implementation(projects.feature.device.setting)

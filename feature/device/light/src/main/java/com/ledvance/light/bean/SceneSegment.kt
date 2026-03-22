@@ -7,9 +7,9 @@ import com.ledvance.ui.component.IRadioGroupItem
  * @author : jason yin
  * Email : j.yin@ledvance.com
  * Created date 3/19/26 17:40
- * Describe : ScenesSegment
+ * Describe : SceneSegment
  */
-enum class ScenesSegment(override val title: String, override val value: TableSceneType) :
+enum class SceneSegment(override val title: String, override val value: TableSceneType) :
     IRadioGroupItem<TableSceneType> {
     Natural("Natural", value = TableSceneType.Natural),
     Festival("Festival", value = TableSceneType.Festival),
@@ -18,7 +18,7 @@ enum class ScenesSegment(override val title: String, override val value: TableSc
     ;
 
     companion object {
-        val allScenesSegment = listOf(
+        val allSceneSegment = listOf(
             Natural,
             Festival,
             Soothing,

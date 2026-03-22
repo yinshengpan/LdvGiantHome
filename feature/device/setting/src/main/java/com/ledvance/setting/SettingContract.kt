@@ -28,6 +28,7 @@ internal interface SettingContract :
         @Immutable
         data class Success(
             val isOnline: Boolean,
+            val loading: Boolean,
             val deviceName: String,
             val deviceMacAddress: String,
             val deviceTypeName: String,

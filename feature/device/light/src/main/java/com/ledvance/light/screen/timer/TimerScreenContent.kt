@@ -1,4 +1,4 @@
-package com.ledvance.light.component
+package com.ledvance.light.screen.timer
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -51,16 +51,17 @@ import java.util.Locale
  * @author : jason yin
  * Email : j.yin@ledvance.com
  * Created date 3/19/26 18:15
- * Describe : TimerControl
+ * Describe : TimerScreenContent
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TimerControl(
+internal fun TimerScreenContent(
     onTimer: TimerUiItem,
     offTimer: TimerUiItem,
     onTimerSwitchChange: (TimerType, Boolean) -> Unit,
     onTimerTimeChange: (TimerType, Int, Int) -> Unit,
     onTimerRepeatChange: (TimerType, Set<DayOfWeek>) -> Unit,
+    modifier: Modifier = Modifier
 ) {
 
     var showTimePicker by remember { mutableStateOf<TimerType?>(null) }
@@ -70,21 +71,13 @@ fun TimerControl(
         elevation = CardDefaults.cardElevation(8.dp),
         colors = CardDefaults.cardColors(containerColor = AppTheme.colors.screenBackground),
         shape = RoundedCornerShape(10.dp),
-        modifier = Modifier.padding(paddingValues = PaddingValues(vertical = 10.dp)),
+        modifier = modifier.padding(paddingValues = PaddingValues(20.dp)),
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(15.dp)
         ) {
-            Text(
-                text = "Timer",
-                style = AppTheme.typography.titleMedium,
-                color = AppTheme.colors.title,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 10.dp)
-            )
             TimerItem(
                 title = "Regularly turn on the lights",
                 switch = onTimer.enabled,

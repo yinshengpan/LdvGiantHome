@@ -26,7 +26,7 @@ fun EntryProviderScope<Any>.profileScreen(
     entry<ProfileRoute> {
         PageLifecycleLogger("ProfileRoute")
         ProfileScreen(
-            onToAddNewDevice = onNavigateToAddNewDevice
+            onNavigateToLicenses = onNavigateToAddNewDevice
         )
     }
 }

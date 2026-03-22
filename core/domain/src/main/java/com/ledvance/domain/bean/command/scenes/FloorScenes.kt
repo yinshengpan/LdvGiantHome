@@ -42,7 +42,7 @@ enum class FloorScenes(override val title: String, override val command: Byte) :
     FireworksShow("Fireworks Show", 0x21);    // 烟花秀
 
     companion object {
-        fun getAllScenes(): List<Scene> {
+        fun getAllScene(): List<Scene> {
             return entries
         }
     }

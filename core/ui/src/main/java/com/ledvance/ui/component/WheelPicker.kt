@@ -49,6 +49,12 @@ fun <T> WheelPicker(
     val flingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
     val density = LocalDensity.current
     val itemHeightPx = with(density) { itemHeight.toPx() }
+ 
+    LaunchedEffect(items, initialIndex) {
+        if (initialIndex in items.indices && !listState.isScrollInProgress) {
+            listState.scrollToItem(initialIndex)
+        }
+    }
 
     // Use derivedStateOf to find the item closest to the center of the viewport
     val centerIndex by remember {

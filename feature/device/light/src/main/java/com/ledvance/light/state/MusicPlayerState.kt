@@ -1,4 +1,4 @@
-package com.ledvance.light.component
+package com.ledvance.light.state
 
 import android.content.Context
 import android.net.Uri
@@ -12,6 +12,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import kotlin.random.Random
 
 // Persist across tab switches
@@ -27,6 +28,10 @@ class MusicPlayerState(
     private val context: Context,
     private val coroutineScope: CoroutineScope
 ) {
+    companion object {
+        private const val TAG = "MusicPlayerState"
+    }
+
     val musicList = MusicItem.allMusicItems
     
     var currentIndex by mutableIntStateOf(persistentLastPlayedIndex)
@@ -44,31 +49,44 @@ class MusicPlayerState(
     private var progressJob: Job? = null
 
     fun initialize() {
+        Timber.tag(TAG).d("MusicPlayerState initialize. exoPlayer is null: ${exoPlayer == null}")
         if (exoPlayer != null) return
-        val player = ExoPlayer.Builder(context).build()
-        player.addListener(object : Player.Listener {
-            override fun onPlaybackStateChanged(state: Int) {
-                if (state == Player.STATE_READY) {
-                    duration = player.duration.coerceAtLeast(0L)
-                } else if (state == Player.STATE_ENDED) {
-                    handlePlaybackEnded()
+        try {
+            val player = ExoPlayer.Builder(context).build()
+            player.addListener(object : Player.Listener {
+                override fun onPlaybackStateChanged(state: Int) {
+                    Timber.tag(TAG).v("onPlaybackStateChanged: $state")
+                    if (state == Player.STATE_READY) {
+                        duration = player.duration.coerceAtLeast(0L)
+                        Timber.tag(TAG).d("Player STATE_READY. Duration: $duration ms")
+                    } else if (state == Player.STATE_ENDED) {
+                        Timber.tag(TAG).i("Playback ended for current track")
+                        handlePlaybackEnded()
+                    }
                 }
-            }
-            override fun onIsPlayingChanged(playerIsPlaying: Boolean) {
-                isPlaying = playerIsPlaying
-                if (playerIsPlaying) {
-                    startProgressTracking()
-                } else {
-                    stopProgressTracking()
+                override fun onIsPlayingChanged(playerIsPlaying: Boolean) {
+                    isPlaying = playerIsPlaying
+                    Timber.tag(TAG).d("onIsPlayingChanged: $playerIsPlaying")
+                    if (playerIsPlaying) {
+                        startProgressTracking()
+                    } else {
+                        stopProgressTracking()
+                    }
                 }
-            }
-        })
-        exoPlayer = player
-        playTrack(currentIndex, playFromZero = true)
+            })
+            exoPlayer = player
+            playTrack(currentIndex, playFromZero = true)
+        } catch (e: Exception) {
+            Timber.tag(TAG).e(e, "Failed to initialize ExoPlayer")
+        }
     }
 
     private fun handlePlaybackEnded() {
-        if (musicList.isEmpty()) return
+        if (musicList.isEmpty()) {
+            Timber.tag(TAG).w("handlePlaybackEnded: musicList is empty")
+            return
+        }
+        Timber.tag(TAG).d("handlePlaybackEnded. Mode: $playbackMode")
         when (playbackMode) {
             PlaybackMode.SEQUENTIAL -> {
                 val next = (currentIndex + 1) % musicList.size
@@ -88,27 +106,44 @@ class MusicPlayerState(
     }
 
     fun playTrack(index: Int, playFromZero: Boolean = false) {
-        if (musicList.isEmpty() || exoPlayer == null) return
-        currentIndex = index
-        persistentLastPlayedIndex = index
-        
-        val item = musicList[index]
-        val uri = Uri.parse("asset:///${item.fileName}")
-        val mediaItem = MediaItem.fromUri(uri)
-        
-        exoPlayer?.setMediaItem(mediaItem)
-        exoPlayer?.prepare()
-        if (playFromZero) {
-            exoPlayer?.seekTo(0)
+        if (musicList.isEmpty()) {
+            Timber.tag(TAG).e("playTrack failed: musicList is empty")
+            return
         }
-        exoPlayer?.play()
+        if (exoPlayer == null) {
+            Timber.tag(TAG).e("playTrack failed: exoPlayer is null")
+            return
+        }
+        try {
+            currentIndex = index
+            persistentLastPlayedIndex = index
+            
+            val item = musicList[index]
+            val uri = Uri.parse("asset:///${item.fileName}")
+            val mediaItem = MediaItem.fromUri(uri)
+            Timber.tag(TAG).i("Playing track $index: ${item.title} (${item.fileName})")
+            
+            exoPlayer?.setMediaItem(mediaItem)
+            exoPlayer?.prepare()
+            if (playFromZero) {
+                exoPlayer?.seekTo(0)
+            }
+            exoPlayer?.play()
+        } catch (e: Exception) {
+            Timber.tag(TAG).e(e, "Error playing track at index $index")
+        }
     }
 
     fun togglePlayPause() {
-        if (isPlaying) {
-            exoPlayer?.pause()
-        } else {
-            exoPlayer?.play()
+        Timber.tag(TAG).d("togglePlayPause. current isPlaying: $isPlaying")
+        try {
+            if (isPlaying) {
+                exoPlayer?.pause()
+            } else {
+                exoPlayer?.play()
+            }
+        } catch (e: Exception) {
+            Timber.tag(TAG).e(e, "togglePlayPause failed")
         }
     }
 
@@ -125,17 +160,23 @@ class MusicPlayerState(
     }
 
     fun togglePlaybackMode() {
+        val oldMode = playbackMode
         playbackMode = when (playbackMode) {
             PlaybackMode.SEQUENTIAL -> PlaybackMode.LOOP_ONE
             PlaybackMode.LOOP_ONE -> PlaybackMode.SHUFFLE
             PlaybackMode.SHUFFLE -> PlaybackMode.SEQUENTIAL
         }
+        Timber.tag(TAG).i("Playback mode changed: $oldMode -> $playbackMode")
         persistentPlaybackMode = playbackMode
     }
 
     fun seekTo(position: Long) {
-        exoPlayer?.seekTo(position)
-        currentPosition = position
+        try {
+            exoPlayer?.seekTo(position)
+            currentPosition = position
+        } catch (e: Exception) {
+            Timber.tag(TAG).e(e, "seekTo failed")
+        }
     }
 
     private fun startProgressTracking() {
@@ -153,12 +194,24 @@ class MusicPlayerState(
     }
 
     fun release() {
+        Timber.tag(TAG).d("MusicPlayerState release called")
         persistentLastPlayedIndex = currentIndex
         persistentPlaybackMode = playbackMode
         stopProgressTracking()
-        exoPlayer?.stop()
-        exoPlayer?.release()
+        try {
+            exoPlayer?.stop()
+            Timber.tag(TAG).d("Player stopped")
+        } catch (e: Exception) {
+            Timber.tag(TAG).w("Player stop failed: ${e.message}")
+        }
+        try {
+            exoPlayer?.release()
+            Timber.tag(TAG).d("Player released")
+        } catch (e: Exception) {
+            Timber.tag(TAG).e(e, "Player release failed")
+        }
         exoPlayer = null
+        Timber.tag(TAG).i("MusicPlayerState released")
     }
 }
 

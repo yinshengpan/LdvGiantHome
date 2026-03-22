@@ -1,5 +1,10 @@
 package com.ledvance.energy.manager.navigation
 
+import com.ledvance.home.navigation.HomeRoute
+import com.ledvance.profile.navigation.ProfileRoute
+import com.ledvance.ui.R
+import com.ledvance.ui.navigation.NavigationRoute
+
 /**
  * @author : jason yin
  * Email : j.yin@ledvance.com
@@ -7,16 +12,22 @@ package com.ledvance.energy.manager.navigation
  * Describe : TopLevelDestination
  */
 enum class TopLevelDestination(
-    val iconId: Int,
+    val selectedIconId: Int,
+    val unselectedIconId: Int,
     val iconTextId: Int,
+    val route: NavigationRoute
 ) {
     HOME(
-        iconId = 0,
-        iconTextId = 0,
+        selectedIconId = R.drawable.ic_home_fill,
+        unselectedIconId = R.drawable.ic_home,
+        iconTextId = R.string.tab_home,
+        route = HomeRoute
     ),
 
-    MINE(
-        iconId = 0,
-        iconTextId = 0,
+    PROFILE(
+        selectedIconId = R.drawable.ic_my_fill,
+        unselectedIconId = R.drawable.ic_my,
+        iconTextId = R.string.tab_profile,
+        route = ProfileRoute
     )
 }

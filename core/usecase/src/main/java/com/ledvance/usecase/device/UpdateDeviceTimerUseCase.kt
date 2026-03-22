@@ -9,10 +9,8 @@ import com.ledvance.domain.bean.command.timer.toByte
 import com.ledvance.domain.di.Dispatcher
 import com.ledvance.domain.di.Dispatchers
 import com.ledvance.usecase.base.SuspendUseCase
-import com.ledvance.utils.extensions.toBinary8
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineDispatcher
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -27,11 +25,9 @@ class UpdateDeviceTimerUseCase @Inject constructor(
     private val timerRepo: TimerRepo,
     private val deviceControlUseCase: DeviceControlUseCase
 ) : SuspendUseCase<UpdateDeviceTimerUseCase.Param, Boolean>(dispatcher) {
-    private val TAG = "UpdateDeviceTimerUseCas"
     override suspend fun execute(parameter: Param): Boolean {
         with(parameter) {
             val weekCycle = TimerRepeat(enabled = timer.enabled, days = timer.days.toSet()).toByte().toInt() and 0xFF
-            Timber.tag(TAG).d("execute() $deviceId ${weekCycle.toBinary8()}")
             timerRepo.upsertTimer(
                 TimerEntity(
                     deviceId = deviceId,

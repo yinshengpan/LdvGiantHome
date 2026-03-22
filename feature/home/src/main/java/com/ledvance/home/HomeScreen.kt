@@ -23,6 +23,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceButton
+import com.ledvance.ui.component.LedvancePrimaryScreen
 import com.ledvance.ui.component.LedvanceScreen
 import com.ledvance.ui.component.LoadingOverlay
 import com.ledvance.ui.dialog.LedvanceDialog
@@ -59,14 +60,12 @@ internal fun HomeScreen(
         }
     }
 
-    LedvanceScreen(
-        topBarContainerColor = AppTheme.colors.primaryBackground,
-        topBarContentColor = AppTheme.colors.primaryContent,
-        horizontalAlignment = Alignment.CenterHorizontally,
+    LedvancePrimaryScreen(
+        title = "LDV Home",
         actionIconPainter = painterResource(R.drawable.ic_add),
         onActionPressed = onToAddNewDevice,
+        horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
-        title = "Ldv Home",
     ) {
         when (uiState) {
             HomeContract.UiState.Empty -> {

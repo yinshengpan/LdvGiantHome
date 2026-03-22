@@ -10,6 +10,7 @@ import com.ledvance.domain.bean.TimerType
 import com.ledvance.domain.bean.command.CommandType
 import com.ledvance.domain.bean.command.NotifyType
 import com.ledvance.domain.bean.command.OnOff
+import com.ledvance.utils.extensions.toHex
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -52,10 +53,15 @@ class ConnectionManager @Inject constructor(
     private val MAX_CONNECTION = 3
 
     fun requestConnect(deviceId: DeviceId) {
-        if (connectionMap.containsKey(deviceId)) return
+        Timber.tag(TAG).d("requestConnect: $deviceId")
+        if (connectionMap.containsKey(deviceId)) {
+            Timber.tag(TAG).d("requestConnect: Device $deviceId already in connection map")
+            return
+        }
 
         if (connectionMap.size >= MAX_CONNECTION) {
             val evict = selectEvictDevice()
+            Timber.tag(TAG).i("requestConnect: Reached MAX_CONNECTION ($MAX_CONNECTION), evicting: $evict")
             disconnect(evict)
         }
 
@@ -63,6 +69,7 @@ class ConnectionManager @Inject constructor(
     }
 
     private fun connect(deviceId: DeviceId) {
+        Timber.tag(TAG).d("connect: Initializing BleClient for $deviceId")
         registry.updateConnection(deviceId, ConnectionState.CONNECTING)
 
         val client = BleClient(
@@ -72,7 +79,7 @@ class ConnectionManager @Inject constructor(
                 handleNotification(deviceId, bytes)
             },
             onConnectChange = { id, state ->
-                Timber.tag(TAG).i("Device $id $state remotely")
+                Timber.tag(TAG).i("onConnectChange: Device $id changed state to $state")
                 if (state == ConnectionState.DISCONNECTED || state == ConnectionState.FAILED) {
                     connectionMap.remove(id)
                 }
@@ -83,8 +90,10 @@ class ConnectionManager @Inject constructor(
 
         scope.launch {
             try {
+                Timber.tag(TAG).d("connect: Launching connection coroutine for $deviceId")
                 client.connect()
             } catch (e: Exception) {
+                Timber.tag(TAG).e(e, "connect: Failed to connect to $deviceId")
                 connectionMap.remove(deviceId)
                 registry.updateConnection(deviceId, ConnectionState.FAILED)
             }
@@ -96,12 +105,15 @@ class ConnectionManager @Inject constructor(
      * 合法帧: 首字节 0x1D, 末字节 0xD1, Byte2 = 0x02 (Response)
      */
     private fun handleNotification(deviceId: DeviceId, bytes: ByteArray) {
+        Timber.tag(TAG).v("handleNotification: Received from $deviceId: ${bytes.toHex()}")
+
         if (bytes.size < 4) return
         if (bytes.first() != GiantProtocol.HEADER_BYTE) return
         if (bytes.last() != GiantProtocol.END_BYTE) return
         if (bytes[2] != NotifyType.Response.command) return
 
         val cmd = bytes[1]
+        Timber.tag(TAG).d("handleNotification: Identified command: 0x%02X for $deviceId", cmd)
         when (cmd) {
             CommandType.QueryDeviceInfo.command -> parseQueryDeviceInfo(deviceId, bytes)
             CommandType.QueryDeviceState.command -> parseQueryDeviceState(deviceId, bytes)
@@ -125,6 +137,7 @@ class ConnectionManager @Inject constructor(
         val modeType = bytes[9].toInt() and 0xFF
         val modeId = bytes[10].toInt() and 0xFF
         val speed = bytes[11].toInt() and 0xFF
+        Timber.tag(TAG).i("parseQueryDeviceInfo: $deviceId -> Power=$power, RGBW=($r,$g,$b,$w), Brightness=$brightness, ModeType=$modeType, ModeId=$modeId, Speed=$speed")
         registry.updateDeviceInfo(deviceId, power, r, g, b, w, brightness, modeType, modeId, speed)
     }
 
@@ -135,6 +148,7 @@ class ConnectionManager @Inject constructor(
     private fun parseQueryDeviceState(deviceId: DeviceId, bytes: ByteArray) {
         if (bytes.size != 9) return
         val power = bytes[3] == OnOff.On.command
+        Timber.tag(TAG).i("parseQueryDeviceState: $deviceId -> Power=$power")
         registry.updateDeviceState(deviceId, power)
     }
 
@@ -168,6 +182,8 @@ class ConnectionManager @Inject constructor(
             minute = offMinute,
             weekCycle = offCycle,
         )
+        Timber.tag(TAG).i("parseGetTimingInfo: $deviceId -> ON(%s):%02d:%02d Cycle:%X, OFF(%s):%02d:%02d Cycle:%X", 
+            onSwitch, onHour, onMinute, onCycle, offSwitch, offHour, offMinute, offCycle)
         registry.updateTimerInfo(deviceId, onTimer, offTimer)
     }
 
@@ -177,16 +193,19 @@ class ConnectionManager @Inject constructor(
      */
     private fun parseQueryCurrentTime(deviceId: DeviceId, bytes: ByteArray) {
         if (bytes.size != 9) return
+        Timber.tag(TAG).d("parseQueryCurrentTime: $deviceId -> Refreshed active time")
         // 更新活跃时间（当前未持久化时间，可按需扩展 DeviceRegistry）
         registry.updateActive(deviceId)
     }
 
     fun disconnect(deviceId: DeviceId) {
+        Timber.tag(TAG).i("disconnect: Manually disconnecting $deviceId")
         connectionMap.remove(deviceId)?.disconnect()
         registry.updateConnection(deviceId, ConnectionState.DISCONNECTED)
     }
 
     fun disconnectAll() {
+        Timber.tag(TAG).d("disconnectAll")
         connectionMap.forEach { (deviceId, client) ->
             client.disconnect()
             registry.updateConnection(deviceId, ConnectionState.DISCONNECTED)
@@ -200,7 +219,7 @@ class ConnectionManager @Inject constructor(
         val now = System.currentTimeMillis()
         val idleThreshold = 60_000L * 5 // 5 minutes
 
-        return connectionMap.keys
+        val victim = connectionMap.keys
             .mapNotNull { registry.get(it) }
             .sortedWith(
                 compareBy<BleDeviceState> { state ->
@@ -209,5 +228,8 @@ class ConnectionManager @Inject constructor(
                 }.thenBy { it.rssi } // Lowest RSSI evicted first among ties/idle devices
             )
             .first().deviceId
+        
+        Timber.tag(TAG).d("selectEvictDevice: Selected $victim for eviction based on LRU/RSSI strategy")
+        return victim
     }
 }

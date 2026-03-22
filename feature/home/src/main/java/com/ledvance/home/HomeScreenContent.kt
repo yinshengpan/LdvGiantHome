@@ -114,7 +114,8 @@ fun DeviceItem(
                         contentDescription = "offline",
                         modifier = Modifier
                             .padding(top = 10.dp, end = 10.dp)
-                            .size(24.dp),
+                            .size(24.dp)
+                            .debouncedClickable { onConnectClick.invoke(device.deviceId) },
                     )
                 } else {
                     LedvanceSwitch(
