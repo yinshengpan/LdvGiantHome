@@ -39,6 +39,7 @@ internal fun ScenesScreen(
                     onSceneChange = viewModel::onSceneChange,
                     onSceneSegmentChange = viewModel::onSceneSegmentChange,
                     onSpeedChange = viewModel::onSpeedChange,
+                    onBrightnessChange = viewModel::onBrightnessChange,
                 )
                 LoadingOverlay(visible = state.commandLoading)
                 OfflineBanner(

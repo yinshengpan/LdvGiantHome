@@ -7,6 +7,8 @@ import com.ledvance.database.model.DevicePowerUpdateEntity
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.WorkMode
 import com.ledvance.domain.bean.command.LineSequence
+import com.ledvance.domain.bean.command.ModeId
+import com.ledvance.domain.bean.command.ModeType
 import com.ledvance.utils.extensions.tryCatch
 import com.ledvance.utils.extensions.tryCatchReturn
 import kotlinx.coroutines.Dispatchers
@@ -67,6 +69,10 @@ class DeviceRepo @Inject constructor(
 
     suspend fun updateDeviceLineSequence(deviceId: DeviceId, lineSequence: LineSequence) = withContext(Dispatchers.IO) {
         tryCatch { deviceDao.updateDeviceLineSequence(deviceId, lineSequence) }
+    }
+
+    suspend fun updateDeviceMode(deviceId: DeviceId, modeType: ModeType?, modeId: ModeId?) = withContext(Dispatchers.IO) {
+        tryCatch { deviceDao.updateModeId(deviceId, modeType, modeId) }
     }
 
     suspend fun updateDeviceFirmwareVersion(deviceId: DeviceId, firmwareVersion: String) = withContext(Dispatchers.IO) {

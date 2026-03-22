@@ -1,15 +1,16 @@
 package com.ledvance.light.screen.scenes
 
-import SnackbarManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
+import com.ledvance.domain.bean.command.ModeType
 import com.ledvance.domain.bean.command.scenes.FloorScenes
 import com.ledvance.domain.bean.command.scenes.Scene
 import com.ledvance.domain.bean.command.scenes.TableScenes
 import com.ledvance.light.bean.LightCommand
 import com.ledvance.light.bean.SceneSegment
+import com.ledvance.ui.component.SnackbarManager
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceStateUseCase
 import com.ledvance.usecase.device.GetDeviceUseCase
@@ -55,10 +56,16 @@ internal class ScenesViewModel @AssistedInject constructor(
         flow2 = getDeviceStateUseCase(deviceId),
         flow3 = screenState
     ) { device, deviceState, state ->
+        val scenes = device.deviceType.getScenes(state.selectedSceneSegment)
+        val selectedScene = if (device.modeType == ModeType.Scene) {
+            scenes.firstOrNull { it.command == device.modeId?.command }
+        } else null
         ScenesContract.UiState.Success(
             isOnline = deviceState.isOnline,
+            brightness = state.brightness.takeIf { it != -1 } ?: device.v,
             speed = state.speed.takeIf { it != -1 } ?: device.speed,
             selectedSceneSegment = state.selectedSceneSegment,
+            selectedScene = selectedScene,
             scenes = device.deviceType.getScenes(state.selectedSceneSegment),
             sceneSegments = device.deviceType.getSceneSceneSegmentList(),
             commandLoading = state.commandLoading
@@ -69,7 +76,6 @@ internal class ScenesViewModel @AssistedInject constructor(
         initialValue = ScenesContract.UiState.Loading
     )
 
-
     init {
         viewModelScope.launch {
             lightCommandFlow.sample(300).collectLatest {
@@ -77,6 +83,10 @@ internal class ScenesViewModel @AssistedInject constructor(
                 when (it) {
                     is LightCommand.Speed -> {
                         deviceControlUseCase.setSpeed(deviceId, it.speed)
+                    }
+
+                    is LightCommand.ColourModeBrightness -> {
+                        deviceControlUseCase.setColourModeBrightness(deviceId, it.brightness)
                     }
 
                     else -> {}
@@ -103,6 +113,11 @@ internal class ScenesViewModel @AssistedInject constructor(
     override fun onSpeedChange(speed: Int) {
         screenState.update { it.copy(speed = speed) }
         lightCommandFlow.tryEmit(LightCommand.Speed(speed))
+    }
+
+    override fun onBrightnessChange(brightness: Int) {
+        screenState.update { it.copy(brightness = brightness) }
+        lightCommandFlow.tryEmit(LightCommand.ColourModeBrightness(brightness))
     }
 
     override fun onReconnect() {
@@ -138,6 +153,7 @@ internal class ScenesViewModel @AssistedInject constructor(
         val selectedSceneSegment: SceneSegment = SceneSegment.Natural,
         val sceneSegments: List<SceneSegment> = listOf(),
         val scenes: List<Scene> = listOf(),
+        val brightness: Int = -1,
         val speed: Int = -1,
         val commandLoading: Boolean = false,
     )

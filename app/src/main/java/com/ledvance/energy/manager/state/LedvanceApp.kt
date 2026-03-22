@@ -1,5 +1,8 @@
 package com.ledvance.energy.manager.state
 
+import com.ledvance.ui.component.SnackbarManager
+import com.ledvance.ui.component.SnackbarMessage
+
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height

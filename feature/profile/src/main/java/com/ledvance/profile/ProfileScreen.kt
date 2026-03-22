@@ -1,7 +1,10 @@
 package com.ledvance.profile
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.ledvance.log.LogManager
 import com.ledvance.ui.R
@@ -22,22 +25,23 @@ internal fun ProfileScreen(onNavigateToLicenses: () -> Unit) {
     LedvancePrimaryScreen(
         title = "Personal Center",
     ) {
-
-        ItemView(
-            itemIconResId = R.drawable.ic_log,
-            title = "Share Logs",
-            showDivider = true,
-            onContentClick = {
-                scope.launch {
-                    LogManager.shareAppLog(context)
+        Column(modifier = Modifier.fillMaxSize()) {
+            ItemView(
+                itemIconResId = R.drawable.ic_log,
+                title = "Share Logs",
+                showDivider = true,
+                onContentClick = {
+                    scope.launch {
+                        LogManager.shareAppLog(context)
+                    }
                 }
-            }
-        )
-//        ItemView(
-//            itemIconResId = R.drawable.ic_license,
-//            title = "Open Source Licenses",
-//            showDivider = true,
-//            onContentClick = onNavigateToLicenses,
-//        )
+            )
+//            ItemView(
+//                itemIconResId = R.drawable.ic_license,
+//                title = "Open Source Licenses",
+//                showDivider = true,
+//                onContentClick = onNavigateToLicenses,
+//            )
+        }
     }
 }

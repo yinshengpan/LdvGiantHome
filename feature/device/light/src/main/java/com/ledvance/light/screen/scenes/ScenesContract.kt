@@ -20,10 +20,12 @@ internal interface ScenesContract {
         data class Success(
             val isOnline: Boolean,
             val speed: Int,
-            val selectedSceneSegment: SceneSegment = SceneSegment.Natural,
-            val sceneSegments: List<SceneSegment> = listOf(),
-            val scenes: List<Scene> = listOf(),
-            val commandLoading: Boolean = false
+            val brightness: Int,
+            val selectedSceneSegment: SceneSegment,
+            val sceneSegments: List<SceneSegment>,
+            val selectedScene: Scene?,
+            val scenes: List<Scene>,
+            val commandLoading: Boolean,
         ) : UiState
 
         @Immutable
@@ -36,5 +38,6 @@ internal interface ScenesContract {
 
     fun onSceneSegmentChange(sceneSegment: SceneSegment)
     fun onSpeedChange(speed: Int)
+    fun onBrightnessChange(brightness: Int)
     fun onReconnect()
 }

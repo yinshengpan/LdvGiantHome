@@ -12,6 +12,8 @@ import com.ledvance.database.model.DevicePowerUpdateEntity
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.WorkMode
 import com.ledvance.domain.bean.command.LineSequence
+import com.ledvance.domain.bean.command.ModeId
+import com.ledvance.domain.bean.command.ModeType
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -63,6 +65,9 @@ interface DeviceDao {
 
     @Query("UPDATE devices SET line_sequence = :lineSequence WHERE device_id = :deviceId")
     suspend fun updateDeviceLineSequence(deviceId: DeviceId, lineSequence: LineSequence)
+
+    @Query("UPDATE devices SET mode_type = :modeType, mode_id = :modeId WHERE device_id = :deviceId")
+    suspend fun updateModeId(deviceId: DeviceId, modeType: ModeType?, modeId: ModeId?)
 
     @Query("UPDATE devices SET firmware_version = :firmwareVersion WHERE device_id = :deviceId")
     suspend fun updateDeviceFirmwareVersion(deviceId: DeviceId, firmwareVersion: String)

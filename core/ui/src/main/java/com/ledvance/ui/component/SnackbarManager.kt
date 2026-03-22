@@ -1,3 +1,5 @@
+package com.ledvance.ui.component
+
 import androidx.annotation.StringRes
 import com.ledvance.ui.R
 import kotlinx.coroutines.flow.MutableSharedFlow

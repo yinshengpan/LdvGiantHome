@@ -10,6 +10,7 @@ import com.ledvance.domain.bean.command.BrightnessType
 import com.ledvance.domain.bean.command.DeviceMicRhythm
 import com.ledvance.domain.bean.command.LineSequence
 import com.ledvance.domain.bean.command.ModeId
+import com.ledvance.domain.bean.command.ModeType
 import com.ledvance.domain.bean.command.scenes.Scene
 import com.ledvance.utils.extensions.toUnsignedInt
 import kotlinx.coroutines.delay
@@ -47,6 +48,7 @@ class DeviceControlUseCase @Inject constructor(
             val protocol = getProtocol(deviceId)
             protocol.setHSV(h, s)
             registry.updateActive(deviceId)
+            deviceRepo.updateDeviceHs(deviceId, h, s)
         }
     }
 
@@ -56,6 +58,7 @@ class DeviceControlUseCase @Inject constructor(
             val protocol = getProtocol(deviceId)
             protocol.setBrightness(BrightnessType.RGB, brightness)
             registry.updateActive(deviceId)
+            deviceRepo.updateDeviceV(deviceId, brightness)
         }
     }
 
@@ -64,6 +67,7 @@ class DeviceControlUseCase @Inject constructor(
             ensureConnected(deviceId)
             getProtocol(deviceId).setCCT(cct)
             registry.updateActive(deviceId)
+            deviceRepo.updateDeviceCct(deviceId, cct)
         }
     }
 
@@ -73,6 +77,7 @@ class DeviceControlUseCase @Inject constructor(
             val protocol = getProtocol(deviceId)
             protocol.setBrightness(BrightnessType.WCT, brightness)
             registry.updateActive(deviceId)
+            deviceRepo.updateDeviceBrightness(deviceId, brightness)
         }
     }
 
@@ -81,6 +86,8 @@ class DeviceControlUseCase @Inject constructor(
             ensureConnected(deviceId)
             getProtocol(deviceId).setScene(sceneId)
             registry.updateActive(deviceId)
+            val modeId = ModeId.fromInt(sceneId.command.toUnsignedInt())
+            deviceRepo.updateDeviceMode(deviceId, ModeType.Scene, modeId)
         }
     }
 
@@ -89,6 +96,7 @@ class DeviceControlUseCase @Inject constructor(
             ensureConnected(deviceId)
             getProtocol(deviceId).setMode(modeId)
             registry.updateActive(deviceId)
+            deviceRepo.updateDeviceMode(deviceId, ModeType.Classic, modeId)
         }
     }
 
@@ -97,6 +105,7 @@ class DeviceControlUseCase @Inject constructor(
             ensureConnected(deviceId)
             getProtocol(deviceId).setSpeed(speed)
             registry.updateActive(deviceId)
+            deviceRepo.updateDeviceSpeed(deviceId, speed)
         }
     }
 
@@ -113,6 +122,7 @@ class DeviceControlUseCase @Inject constructor(
             ensureConnected(deviceId)
             getProtocol(deviceId).setLineSequence(lineSequence)
             registry.updateActive(deviceId)
+            deviceRepo.updateDeviceLineSequence(deviceId, lineSequence)
         }
     }
 

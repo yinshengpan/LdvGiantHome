@@ -26,6 +26,7 @@ class AndroidComposeFeatureConventionPlugin : Plugin<Project> {
 
                 "implementation"(libs.findLibrary("timber").get())
                 "implementation"(libs.findLibrary("navigation3.runtime").get())
+                "implementation"(libs.findLibrary("navigation3.ui").get())
                 "implementation"(libs.findLibrary("hilt.navigation.compose").get())
             }
         }

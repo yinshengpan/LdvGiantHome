@@ -6,7 +6,7 @@ import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
 import com.ledvance.domain.bean.asMacAddress
 import com.ledvance.domain.bean.command.LineSequence
-import com.ledvance.domain.bean.command.scenes.Scene
+import com.ledvance.ui.component.SnackbarManager
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceStateUseCase
 import com.ledvance.usecase.device.GetDeviceUseCase
@@ -77,13 +77,23 @@ internal class SettingViewModel @AssistedInject constructor(
 
     override fun resetDevice() {
         viewModelScope.launch {
-            deviceControlUseCase.reset(deviceId)
+            screenState.update { it.copy(commandLoading = true) }
+            val success = deviceControlUseCase.reset(deviceId)
+            if (!success) {
+                SnackbarManager.showGenericError()
+            }
+            screenState.update { it.copy(commandLoading = false) }
         }
     }
 
     override fun setLineSequence(lineSequence: LineSequence) {
         viewModelScope.launch {
-            deviceControlUseCase.setLineSequence(deviceId, lineSequence)
+            screenState.update { it.copy(commandLoading = true) }
+            val success = deviceControlUseCase.setLineSequence(deviceId, lineSequence)
+            if (!success) {
+                SnackbarManager.showGenericError()
+            }
+            screenState.update { it.copy(commandLoading = false) }
         }
     }
 

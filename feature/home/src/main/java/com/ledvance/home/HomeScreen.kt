@@ -24,7 +24,6 @@ import com.ledvance.domain.bean.DeviceId
 import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceButton
 import com.ledvance.ui.component.LedvancePrimaryScreen
-import com.ledvance.ui.component.LedvanceScreen
 import com.ledvance.ui.component.LoadingOverlay
 import com.ledvance.ui.dialog.LedvanceDialog
 import com.ledvance.ui.state.rememberBluetoothBusinessState
@@ -64,52 +63,33 @@ internal fun HomeScreen(
         title = "LDV Home",
         actionIconPainter = painterResource(R.drawable.ic_add),
         onActionPressed = onToAddNewDevice,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
     ) {
         when (uiState) {
-            HomeContract.UiState.Empty -> {
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "No device added, please add a device",
-                        style = AppTheme.typography.bodyMedium,
-                        color = AppTheme.colors.body
-                    )
-                    Spacer(modifier = Modifier.height(24.dp))
-                    LedvanceButton(
-                        text = "Add Device",
-                        modifier = Modifier.width(150.dp),
-                        onClick = onToAddNewDevice
-                    )
-                }
-            }
-
             HomeContract.UiState.Loading -> {}
             is HomeContract.UiState.Success -> {
                 val successUiState = uiState as HomeContract.UiState.Success
-                HomeScreenContent(
-                    uiState = successUiState,
-                    onSwitchChange = { deviceId, switch ->
-                        viewModel.onSwitchChange(deviceId, switch)
-                    },
-                    onConnectClick = {
-                        viewModel.connectDevice(it)
-                    },
-                    onDisconnectClick = {
-                        viewModel.disconnectDevice(it)
-                    },
-                    onDeviceClick = {
-                        onNavigateToControlPanel(it)
-                    },
-                    onDeleteClick = {
-                        deviceToDelete = it
-                    }
-                )
-
+                if (successUiState.devices.isNotEmpty()) {
+                    HomeScreenContent(
+                        uiState = successUiState,
+                        onSwitchChange = { deviceId, switch ->
+                            viewModel.onSwitchChange(deviceId, switch)
+                        },
+                        onConnectClick = {
+                            viewModel.connectDevice(it)
+                        },
+                        onDisconnectClick = {
+                            viewModel.disconnectDevice(it)
+                        },
+                        onDeviceClick = {
+                            onNavigateToControlPanel(it)
+                        },
+                        onDeleteClick = {
+                            deviceToDelete = it
+                        }
+                    )
+                } else {
+                    EmptyData(onToAddNewDevice = onToAddNewDevice)
+                }
                 val loading = (uiState as HomeContract.UiState.Success).commandLoading
                 LoadingOverlay(visible = loading)
             }
@@ -125,6 +105,27 @@ internal fun HomeScreen(
                 viewModel.onDeleteDevice(deviceToDelete!!)
                 deviceToDelete = null
             }
+        )
+    }
+}
+
+@Composable
+private fun EmptyData(onToAddNewDevice: () -> Unit) {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = "No device added, please add a device",
+            style = AppTheme.typography.bodyMedium,
+            color = AppTheme.colors.body
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        LedvanceButton(
+            text = "Add Device",
+            modifier = Modifier.width(150.dp),
+            onClick = onToAddNewDevice
         )
     }
 }

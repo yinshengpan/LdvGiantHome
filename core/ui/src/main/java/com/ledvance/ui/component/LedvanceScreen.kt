@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
@@ -104,14 +105,13 @@ fun LedvanceScreen(
 
 @Composable
 fun LedvancePrimaryScreen(
-    title: String = "",
     modifier: Modifier = Modifier,
+    title: String = "",
     actionEnable: Boolean = true,
     actionIconPainter: Painter? = null,
     onActionPressed: () -> Unit = {},
-    verticalArrangement: Arrangement.Vertical = Arrangement.Top,
-    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
-    content: @Composable ColumnScope.() -> Unit
+    contentAlignment: Alignment = Alignment.TopStart,
+    content: @Composable BoxScope.() -> Unit
 ) {
     LedvanceScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -147,7 +147,7 @@ fun LedvancePrimaryScreen(
                     )
                 }
             }
-            Column(
+            Box(
                 modifier = Modifier
                     .padding(top = 24.dp)
                     .fillMaxSize()
@@ -156,8 +156,7 @@ fun LedvancePrimaryScreen(
                         shape = RoundedCornerShape(topStart = 12.dp, topEnd = 12.dp)
                     )
                     .then(modifier),
-                verticalArrangement = verticalArrangement,
-                horizontalAlignment = horizontalAlignment,
+                contentAlignment = contentAlignment,
                 content = content
             )
         }

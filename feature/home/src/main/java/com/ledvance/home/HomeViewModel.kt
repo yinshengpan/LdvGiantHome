@@ -12,6 +12,7 @@ import androidx.lifecycle.viewModelScope
 import com.ledvance.ble.core.ConnectionManager
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceUiItem
+import com.ledvance.ui.component.SnackbarManager
 import com.ledvance.usecase.device.DeleteDeviceUseCase
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceListStateUseCase
@@ -48,32 +49,24 @@ internal class HomeViewModel @Inject constructor(
         getDeviceListStateUseCase(),
         commandLoading
     ) { dbDevices, deviceStateList, loading ->
-        if (dbDevices.isEmpty()) {
-            HomeContract.UiState.Empty
-        } else {
-            val onlineMap = deviceStateList.associate { it.deviceId to it.isOnline }
-            Timber.tag(TAG).d("onlineMap:$onlineMap")
-            val mergedDevices = dbDevices.map { device ->
-                device.copy(isOnline = onlineMap[device.deviceId] ?: false)
-            }
-            HomeContract.UiState.Success(devices = mergedDevices, commandLoading = loading)
+        val onlineMap = deviceStateList.associate { it.deviceId to it.isOnline }
+        Timber.tag(TAG).d("onlineMap:$onlineMap")
+        val mergedDevices = dbDevices.map { device ->
+            device.copy(isOnline = onlineMap[device.deviceId] ?: false)
         }
-    }
-        .onStart {
-            Timber.d("Loading home page")
-        }
-        .onEach {
-            Timber.d("Home page is loaded")
-        }
-        .catch { error ->
-            Timber.e(error, "Failed to load home page")
-            emit(HomeContract.UiState.Empty)
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(),
-            initialValue = HomeContract.UiState.Loading
-        )
+        HomeContract.UiState.Success(devices = mergedDevices, commandLoading = loading)
+    }.onStart {
+        Timber.d("Loading home page")
+    }.onEach {
+        Timber.d("Home page is loaded")
+    }.catch { error ->
+        Timber.e(error, "Failed to load home page")
+        emit(HomeContract.UiState.Success(devices = listOf()))
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(),
+        initialValue = HomeContract.UiState.Loading
+    )
 
     init {
         syncDeviceInfoUseCase(viewModelScope)
@@ -91,7 +84,7 @@ internal class HomeViewModel @Inject constructor(
                         val devicesToConnect = currentState.devices
                             .filter { !it.isOnline }
                             .take(3 - connectedCount)
-                        
+
                         if (devicesToConnect.isNotEmpty()) {
                             Timber.tag(TAG).d("Auto-reconnecting ${devicesToConnect.size} devices")
                             connectDevices(devicesToConnect)

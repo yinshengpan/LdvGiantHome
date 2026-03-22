@@ -22,11 +22,8 @@ internal interface HomeContract {
         @Immutable
         data class Success(
             val devices: List<DeviceUiItem>,
-             val commandLoading: Boolean = false,
+            val commandLoading: Boolean = false,
         ) : UiState
-
-        @Immutable
-        data object Empty : UiState
     }
 
     val uiState: StateFlow<UiState>

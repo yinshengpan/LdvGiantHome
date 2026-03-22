@@ -1,6 +1,6 @@
 package com.ledvance.light
 
-import SnackbarManager
+import com.ledvance.ui.component.SnackbarManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ledvance.domain.bean.DeviceId

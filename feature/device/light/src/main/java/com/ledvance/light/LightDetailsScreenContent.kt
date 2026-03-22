@@ -3,7 +3,6 @@ package com.ledvance.light
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -53,15 +52,13 @@ internal fun LightDetailsScreenContent(
             onWhiteModeCctChange = onWhiteModeCctChange,
             onWhiteModeBrightnessChange = onWhiteModeBrightnessChange,
         )
-        if (uiState.power) {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2), modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(15.dp),
-            ) {
-                items(uiState.cardFeatureList) { feature ->
-                    CardFeatureItem(cardFeature = feature) {
-                        onNavigateToFeature(feature)
-                    }
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2), modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.spacedBy(15.dp),
+        ) {
+            items(uiState.cardFeatureList) { feature ->
+                CardFeatureItem(cardFeature = feature) {
+                    onNavigateToFeature(feature)
                 }
             }
         }
