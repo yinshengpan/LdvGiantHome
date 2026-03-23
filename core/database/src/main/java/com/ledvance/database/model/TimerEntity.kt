@@ -2,6 +2,7 @@ package com.ledvance.database.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.TimerType
 
@@ -18,7 +19,15 @@ import com.ledvance.domain.bean.TimerType
  */
 @Entity(
     tableName = "device_timers",
-    primaryKeys = ["device_id", "timer_type"]
+    primaryKeys = ["device_id", "timer_type"],
+    foreignKeys = [
+        ForeignKey(
+            entity = DeviceEntity::class,
+            parentColumns = ["device_id"],
+            childColumns = ["device_id"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
 )
 data class TimerEntity(
     @ColumnInfo(name = "device_id")

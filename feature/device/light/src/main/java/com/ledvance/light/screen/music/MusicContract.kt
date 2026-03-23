@@ -24,7 +24,8 @@ internal interface MusicContract {
             val musicSegmentList: List<MusicSegment>,
             val deviceMicRhythm: DeviceMicRhythm,
             val deviceMicRhythmList: List<DeviceMicRhythm>,
-            val deviceMicSensitivity: Int
+            val phoneMicSensitivity: Int,
+            val deviceMicSensitivity: Int,
         ) : UiState
 
         @Immutable
@@ -34,7 +35,8 @@ internal interface MusicContract {
     val uiState: StateFlow<UiState>
 
     fun onRhythmChange(deviceMicRhythm: DeviceMicRhythm)
-    fun onSensitivityChange(sensitivity: Int)
+    fun onDeviceMicSensitivityChange(sensitivity: Int)
+    fun onPhoneMicSensitivityChange(sensitivity: Int)
     fun onMusicSegmentChange(musicSegment: MusicSegment)
     fun onReconnect()
 }

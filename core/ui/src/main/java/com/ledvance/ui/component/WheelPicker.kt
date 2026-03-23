@@ -2,18 +2,26 @@ package com.ledvance.ui.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -21,8 +29,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.map
+import com.ledvance.utils.extensions.tryCatch
 
 /**
  * @author : jason yin
@@ -43,16 +50,26 @@ fun <T> WheelPicker(
     highlightShape: RoundedCornerShape = RoundedCornerShape(12.dp),
     onSelectionChanged: (T) -> Unit = {},
     onPickCompleted: (T) -> Unit = {},
+    isInfinite: Boolean = false,
     label: (T) -> String
 ) {
-    val listState = rememberLazyListState(initialIndex)
+    val totalItems = if (isInfinite && items.isNotEmpty()) Int.MAX_VALUE else items.size
+    val scrollToIndex = remember(items, initialIndex, isInfinite) {
+        if (isInfinite && items.isNotEmpty()) {
+            (Int.MAX_VALUE / 2) - ((Int.MAX_VALUE / 2) % items.size) + initialIndex
+        } else {
+            initialIndex
+        }
+    }
+
+    val listState = rememberLazyListState(scrollToIndex)
     val flingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
     val density = LocalDensity.current
     val itemHeightPx = with(density) { itemHeight.toPx() }
  
-    LaunchedEffect(items, initialIndex) {
-        if (initialIndex in items.indices && !listState.isScrollInProgress) {
-            listState.scrollToItem(initialIndex)
+    LaunchedEffect(items, initialIndex, isInfinite) {
+        if (items.isNotEmpty() && !listState.isScrollInProgress) {
+            tryCatch { listState.scrollToItem(scrollToIndex) }
         }
     }
 
@@ -69,8 +86,11 @@ fun <T> WheelPicker(
     }
 
     LaunchedEffect(centerIndex) {
-        if (centerIndex in items.indices) {
-            onSelectionChanged(items[centerIndex])
+        if (items.isNotEmpty()) {
+            val index = if (isInfinite) centerIndex % items.size else centerIndex
+            if (index in items.indices) {
+                onSelectionChanged(items[index])
+            }
         }
     }
 
@@ -81,8 +101,11 @@ fun <T> WheelPicker(
             hasScrolled.value = true
         } else if (hasScrolled.value) {
             hasScrolled.value = false
-            if (centerIndex in items.indices) {
-                onPickCompleted(items[centerIndex])
+            if (items.isNotEmpty()) {
+                val index = if (isInfinite) centerIndex % items.size else centerIndex
+                if (index in items.indices) {
+                    onPickCompleted(items[index])
+                }
             }
         }
     }
@@ -104,14 +127,16 @@ fun <T> WheelPicker(
                 )
         )
 
+        val itemList = items
         LazyColumn(
             state = listState,
             flingBehavior = flingBehavior,
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(vertical = itemHeight * (visibleItemsCount / 2))
         ) {
-            items(items.size) { index ->
-                val item = items[index]
+            items(totalItems) { index ->
+                val actualIndex = if (isInfinite) index % itemList.size else index
+                val item = itemList[actualIndex]
                 val distance = kotlin.math.abs(index - centerIndex)
 
                 val alpha = when (distance) {

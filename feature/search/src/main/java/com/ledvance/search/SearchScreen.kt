@@ -69,21 +69,22 @@ internal fun SearchScreen(
         onBackPressed = onBackClick,
         verticalArrangement = Arrangement.Center,
         title = "Search For Devices",
+        isLoading = uiState.loading
     ) {
-        when (uiState) {
-            is SearchContract.UiState.Success -> {
-                SearchScreenContent(uiState = uiState as SearchContract.UiState.Success) {
-                    viewModel.addDevice(it)
-                }
-            }
-
-            else -> {
+        when {
+            uiState.devices.isEmpty() -> {
                 LottieAsset(
                     assetName = "ble.lottie",
                     modifier = Modifier
                         .padding(top = 76.dp)
                         .align(Alignment.TopCenter)
                 )
+            }
+
+            else -> {
+                SearchScreenContent(uiState = uiState) {
+                    viewModel.addDevice(it)
+                }
             }
         }
     }

@@ -25,7 +25,7 @@ internal interface ScenesContract {
             val sceneSegments: List<SceneSegment>,
             val selectedScene: Scene?,
             val scenes: List<Scene>,
-            val commandLoading: Boolean,
+            val loading: Boolean,
         ) : UiState
 
         @Immutable

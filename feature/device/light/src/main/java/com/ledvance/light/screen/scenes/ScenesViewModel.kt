@@ -68,7 +68,7 @@ internal class ScenesViewModel @AssistedInject constructor(
             selectedScene = selectedScene,
             scenes = device.deviceType.getScenes(state.selectedSceneSegment),
             sceneSegments = device.deviceType.getSceneSceneSegmentList(),
-            commandLoading = state.commandLoading
+            loading = state.loading
         )
     }.stateIn(
         scope = viewModelScope,
@@ -97,12 +97,12 @@ internal class ScenesViewModel @AssistedInject constructor(
 
     override fun onSceneChange(scene: Scene) {
         viewModelScope.launch {
-            screenState.update { it.copy(commandLoading = true) }
+            screenState.update { it.copy(loading = true) }
             val success = deviceControlUseCase.setScene(deviceId, scene)
             if (!success) {
                 SnackbarManager.showGenericError()
             }
-            screenState.update { it.copy(commandLoading = false) }
+            screenState.update { it.copy(loading = false) }
         }
     }
 
@@ -122,12 +122,12 @@ internal class ScenesViewModel @AssistedInject constructor(
 
     override fun onReconnect() {
         viewModelScope.launch {
-            screenState.update { it.copy(commandLoading = true) }
+            screenState.update { it.copy(loading = true) }
             val success = deviceControlUseCase.onReconnect(deviceId)
             if (!success) {
                 SnackbarManager.showGenericError()
             }
-            screenState.update { it.copy(commandLoading = false) }
+            screenState.update { it.copy(loading = false) }
         }
     }
 
@@ -155,6 +155,6 @@ internal class ScenesViewModel @AssistedInject constructor(
         val scenes: List<Scene> = listOf(),
         val brightness: Int = -1,
         val speed: Int = -1,
-        val commandLoading: Boolean = false,
+        val loading: Boolean = false,
     )
 }

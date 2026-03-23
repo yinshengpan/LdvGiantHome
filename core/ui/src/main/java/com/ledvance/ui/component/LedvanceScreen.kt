@@ -58,6 +58,7 @@ fun LedvanceScreen(
     horizontalAlignment: Alignment.Horizontal = Alignment.Start,
     topBarContainerColor: Color = AppTheme.colors.primaryBackground,
     topBarContentColor: Color = AppTheme.colors.primaryContent,
+    isLoading: Boolean = false,
     content: @Composable BoxScope.() -> Unit
 ) {
     val bgColor = LocalBackgroundTheme.current.color
@@ -99,7 +100,10 @@ fun LedvanceScreen(
                 onLeftIconClick = onLeftIconClick
             )
         }
-        Box(modifier = Modifier.weight(1f), content = content)
+        Box(modifier = Modifier.weight(1f)) {
+            content()
+            LoadingOverlay(visible = isLoading)
+        }
     }
 }
 
@@ -111,6 +115,7 @@ fun LedvancePrimaryScreen(
     actionIconPainter: Painter? = null,
     onActionPressed: () -> Unit = {},
     contentAlignment: Alignment = Alignment.TopStart,
+    isLoading: Boolean = false,
     content: @Composable BoxScope.() -> Unit
 ) {
     LedvanceScreen(
@@ -157,8 +162,10 @@ fun LedvancePrimaryScreen(
                     )
                     .then(modifier),
                 contentAlignment = contentAlignment,
-                content = content
-            )
+            ) {
+                content()
+                LoadingOverlay(visible = isLoading)
+            }
         }
     }
 }

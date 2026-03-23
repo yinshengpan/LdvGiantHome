@@ -12,7 +12,6 @@ import com.ledvance.domain.bean.DeviceId
 import com.ledvance.light.component.CardFeature
 import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceScreen
-import com.ledvance.ui.component.LoadingOverlay
 import com.ledvance.ui.component.OfflineBanner
 import com.ledvance.ui.theme.AppTheme
 
@@ -44,6 +43,7 @@ internal fun LightDetailsScreen(
         onActionPressed = { onNavigateToSetting.invoke(deviceId) },
         onBackPressed = onBackClick,
         title = title,
+        isLoading = (uiState as? LightDetailsContract.UiState.Success)?.loading ?: false
     ) {
         when (uiState) {
             LightDetailsContract.UiState.Error -> {}
@@ -70,7 +70,6 @@ internal fun LightDetailsScreen(
                         onNavigateToFeature(deviceId, feature)
                     }
                 )
-                LoadingOverlay(visible = state.commandLoading)
                 OfflineBanner(
                     visible = !state.isOnline,
                     onReconnectClick = { viewModel.onReconnect() },

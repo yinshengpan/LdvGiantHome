@@ -29,10 +29,10 @@ import com.ledvance.ui.theme.AppTheme
  */
 @Composable
 internal fun DeviceMicView(
-    sensitivity: Int,
+    deviceMicSensitivity: Int,
     selectedRhythm: DeviceMicRhythm,
     rhythmList: List<DeviceMicRhythm>,
-    onSensitivityChange: (Int) -> Unit,
+    onDeviceMicSensitivityChange: (Int) -> Unit,
     onRhythmChange: (DeviceMicRhythm) -> Unit,
 ) {
 
@@ -86,9 +86,9 @@ internal fun DeviceMicView(
             }
         }
         MicSensitivitySlider(
-            sensitivity = sensitivity,
+            sensitivity = deviceMicSensitivity,
             modifier = Modifier.padding(vertical = 15.dp),
-            onSensitivityChange = onSensitivityChange,
+            onSensitivityChange = onDeviceMicSensitivityChange,
         )
     }
 }

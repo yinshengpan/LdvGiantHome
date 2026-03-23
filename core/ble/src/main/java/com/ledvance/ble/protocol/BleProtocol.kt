@@ -20,8 +20,9 @@ interface BleProtocol {
     suspend fun setSpeed(speed: Int): Boolean
     suspend fun setMode(modeId: ModeId): Boolean
     suspend fun setPower(power: Boolean, onOffType: OnOffType = OnOffType.ALL): Boolean
-    suspend fun setHSV(h: Int, s: Int): Boolean
-    suspend fun setCCT(cct: Int): Boolean
+    suspend fun setHs(h: Int, s: Int): Boolean
+    suspend fun setRgb(r: Int, g: Int, b: Int): Boolean
+    suspend fun setCct(cct: Int): Boolean
     suspend fun setScene(sceneId: Scene): Boolean
     suspend fun setColor(type: ColourType, param1: Int, param2: Int, param3: Int): Boolean
     suspend fun setMicRhythmEffect(effect: Int): Boolean

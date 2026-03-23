@@ -186,7 +186,7 @@ fun LedvanceDialog(
                             Text(
                                 text = cancelText,
                                 textAlign = TextAlign.Center,
-                                style = AppTheme.typography.titleMedium.copy(fontSize = 17.sp),
+                                style = AppTheme.typography.bodyMedium.copy(fontSize = 17.sp),
                                 color = cancelTextColor,
                             )
                         }

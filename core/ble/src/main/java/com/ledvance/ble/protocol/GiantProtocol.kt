@@ -77,7 +77,7 @@ class GiantProtocol(
         client.write(buildCommand(CommandType.SetSwitch.command, onOffType.command, stateByte))
     }
 
-    override suspend fun setHSV(h: Int, s: Int) = queue.execute {
+    override suspend fun setHs(h: Int, s: Int) = queue.execute {
         Timber.tag(TAG).d("setHSV: h=$h, s=$s")
         val rgb = ColorUtils.hsvToRgb(h, s, 100)
         client.write(
@@ -89,7 +89,19 @@ class GiantProtocol(
         )
     }
 
-    override suspend fun setCCT(cct: Int) = queue.execute {
+    override suspend fun setRgb(r: Int, g: Int, b: Int) = queue.execute {
+        Timber.tag(TAG).d("setRgb: r=$r, g=$g, b=$b")
+        client.write(
+            data = buildCommand(
+                cmd = CommandType.SetColour.command,
+                ColourType.RGB.command,
+                r.toByte(), g.toByte(), b.toByte()
+            ),
+            isDelay = false
+        )
+    }
+
+    override suspend fun setCct(cct: Int) = queue.execute {
         Timber.tag(TAG).d("setCCT: cct=$cct")
         val (warm, cool) = ColorUtils.cctToWwCw(cct)
         client.write(

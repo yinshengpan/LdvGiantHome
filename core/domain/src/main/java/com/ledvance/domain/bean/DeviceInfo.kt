@@ -20,6 +20,7 @@ data class DeviceInfo(
     val modeType: ModeType? = null,
     val modeId: ModeId? = null,
     val speed: Int = 50,
+    val phoneMicSensitivity: Int = 60,
     val h: Int = 255,
     val s: Int = 255,
     val v: Int = 255,

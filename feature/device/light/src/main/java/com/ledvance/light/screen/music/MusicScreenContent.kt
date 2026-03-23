@@ -28,7 +28,8 @@ import com.ledvance.ui.theme.AppTheme
 @Composable
 internal fun MusicScreenContent(
     uiState: MusicContract.UiState.Success,
-    onSensitivityChange: (Int) -> Unit,
+    onDeviceMicSensitivityChange: (Int) -> Unit,
+    onPhoneMicSensitivityChange: (Int) -> Unit,
     onRhythmChange: (DeviceMicRhythm) -> Unit,
     onMusicSegmentChange: (MusicSegment) -> Unit,
 ) {
@@ -62,18 +63,18 @@ internal fun MusicScreenContent(
             when (uiState.musicSegment) {
                 MusicSegment.DeviceMic -> {
                     DeviceMicView(
-                        sensitivity = uiState.deviceMicSensitivity,
+                        deviceMicSensitivity = uiState.deviceMicSensitivity,
                         selectedRhythm = uiState.deviceMicRhythm,
                         rhythmList = uiState.deviceMicRhythmList,
-                        onSensitivityChange = onSensitivityChange,
+                        onDeviceMicSensitivityChange = onDeviceMicSensitivityChange,
                         onRhythmChange = onRhythmChange,
                     )
                 }
 
                 MusicSegment.PhoneMic -> {
                     PhoneMicView(
-                        sensitivity = uiState.deviceMicSensitivity,
-                        onSensitivityChange = onSensitivityChange,
+                        phoneMicSensitivity = uiState.phoneMicSensitivity,
+                        onPhoneMicSensitivityChange = onPhoneMicSensitivityChange,
                     )
                 }
 

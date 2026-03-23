@@ -21,7 +21,7 @@ internal interface TimerContract {
             val onTimer: TimerUiItem,
             val offTimer: TimerUiItem,
             val isOnline: Boolean,
-            val commandLoading: Boolean = false
+            val loading: Boolean = false
         ) : UiState
         @Immutable
         data object Error : UiState

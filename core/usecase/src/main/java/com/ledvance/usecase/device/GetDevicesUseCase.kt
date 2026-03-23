@@ -1,6 +1,6 @@
 package com.ledvance.usecase.device
 
-import com.ledvance.database.model.DeviceEntity
+import com.ledvance.database.model.DeviceWithRuntimeConfig
 import com.ledvance.database.repo.DeviceRepo
 import com.ledvance.domain.bean.DeviceUiItem
 import com.ledvance.domain.di.Dispatcher
@@ -31,12 +31,12 @@ class GetDevicesUseCase @Inject constructor(
     }
 }
 
-internal fun DeviceEntity.toDeviceUiItem(): DeviceUiItem {
+internal fun DeviceWithRuntimeConfig.toDeviceUiItem(): DeviceUiItem {
     return DeviceUiItem(
-        name = name,
-        deviceId = deviceId,
-        power = power,
-        deviceType = deviceType
+        name = device.name,
+        deviceId = device.deviceId,
+        power = device.power,
+        deviceType = device.deviceType
     )
 }
 

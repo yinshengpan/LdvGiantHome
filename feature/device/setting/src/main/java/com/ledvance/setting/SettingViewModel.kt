@@ -25,6 +25,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * @author : jason yin
@@ -43,6 +44,10 @@ internal class SettingViewModel @AssistedInject constructor(
 ) : ViewModel(), SettingContract,
     OneTimeActionPublisherContract<SettingContract.SettingOneTimeAction> {
 
+    companion object {
+        private const val TAG = "SettingViewModel"
+    }
+
     override val mutableActionFlow: MutableSharedFlow<SettingContract.SettingOneTimeAction> =
         createDefaultMutableActionFlow()
 
@@ -60,7 +65,7 @@ internal class SettingViewModel @AssistedInject constructor(
     ) { device, deviceState, state ->
         SettingContract.UiState.Success(
             isOnline = deviceState.isOnline,
-            loading = state.commandLoading,
+            loading = state.loading,
             deviceName = device.name,
             deviceMacAddress = deviceId.asMacAddress(),
             deviceTypeName = device.deviceType.getDisplayName(),
@@ -76,24 +81,26 @@ internal class SettingViewModel @AssistedInject constructor(
     )
 
     override fun resetDevice() {
+        Timber.tag(TAG).d("resetDevice: deviceId=%s", deviceId)
         viewModelScope.launch {
-            screenState.update { it.copy(commandLoading = true) }
+            screenState.update { it.copy(loading = true) }
             val success = deviceControlUseCase.reset(deviceId)
             if (!success) {
                 SnackbarManager.showGenericError()
             }
-            screenState.update { it.copy(commandLoading = false) }
+            screenState.update { it.copy(loading = false) }
         }
     }
 
     override fun setLineSequence(lineSequence: LineSequence) {
+        Timber.tag(TAG).d("setLineSequence: deviceId=%s, lineSequence=%s", deviceId, lineSequence)
         viewModelScope.launch {
-            screenState.update { it.copy(commandLoading = true) }
+            screenState.update { it.copy(loading = true) }
             val success = deviceControlUseCase.setLineSequence(deviceId, lineSequence)
             if (!success) {
                 SnackbarManager.showGenericError()
             }
-            screenState.update { it.copy(commandLoading = false) }
+            screenState.update { it.copy(loading = false) }
         }
     }
 
@@ -103,16 +110,17 @@ internal class SettingViewModel @AssistedInject constructor(
 
     override fun onReconnect() {
         viewModelScope.launch {
-            screenState.update { it.copy(commandLoading = true) }
+            screenState.update { it.copy(loading = true) }
             val success = deviceControlUseCase.onReconnect(deviceId)
             if (!success) {
                 SnackbarManager.showGenericError()
             }
-            screenState.update { it.copy(commandLoading = false) }
+            screenState.update { it.copy(loading = false) }
         }
     }
 
     override fun deleteDevice() {
+        Timber.tag(TAG).d("deleteDevice: deviceId=%s", deviceId)
         viewModelScope.launch {
             deleteDeviceUseCase(deviceId)
             publish(SettingContract.SettingOneTimeAction.DeleteSuccess)
@@ -134,6 +142,6 @@ internal class SettingViewModel @AssistedInject constructor(
     }
 
     private data class ScreenState(
-        val commandLoading: Boolean = false,
+        val loading: Boolean = false,
     )
 }

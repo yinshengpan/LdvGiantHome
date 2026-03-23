@@ -1,14 +1,14 @@
 package com.ledvance.light.screen.mode
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.ui.component.LedvanceScreen
-import com.ledvance.ui.component.LoadingOverlay
+import com.ledvance.ui.component.OfflineBanner
 
 /**
  * @author : jason yin
@@ -28,16 +28,23 @@ internal fun ModeScreen(
     LedvanceScreen(
         title = "Mode",
         onBackPressed = onBackClick,
+        isLoading = (uiState as? ModeContract.UiState.Success)?.loading ?: false
     ) {
         when (uiState) {
             is ModeContract.UiState.Loading, ModeContract.UiState.Error -> {}
             is ModeContract.UiState.Success -> {
                 val state = uiState as ModeContract.UiState.Success
                 ModeScreenContent(
-                    selectedModeId = state.modeId,
-                    onModeChange = viewModel::onModeIdChange
+                    uiState = state,
+                    onModeChange = viewModel::onModeIdChange,
+                    onSpeedChange =  viewModel::onSpeedChange,
+                    onBrightnessChange =  viewModel::onBrightnessChange,
                 )
-                LoadingOverlay(visible = state.commandLoading)
+                OfflineBanner(
+                    visible = !state.isOnline,
+                    onReconnectClick = viewModel::onReconnect,
+                    modifier = Modifier.align(Alignment.BottomCenter)
+                )
             }
         }
     }

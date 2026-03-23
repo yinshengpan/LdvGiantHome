@@ -1,18 +1,33 @@
 package com.ledvance.light.state
 
 import android.content.Context
+import android.media.audiofx.Visualizer
 import android.net.Uri
-import androidx.compose.runtime.*
+import androidx.annotation.OptIn
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.Stable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import com.ledvance.domain.bean.MusicItem
+import com.ledvance.light.screen.music.fft.AudioLightController
+import com.ledvance.utils.extensions.tryCatch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import kotlin.math.sqrt
 import kotlin.random.Random
 
 // Persist across tab switches
@@ -23,6 +38,7 @@ enum class PlaybackMode {
     SEQUENTIAL, LOOP_ONE, SHUFFLE
 }
 
+@OptIn(markerClass = [UnstableApi::class])
 @Stable
 class MusicPlayerState(
     private val context: Context,
@@ -45,8 +61,11 @@ class MusicPlayerState(
     var playbackMode by mutableStateOf(persistentPlaybackMode)
         private set
 
+    var onAudioData: ((r: Int, g: Int, b: Int, brightness: Int) -> Unit)? = null
+
     private var exoPlayer: ExoPlayer? = null
     private var progressJob: Job? = null
+    private var visualizer: Visualizer? = null
 
     fun initialize() {
         Timber.tag(TAG).d("MusicPlayerState initialize. exoPlayer is null: ${exoPlayer == null}")
@@ -73,11 +92,52 @@ class MusicPlayerState(
                         stopProgressTracking()
                     }
                 }
+                override fun onAudioSessionIdChanged(audioSessionId: Int) {
+                    Timber.tag(TAG).d("onAudioSessionIdChanged: $audioSessionId")
+                    if (audioSessionId > 0) {
+                        setupVisualizer(audioSessionId)
+                    }
+                }
             })
             exoPlayer = player
+            val sessionId = player.audioSessionId
+            if (sessionId > 0) {
+                setupVisualizer(sessionId)
+            }
             playTrack(currentIndex, playFromZero = true)
         } catch (e: Exception) {
             Timber.tag(TAG).e(e, "Failed to initialize ExoPlayer")
+        }
+    }
+
+    private fun setupVisualizer(sessionId: Int) {
+        try {
+            visualizer?.release()
+            visualizer = Visualizer(sessionId).apply {
+                captureSize = Visualizer.getCaptureSizeRange()[1]
+                setDataCaptureListener(object : Visualizer.OnDataCaptureListener {
+                    override fun onWaveFormDataCapture(v: Visualizer?, waveform: ByteArray?, samplingRate: Int) {}
+                    override fun onFftDataCapture(v: Visualizer?, fft: ByteArray?, samplingRate: Int) {
+                        fft?.let { data ->
+                            tryCatch {
+                                val n = data.size / 2
+                                val magnitude = FloatArray(n)
+                                for (i in 0 until n) {
+                                    val real = data[2 * i].toFloat()
+                                    val imag = data[2 * i + 1].toFloat()
+                                    magnitude[i] = sqrt(real * real + imag * imag)
+                                }
+                                // 🎯 振幅（推荐用 RMS）
+                                val amplitude = magnitude.average().toFloat() / 128f
+                                AudioLightController.onAudio(magnitude, amplitude)
+                            }
+                        }
+                    }
+                }, Visualizer.getMaxCaptureRate() / 2, false, true)
+                enabled = true
+            }
+        } catch (e: Exception) {
+            Timber.tag(TAG).e(e, "Failed to setup Visualizer")
         }
     }
 
@@ -198,6 +258,9 @@ class MusicPlayerState(
         persistentLastPlayedIndex = currentIndex
         persistentPlaybackMode = playbackMode
         stopProgressTracking()
+        visualizer?.enabled = false
+        visualizer?.release()
+        visualizer = null
         try {
             exoPlayer?.stop()
             Timber.tag(TAG).d("Player stopped")

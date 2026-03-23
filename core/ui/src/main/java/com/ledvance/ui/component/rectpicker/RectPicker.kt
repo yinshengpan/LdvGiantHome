@@ -39,6 +39,8 @@ internal fun <T> RectPicker(
     backgroundBrushes: List<Brush>,
     modifier: Modifier = Modifier,
     thumbSize: Dp = 42.dp,
+    enableHorizontal: Boolean = true,
+    enableVertical: Boolean = true,
     onGrant: (() -> Unit)? = null,
     onRelease: ((T) -> Unit)? = null,
 ) {
@@ -64,8 +66,8 @@ internal fun <T> RectPicker(
         val gestureModifier = Modifier
             .pointerInput(pickerSize) {
                 fun updateFromGesture(offset: Offset) {
-                    val clampedX = offset.x.coerceIn(thumbRadius, pickerSize.width - thumbRadius)
-                    val clampedY = offset.y.coerceIn(thumbRadius, pickerSize.height - thumbRadius)
+                    val clampedX = if (enableHorizontal) offset.x.coerceIn(thumbRadius, pickerSize.width - thumbRadius) else currentPosition.x
+                    val clampedY = if (enableVertical) offset.y.coerceIn(thumbRadius, pickerSize.height - thumbRadius) else currentPosition.y
                     val newPos = Offset(clampedX, clampedY)
 
                     currentPosition = newPos
@@ -85,8 +87,8 @@ internal fun <T> RectPicker(
             }
             .pointerInput(pickerSize) {
                 fun updateFromGesture(offset: Offset) {
-                    val clampedX = offset.x.coerceIn(thumbRadius, pickerSize.width - thumbRadius)
-                    val clampedY = offset.y.coerceIn(thumbRadius, pickerSize.height - thumbRadius)
+                    val clampedX = if (enableHorizontal) offset.x.coerceIn(thumbRadius, pickerSize.width - thumbRadius) else currentPosition.x
+                    val clampedY = if (enableVertical) offset.y.coerceIn(thumbRadius, pickerSize.height - thumbRadius) else currentPosition.y
                     val newPos = Offset(clampedX, clampedY)
                     currentPosition = newPos
                     val newValue = coorToValue(newPos, pickerSize, thumbRadius)

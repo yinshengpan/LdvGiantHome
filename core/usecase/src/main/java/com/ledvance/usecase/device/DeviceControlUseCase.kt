@@ -46,7 +46,7 @@ class DeviceControlUseCase @Inject constructor(
         return executionResult("setColourModeHS(deviceId=$deviceId, h=$h, s=$s)") {
             ensureConnected(deviceId)
             val protocol = getProtocol(deviceId)
-            protocol.setHSV(h, s)
+            protocol.setHs(h, s)
             registry.updateActive(deviceId)
             deviceRepo.updateDeviceHs(deviceId, h, s)
         }
@@ -62,10 +62,36 @@ class DeviceControlUseCase @Inject constructor(
         }
     }
 
+    suspend fun setRgb(deviceId: DeviceId, r: Int, g: Int, b: Int): Boolean {
+        return try {
+            ensureConnected(deviceId)
+            val protocol = getProtocol(deviceId)
+            protocol.setRgb(r, g, b)
+            registry.updateActive(deviceId)
+            true
+        } catch (e: Exception) {
+            Timber.tag(TAG).e(e, "setRgb")
+            false
+        }
+    }
+
+    suspend fun setBrightness(deviceId: DeviceId, brightness: Int, brightnessType: BrightnessType = BrightnessType.RGB): Boolean {
+        return try {
+            ensureConnected(deviceId)
+            val protocol = getProtocol(deviceId)
+            protocol.setBrightness(brightnessType, brightness)
+            registry.updateActive(deviceId)
+            true
+        } catch (e: Exception) {
+            Timber.tag(TAG).e(e, "setBrightness")
+            false
+        }
+    }
+
     suspend fun setWhiteModeCCT(deviceId: DeviceId, cct: Int): Boolean {
         return executionResult("setWhiteModeCCT(deviceId=$deviceId, cct=$cct)") {
             ensureConnected(deviceId)
-            getProtocol(deviceId).setCCT(cct)
+            getProtocol(deviceId).setCct(cct)
             registry.updateActive(deviceId)
             deviceRepo.updateDeviceCct(deviceId, cct)
         }
@@ -180,6 +206,12 @@ class DeviceControlUseCase @Inject constructor(
         }
     }
 
+    suspend fun connectDevice(deviceId: DeviceId): Boolean {
+        return executionResult("connectDevice(deviceId=$deviceId)") {
+            ensureConnected(deviceId)
+        }
+    }
+
     suspend fun readFirmwareVersion(deviceId: DeviceId): String? {
         val callInfo = "readFirmwareVersion(deviceId=$deviceId)"
         Timber.tag(TAG).d("--> START $callInfo")
@@ -210,6 +242,7 @@ class DeviceControlUseCase @Inject constructor(
             if (registry.get(deviceId)?.isConnected == true) return
             delay(300)
         }
+        Timber.tag(TAG).e("waitConnected: connect timeout for deviceId=%s", deviceId)
         error("connect timeout")
     }
 

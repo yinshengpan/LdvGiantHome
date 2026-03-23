@@ -12,7 +12,9 @@ import com.ledvance.database.converter.StringListConverter
 import com.ledvance.database.converter.TimerTypeConverter
 import com.ledvance.database.converter.WorkModeConverter
 import com.ledvance.database.dao.DeviceDao
+import com.ledvance.database.dao.DeviceRuntimeConfigDao
 import com.ledvance.database.dao.TimerDao
+import com.ledvance.database.model.DeviceRuntimeConfigEntity
 import com.ledvance.database.model.DeviceEntity
 import com.ledvance.database.model.TimerEntity
 
@@ -23,7 +25,7 @@ import com.ledvance.database.model.TimerEntity
  * Describe : AppDatabase
  */
 @Database(
-    entities = [DeviceEntity::class, TimerEntity::class],
+    entities = [DeviceEntity::class, TimerEntity::class, DeviceRuntimeConfigEntity::class],
     version = 1,
     exportSchema = true
 )
@@ -42,4 +44,5 @@ import com.ledvance.database.model.TimerEntity
 abstract class AppDatabase : RoomDatabase() {
     abstract fun deviceDao(): DeviceDao
     abstract fun timerDao(): TimerDao
+    abstract fun deviceRuntimeConfigDao(): DeviceRuntimeConfigDao
 }

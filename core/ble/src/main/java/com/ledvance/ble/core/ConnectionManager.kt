@@ -54,9 +54,15 @@ class ConnectionManager @Inject constructor(
 
     fun requestConnect(deviceId: DeviceId) {
         Timber.tag(TAG).d("requestConnect: $deviceId")
-        if (connectionMap.containsKey(deviceId)) {
-            Timber.tag(TAG).d("requestConnect: Device $deviceId already in connection map")
-            return
+        val existing = connectionMap[deviceId]
+        if (existing != null) {
+            val s = existing.state.value
+            if (s == ConnectionState.CONNECTED || s == ConnectionState.CONNECTING) {
+                Timber.tag(TAG).d("requestConnect: Device $deviceId already $s, skipping request")
+                return
+            }
+            Timber.tag(TAG).i("requestConnect: Device $deviceId found in stale state $s, closing before reconnect")
+            connectionMap.remove(deviceId)?.close()
         }
 
         if (connectionMap.size >= MAX_CONNECTION) {
@@ -81,7 +87,7 @@ class ConnectionManager @Inject constructor(
             onConnectChange = { id, state ->
                 Timber.tag(TAG).i("onConnectChange: Device $id changed state to $state")
                 if (state == ConnectionState.DISCONNECTED || state == ConnectionState.FAILED) {
-                    connectionMap.remove(id)
+                    connectionMap.remove(id)?.close()
                 }
                 registry.updateConnection(id, state)
             }
@@ -138,7 +144,18 @@ class ConnectionManager @Inject constructor(
         val modeId = bytes[10].toInt() and 0xFF
         val speed = bytes[11].toInt() and 0xFF
         Timber.tag(TAG).i("parseQueryDeviceInfo: $deviceId -> Power=$power, RGBW=($r,$g,$b,$w), Brightness=$brightness, ModeType=$modeType, ModeId=$modeId, Speed=$speed")
-        registry.updateDeviceInfo(deviceId, power, r, g, b, w, brightness, modeType, modeId, speed)
+        registry.updateDeviceInfo(
+            deviceId = deviceId,
+            power = power,
+            r = r,
+            g = g,
+            b = b,
+            w = w,
+            brightness = brightness,
+            modeType = modeType,
+            mode = modeId,
+            speed = speed
+        )
     }
 
     /**
@@ -200,7 +217,7 @@ class ConnectionManager @Inject constructor(
 
     fun disconnect(deviceId: DeviceId) {
         Timber.tag(TAG).i("disconnect: Manually disconnecting $deviceId")
-        connectionMap.remove(deviceId)?.disconnect()
+        connectionMap.remove(deviceId)?.close()
         registry.updateConnection(deviceId, ConnectionState.DISCONNECTED)
     }
 

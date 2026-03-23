@@ -24,18 +24,13 @@ internal interface SearchContract :
     sealed interface UiState {
 
         @Immutable
-        data object Loading : UiState
-
-        @Immutable
         data class Success(
-            val devices: List<ScannedDevice>
+            val loading: Boolean = false,
+            val devices: List<ScannedDevice> = listOf(),
         ) : UiState
-
-        @Immutable
-        data object Error : UiState
     }
 
-    val uiState: StateFlow<UiState>
+    val uiState: StateFlow<UiState.Success>
 
     fun startBleScan()
 

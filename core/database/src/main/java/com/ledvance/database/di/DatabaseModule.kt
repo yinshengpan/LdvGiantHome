@@ -23,5 +23,7 @@ object DatabaseModule {
     @Provides
     @Singleton
     fun providesAppDatabase(@ApplicationContext context: Context): AppDatabase =
-        Room.databaseBuilder(context, AppDatabase::class.java, "ldv-giant-home-database").build()
+        Room.databaseBuilder(context, AppDatabase::class.java, "ldv-giant-home-database")
+            .fallbackToDestructiveMigration(false)
+            .build()
 }

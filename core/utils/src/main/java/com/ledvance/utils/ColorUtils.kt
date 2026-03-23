@@ -9,7 +9,7 @@ package com.ledvance.utils
 object ColorUtils {
 
     fun hsvToRgb(h: Int, s: Int, v: Int): IntArray {
-        val hf = h.toFloat()
+        val hf = ((h % 360) + 360) % 360f
         val sf = s.toFloat() / 100f
         val vf = v.toFloat() / 100f
 
@@ -27,10 +27,14 @@ object ColorUtils {
         }
 
         return intArrayOf(
-            ((r + m) * 255).toInt(),
-            ((g + m) * 255).toInt(),
-            ((b + m) * 255).toInt()
+            clamp(r + m),
+            clamp(g + m),
+            clamp(b + m),
         )
+    }
+
+    private fun clamp(x: Float): Int {
+        return (x * 255).toInt().coerceIn(0, 255)
     }
 
     fun rgbToHsv(r: Int, g: Int, b: Int): IntArray {

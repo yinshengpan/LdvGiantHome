@@ -1,12 +1,13 @@
 package com.ledvance.light
 
-import com.ledvance.ui.component.SnackbarManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ledvance.domain.bean.DeviceId
+import com.ledvance.domain.bean.DeviceType
 import com.ledvance.domain.bean.WorkMode
 import com.ledvance.light.bean.LightCommand
 import com.ledvance.light.component.CardFeature
+import com.ledvance.ui.component.SnackbarManager
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceStateUseCase
 import com.ledvance.usecase.device.GetDeviceUseCase
@@ -50,6 +51,21 @@ internal class LightDetailsViewModel @AssistedInject constructor(
 
     private val screenState = MutableStateFlow(ScreenState())
     private val lightCommandFlow = MutableStateFlow<LightCommand?>(null)
+    private val cardFeatureMap by lazy {
+        mapOf(
+            DeviceType.Table to listOf(
+                CardFeature.Scene,
+                CardFeature.Timer,
+                CardFeature.Music,
+            ),
+            DeviceType.Floor to listOf(
+                CardFeature.Scene,
+                CardFeature.Timer,
+                CardFeature.Music,
+                CardFeature.Mode,
+            )
+        )
+    }
     override val uiState: StateFlow<LightDetailsContract.UiState> = combine(
         getDeviceUseCase(deviceId),
         getDeviceStateUseCase(deviceId),
@@ -66,8 +82,8 @@ internal class LightDetailsViewModel @AssistedInject constructor(
             colourModeBrightness = screenState.colourModeBrightness.takeIf { it != -1 } ?: device.v,
             whiteModeCct = screenState.whiteModeCct.takeIf { it != -1 } ?: device.cct,
             whiteModeBrightness = screenState.whiteModeBrightness.takeIf { it != -1 } ?: device.brightness,
-            cardFeatureList = screenState.cardList,
-            commandLoading = screenState.commandLoading,
+            cardFeatureList = cardFeatureMap[device.deviceType] ?: listOf() ,
+            loading = screenState.loading,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -108,12 +124,12 @@ internal class LightDetailsViewModel @AssistedInject constructor(
 
     override fun onSwitchChange(switch: Boolean) {
         viewModelScope.launch {
-            screenState.update { it.copy(commandLoading = true) }
+            screenState.update { it.copy(loading = true) }
             val success = deviceControlUseCase.setPower(deviceId, switch)
             if (!success) {
                 SnackbarManager.showGenericError()
             }
-            screenState.update { it.copy(commandLoading = false) }
+            screenState.update { it.copy(loading = false) }
         }
     }
 
@@ -156,12 +172,12 @@ internal class LightDetailsViewModel @AssistedInject constructor(
 
     override fun onReconnect() {
         viewModelScope.launch {
-            screenState.update { it.copy(commandLoading = true) }
+            screenState.update { it.copy(loading = true) }
             val success = deviceControlUseCase.onReconnect(deviceId)
             if (!success) {
                 SnackbarManager.showGenericError()
             }
-            screenState.update { it.copy(commandLoading = false) }
+            screenState.update { it.copy(loading = false) }
         }
     }
 
@@ -172,7 +188,7 @@ internal class LightDetailsViewModel @AssistedInject constructor(
         val colourModeBrightness: Int = -1,
         val whiteModeCct: Int = -1,
         val whiteModeBrightness: Int = -1,
-        val commandLoading: Boolean = false,
+        val loading: Boolean = false,
         val cardList: List<CardFeature> = listOf(
             CardFeature.Scene,
             CardFeature.Timer,

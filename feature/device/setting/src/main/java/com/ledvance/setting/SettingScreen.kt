@@ -15,7 +15,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.ui.component.LedvanceScreen
-import com.ledvance.ui.component.LoadingOverlay
 import com.ledvance.ui.component.OfflineBanner
 import com.ledvance.ui.dialog.LedvanceDialog
 import com.ledvance.ui.theme.AppTheme
@@ -58,6 +57,7 @@ internal fun SettingScreen(
         onBackPressed = onBackClick,
         verticalArrangement = Arrangement.Center,
         title = "Setting",
+        isLoading = (uiState as? SettingContract.UiState.Success)?.loading ?: false
     ) {
         when (uiState) {
             SettingContract.UiState.Error -> {}
@@ -77,7 +77,6 @@ internal fun SettingScreen(
                     onReconnectClick = { viewModel.onReconnect() },
                     modifier = Modifier.align(Alignment.BottomCenter)
                 )
-                LoadingOverlay(visible = state.loading)
             }
         }
     }

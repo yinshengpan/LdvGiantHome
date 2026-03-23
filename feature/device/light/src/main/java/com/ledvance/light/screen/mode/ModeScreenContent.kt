@@ -9,7 +9,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -19,7 +18,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ledvance.domain.bean.command.ModeId
 import com.ledvance.light.bean.ModeSegment
+import com.ledvance.ui.component.BrightnessSlider
 import com.ledvance.ui.component.LedvanceRadioGroup
+import com.ledvance.ui.component.SpeedSlider
 import com.ledvance.ui.component.WheelPicker
 import com.ledvance.ui.theme.AppTheme
 
@@ -31,7 +32,9 @@ import com.ledvance.ui.theme.AppTheme
  */
 @Composable
 internal fun ModeScreenContent(
-    selectedModeId: ModeId?,
+    uiState: ModeContract.UiState.Success,
+    onBrightnessChange: (Int) -> Unit,
+    onSpeedChange: (Int) -> Unit,
     onModeChange: (ModeId) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -44,8 +47,8 @@ internal fun ModeScreenContent(
         derivedStateOf { ModeSegment.getModesBySegment(selectedSegment) }
     }
 
-    val initialIndex = remember(modes, selectedModeId) {
-        val index = modes.indexOfFirst { it == selectedModeId }
+    val initialIndex = remember(modes, uiState.modeId) {
+        val index = modes.indexOfFirst { it == uiState.modeId }
         if (index != -1) index else 0
     }
 
@@ -60,6 +63,15 @@ internal fun ModeScreenContent(
                 .fillMaxWidth()
                 .padding(15.dp)
         ) {
+            BrightnessSlider(
+                brightness = uiState.brightness,
+                onBrightnessChange = onBrightnessChange,
+            )
+            SpeedSlider(
+                modifier = Modifier.padding(top = 15.dp),
+                speed = uiState.speed,
+                onSpeedChange = onSpeedChange,
+            )
             LedvanceRadioGroup(
                 selectorItem = selectedSegment,
                 items = allSegments,
@@ -89,6 +101,7 @@ internal fun ModeScreenContent(
                 onPickCompleted = { mode ->
                     onModeChange(mode)
                 },
+                isInfinite = true,
                 label = { it.title }
             )
         }

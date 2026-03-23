@@ -39,7 +39,10 @@ import com.ledvance.ui.theme.AppTheme
  * Describe : PhoneMicView
  */
 @Composable
-internal fun PhoneMicView(sensitivity: Int, onSensitivityChange: (Int) -> Unit) {
+internal fun PhoneMicView(
+    phoneMicSensitivity: Int,
+    onPhoneMicSensitivityChange: (Int) -> Unit,
+) {
     val micPermissionState = rememberMicPermissionState()
     var micPermissionGranted by remember { mutableStateOf(false) }
 
@@ -48,14 +51,19 @@ internal fun PhoneMicView(sensitivity: Int, onSensitivityChange: (Int) -> Unit) 
         onPauseOrDispose { }
     }
 
-    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 15.dp)) {
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 15.dp)) {
         if (micPermissionGranted) {
             val recorderState = rememberMicRecorderState()
             PhoneMicPulseUI(amplitude = recorderState.amplitude)
             MicSensitivitySlider(
-                sensitivity = sensitivity,
+                sensitivity = phoneMicSensitivity,
                 modifier = Modifier.padding(vertical = 15.dp),
-                onSensitivityChange = onSensitivityChange,
+                onSensitivityChange = {
+                    onPhoneMicSensitivityChange.invoke(it)
+                    recorderState.sensitivity = it
+                },
             )
         } else {
             Box(

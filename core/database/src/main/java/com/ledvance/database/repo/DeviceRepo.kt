@@ -1,9 +1,12 @@
 package com.ledvance.database.repo
 
 import com.ledvance.database.dao.DeviceDao
+import com.ledvance.database.dao.DeviceRuntimeConfigDao
 import com.ledvance.database.model.DeviceBaseUpdateEntity
+import com.ledvance.database.model.DeviceRuntimeConfigEntity
 import com.ledvance.database.model.DeviceEntity
 import com.ledvance.database.model.DevicePowerUpdateEntity
+import com.ledvance.database.model.DeviceWithRuntimeConfig
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.WorkMode
 import com.ledvance.domain.bean.command.LineSequence
@@ -15,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -24,14 +28,23 @@ import javax.inject.Inject
  * Describe : DeviceRepo
  */
 class DeviceRepo @Inject constructor(
-    private val deviceDao: DeviceDao
+    private val deviceDao: DeviceDao,
+    private val deviceRuntimeConfigDao: DeviceRuntimeConfigDao
 ) {
+    companion object {
+        private const val TAG = "DeviceRepo"
+    }
 
     suspend fun addDevice(deviceEntity: DeviceEntity) = withContext(Dispatchers.IO) {
-        tryCatch { deviceDao.insert(deviceEntity) }
+        Timber.tag(TAG).d("addDevice: deviceId=%s", deviceEntity.deviceId)
+        tryCatch {
+            deviceDao.insert(deviceEntity)
+            deviceRuntimeConfigDao.insertConfig(DeviceRuntimeConfigEntity(deviceId = deviceEntity.deviceId))
+        }
     }
 
     suspend fun deleteDevice(deviceId: DeviceId) = withContext(Dispatchers.IO) {
+        Timber.tag(TAG).d("deleteDevice: deviceId=%s", deviceId)
         tryCatch { deviceDao.deleteDevice(deviceId) }
     }
 
@@ -40,6 +53,7 @@ class DeviceRepo @Inject constructor(
     }
 
     suspend fun updateDevicePower(deviceId: DeviceId, power: Boolean) = withContext(Dispatchers.IO) {
+        Timber.tag(TAG).d("updateDevicePower: deviceId=%s, power=%s", deviceId, power)
         tryCatch { deviceDao.updateDevicePower(deviceId, power) }
     }
 
@@ -64,15 +78,22 @@ class DeviceRepo @Inject constructor(
     }
 
     suspend fun updateDeviceWorkMode(deviceId: DeviceId, workMode: WorkMode) = withContext(Dispatchers.IO) {
-        tryCatch { deviceDao.updateDeviceWorkMode(deviceId, workMode) }
+        Timber.tag(TAG).d("updateDeviceWorkMode: deviceId=%s, workMode=%s", deviceId, workMode)
+        tryCatch { deviceRuntimeConfigDao.updateDeviceWorkMode(deviceId, workMode) }
     }
 
     suspend fun updateDeviceLineSequence(deviceId: DeviceId, lineSequence: LineSequence) = withContext(Dispatchers.IO) {
-        tryCatch { deviceDao.updateDeviceLineSequence(deviceId, lineSequence) }
+        Timber.tag(TAG).d("updateDeviceLineSequence: deviceId=%s, lineSequence=%s", deviceId, lineSequence)
+        tryCatch { deviceRuntimeConfigDao.updateDeviceLineSequence(deviceId, lineSequence) }
     }
 
     suspend fun updateDeviceMode(deviceId: DeviceId, modeType: ModeType?, modeId: ModeId?) = withContext(Dispatchers.IO) {
         tryCatch { deviceDao.updateModeId(deviceId, modeType, modeId) }
+    }
+
+    suspend fun updatePhoneMicSensitivity(deviceId: DeviceId, phoneMicSensitivity: Int) = withContext(Dispatchers.IO) {
+        Timber.tag(TAG).d("updatePhoneMicSensitivity: deviceId=%s, sensitivity=%s", deviceId, phoneMicSensitivity)
+        tryCatch { deviceRuntimeConfigDao.updatePhoneMicSensitivity(deviceId, phoneMicSensitivity) }
     }
 
     suspend fun updateDeviceFirmwareVersion(deviceId: DeviceId, firmwareVersion: String) = withContext(Dispatchers.IO) {
@@ -98,7 +119,7 @@ class DeviceRepo @Inject constructor(
         return@withContext tryCatchReturn { deviceDao.getDevice(deviceId) }
     }
 
-    fun getDeviceListFlow(): Flow<List<DeviceEntity>> {
+    fun getDeviceListFlow(): Flow<List<DeviceWithRuntimeConfig>> {
         return deviceDao.getDeviceListFlow().catch { }
     }
 
@@ -106,7 +127,7 @@ class DeviceRepo @Inject constructor(
         return deviceDao.getDeviceIdListFlow().catch { }
     }
 
-    fun getDeviceFlow(deviceId: DeviceId): Flow<DeviceEntity?> {
+    fun getDeviceFlow(deviceId: DeviceId): Flow<DeviceWithRuntimeConfig?> {
         return deviceDao.getDeviceFlow(deviceId).catch { }
     }
 

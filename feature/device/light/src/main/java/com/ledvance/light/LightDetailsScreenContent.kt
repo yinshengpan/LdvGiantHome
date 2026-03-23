@@ -10,6 +10,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.ledvance.domain.bean.DeviceType
 import com.ledvance.domain.bean.WorkMode
 import com.ledvance.light.component.CardFeature
 import com.ledvance.light.component.CardFeatureItem
@@ -44,6 +45,7 @@ internal fun LightDetailsScreenContent(
             colourModeSat = uiState.colourModeSat,
             colourModeBrightness = uiState.colourModeBrightness,
             whiteModeCct = uiState.whiteModeCct,
+            isSupportWhiteMode = uiState.deviceType == DeviceType.Table,
             whiteModeBrightness = uiState.whiteModeBrightness,
             onSwitchChange = onSwitchChange,
             onWorkModeChange = onWorkModeChange,

@@ -8,7 +8,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.ui.component.LedvanceScreen
-import com.ledvance.ui.component.LoadingOverlay
 import com.ledvance.ui.component.OfflineBanner
 
 /**
@@ -29,6 +28,7 @@ internal fun MusicScreen(
     LedvanceScreen(
         title = "Music",
         onBackPressed = onBackClick,
+        isLoading = (uiState as? MusicContract.UiState.Success)?.loading ?: false
     ) {
         when (uiState) {
             MusicContract.UiState.Error -> {}
@@ -38,11 +38,11 @@ internal fun MusicScreen(
                 MusicScreenContent(
                     uiState = state,
                     onRhythmChange = viewModel::onRhythmChange,
-                    onSensitivityChange = viewModel::onSensitivityChange,
+                    onDeviceMicSensitivityChange = viewModel::onDeviceMicSensitivityChange,
+                    onPhoneMicSensitivityChange = viewModel::onPhoneMicSensitivityChange,
                     onMusicSegmentChange = viewModel::onMusicSegmentChange,
                 )
 
-                LoadingOverlay(visible = state.loading)
                 OfflineBanner(
                     visible = !state.isOnline,
                     onReconnectClick = viewModel::onReconnect,

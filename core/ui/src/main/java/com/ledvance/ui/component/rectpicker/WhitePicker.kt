@@ -86,6 +86,7 @@ internal fun WhitePicker(
                     .fillMaxWidth()
                     .weight(1f),
                 value = useCct,
+                enableVertical = false,
                 onValueChange = {
                     useCct = it
                     onCctChange(useCct, cctColor)

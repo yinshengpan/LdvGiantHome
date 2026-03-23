@@ -12,4 +12,5 @@ android {
 dependencies {
     implementation(projects.core.utils)
     implementation(projects.core.domain)
+    implementation(libs.timber)
 }

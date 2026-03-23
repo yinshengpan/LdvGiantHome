@@ -27,7 +27,7 @@ internal fun ScenesScreen(
         actionIconPainter = painterResource(R.drawable.ic_add),
         onActionPressed = onToAddNewDevice,
         verticalArrangement = Arrangement.Center,
-        title = "Ldv Giant Home",
+        title = "Ldv Home",
     ) {
 
     }

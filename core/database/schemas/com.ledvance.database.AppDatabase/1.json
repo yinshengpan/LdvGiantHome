@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "7c9252c5ab2998e0f96e7475baa756f9",
+    "identityHash": "827303458a5ec3513352782a8e76f7c9",
     "entities": [
       {
         "tableName": "devices",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` TEXT NOT NULL, `name` TEXT NOT NULL, `device_type` INTEGER NOT NULL, `work_mode` TEXT NOT NULL, `power` INTEGER NOT NULL, `line_sequence` INTEGER NOT NULL, `mode_type` INTEGER, `mode_id` INTEGER, `speed` INTEGER NOT NULL, `h` INTEGER NOT NULL, `s` INTEGER NOT NULL, `v` INTEGER NOT NULL, `cct` INTEGER NOT NULL, `brightness` INTEGER NOT NULL, `firmware_version` TEXT NOT NULL, PRIMARY KEY(`device_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` TEXT NOT NULL, `name` TEXT NOT NULL, `device_type` INTEGER NOT NULL, `power` INTEGER NOT NULL, `mode_type` INTEGER, `mode_id` INTEGER, `speed` INTEGER NOT NULL, `h` INTEGER NOT NULL, `s` INTEGER NOT NULL, `v` INTEGER NOT NULL, `cct` INTEGER NOT NULL, `brightness` INTEGER NOT NULL, `firmware_version` TEXT NOT NULL, PRIMARY KEY(`device_id`))",
         "fields": [
           {
             "fieldPath": "deviceId",
@@ -27,20 +27,8 @@
             "notNull": true
           },
           {
-            "fieldPath": "workMode",
-            "columnName": "work_mode",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
             "fieldPath": "power",
             "columnName": "power",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "lineSequence",
-            "columnName": "line_sequence",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -106,7 +94,7 @@
       },
       {
         "tableName": "device_timers",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` TEXT NOT NULL, `timer_type` TEXT NOT NULL, `enabled` INTEGER NOT NULL, `hour` INTEGER NOT NULL, `minute` INTEGER NOT NULL, `week_cycle` INTEGER NOT NULL, PRIMARY KEY(`device_id`, `timer_type`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` TEXT NOT NULL, `timer_type` TEXT NOT NULL, `enabled` INTEGER NOT NULL, `hour` INTEGER NOT NULL, `minute` INTEGER NOT NULL, `week_cycle` INTEGER NOT NULL, PRIMARY KEY(`device_id`, `timer_type`), FOREIGN KEY(`device_id`) REFERENCES `devices`(`device_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "deviceId",
@@ -151,12 +139,74 @@
             "device_id",
             "timer_type"
           ]
-        }
+        },
+        "foreignKeys": [
+          {
+            "table": "devices",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "device_id"
+            ],
+            "referencedColumns": [
+              "device_id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "device_runtime_config",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` TEXT NOT NULL, `work_mode` TEXT NOT NULL, `line_sequence` INTEGER NOT NULL, `phone_mic_sensitivity` INTEGER NOT NULL, PRIMARY KEY(`device_id`), FOREIGN KEY(`device_id`) REFERENCES `devices`(`device_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "deviceId",
+            "columnName": "device_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "workMode",
+            "columnName": "work_mode",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lineSequence",
+            "columnName": "line_sequence",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "phoneMicSensitivity",
+            "columnName": "phone_mic_sensitivity",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "device_id"
+          ]
+        },
+        "foreignKeys": [
+          {
+            "table": "devices",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "device_id"
+            ],
+            "referencedColumns": [
+              "device_id"
+            ]
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7c9252c5ab2998e0f96e7475baa756f9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '827303458a5ec3513352782a8e76f7c9')"
     ]
   }
 }

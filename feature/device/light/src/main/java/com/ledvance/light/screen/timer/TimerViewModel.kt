@@ -57,7 +57,7 @@ internal class TimerViewModel @AssistedInject constructor(
             onTimer = onTimer,
             offTimer = offTimer,
             isOnline = deviceState.isOnline,
-            commandLoading = state.commandLoading
+            loading = state.loading
         )
     }.stateIn(
         scope = viewModelScope,
@@ -93,7 +93,7 @@ internal class TimerViewModel @AssistedInject constructor(
         val currentState = uiState.value as? TimerContract.UiState.Success ?: return
         val timer = if (timerType == TimerType.ON) currentState.onTimer else currentState.offTimer
         viewModelScope.launch {
-            screenState.update { it.copy(commandLoading = true) }
+            screenState.update { it.copy(loading = true) }
             val success = updateDeviceTimerUseCase(
                 parameter = UpdateDeviceTimerUseCase.Param(
                     deviceId = deviceId,
@@ -103,20 +103,20 @@ internal class TimerViewModel @AssistedInject constructor(
             if (success.isFailure || !success.getOrDefault(false)) {
                 SnackbarManager.showGenericError()
             }
-            screenState.update { it.copy(commandLoading = false) }
+            screenState.update { it.copy(loading = false) }
         }
     }
 
     override fun onReconnect() {
         viewModelScope.launch {
-            screenState.update { it.copy(commandLoading = true) }
+            screenState.update { it.copy(loading = true) }
             val success = deviceControlUseCase.onReconnect(deviceId)
             if (!success) {
                 SnackbarManager.showGenericError()
             }
-            screenState.update { it.copy(commandLoading = false) }
+            screenState.update { it.copy(loading = false) }
         }
     }
 
-    private data class ScreenState(val commandLoading: Boolean = false)
+    private data class ScreenState(val loading: Boolean = false)
 }

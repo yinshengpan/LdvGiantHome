@@ -22,7 +22,7 @@ internal interface HomeContract {
         @Immutable
         data class Success(
             val devices: List<DeviceUiItem>,
-            val commandLoading: Boolean = false,
+            val loading: Boolean = false,
         ) : UiState
     }
 

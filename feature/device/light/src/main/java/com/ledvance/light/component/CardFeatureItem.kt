@@ -26,7 +26,7 @@ import com.ledvance.ui.theme.AppTheme
  * @author : jason yin
  * Email : j.yin@ledvance.com
  * Created date 2026/3/22 10:36
- * Describe : CardItem
+ * Describe : CardFeatureItem
  */
 internal sealed class CardFeature(
     val title: String,

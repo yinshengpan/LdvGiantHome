@@ -1,6 +1,5 @@
 package com.ledvance.light.screen.timer
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -9,7 +8,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.ui.component.LedvanceScreen
-import com.ledvance.ui.component.LoadingOverlay
 import com.ledvance.ui.component.OfflineBanner
 
 /**
@@ -30,6 +28,7 @@ internal fun TimerScreen(
     LedvanceScreen(
         title = "Timer",
         onBackPressed = onBackClick,
+        isLoading = (uiState as? TimerContract.UiState.Success)?.loading ?: false
     ) {
         when (uiState) {
             is TimerContract.UiState.Loading, TimerContract.UiState.Error -> {}
@@ -42,7 +41,6 @@ internal fun TimerScreen(
                     onTimerTimeChange = viewModel::onTimerTimeChange,
                     onTimerRepeatChange = viewModel::onTimerRepeatChange
                 )
-                LoadingOverlay(visible = state.commandLoading)
                 OfflineBanner(
                     visible = !state.isOnline,
                     onReconnectClick = viewModel::onReconnect,

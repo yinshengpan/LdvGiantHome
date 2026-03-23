@@ -26,13 +26,8 @@ class DeleteDeviceUseCase @Inject constructor(
 ) : SuspendUseCase<DeviceId, Unit>(dispatcher) {
     override suspend fun execute(parameter: DeviceId) {
         Timber.tag("DeleteDeviceUseCase").d("Executing delete for $parameter")
-        // 1. Disconnect the device if it's connected
-        connectionManager.disconnect(parameter)
-        // 2. Wait a bit for the BLE stack to physically tear down the connection
-        // and for the device to start advertising again.
-        delay(1000) 
-        // 3. Delete from database
         deviceRepo.deleteDevice(parameter)
+        connectionManager.disconnect(parameter)
         Timber.tag("DeleteDeviceUseCase").d("Successfully deleted $parameter from DB")
     }
 }

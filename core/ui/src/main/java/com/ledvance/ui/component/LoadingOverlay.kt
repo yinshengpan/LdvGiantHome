@@ -79,7 +79,7 @@ fun LoadingOverlay(
                         shape = RoundedCornerShape(15.dp),
                         elevation = CardDefaults.elevatedCardElevation(10.dp),
                         colors = CardDefaults.cardColors(
-                            containerColor = AppTheme.colors.screenBackground
+                            containerColor = AppTheme.colors.dialogBackground
                         )
                     ) {
                         Box(

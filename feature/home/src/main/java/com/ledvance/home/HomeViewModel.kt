@@ -28,6 +28,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -43,18 +44,18 @@ internal class HomeViewModel @Inject constructor(
 ) : ViewModel(), HomeContract {
 
     private val TAG = "HomeViewModel"
-    private val commandLoading = MutableStateFlow(false)
+    private val screenState = MutableStateFlow(ScreenState())
     override val uiState: StateFlow<HomeContract.UiState> = combine(
         getDevicesUseCase(),
         getDeviceListStateUseCase(),
-        commandLoading
-    ) { dbDevices, deviceStateList, loading ->
+        screenState
+    ) { dbDevices, deviceStateList, state ->
         val onlineMap = deviceStateList.associate { it.deviceId to it.isOnline }
         Timber.tag(TAG).d("onlineMap:$onlineMap")
         val mergedDevices = dbDevices.map { device ->
             device.copy(isOnline = onlineMap[device.deviceId] ?: false)
         }
-        HomeContract.UiState.Success(devices = mergedDevices, commandLoading = loading)
+        HomeContract.UiState.Success(devices = mergedDevices, loading = state.loading)
     }.onStart {
         Timber.d("Loading home page")
     }.onEach {
@@ -96,21 +97,31 @@ internal class HomeViewModel @Inject constructor(
     }
 
     override fun onSwitchChange(deviceId: DeviceId, switch: Boolean) {
+        Timber.tag(TAG).d("onSwitchChange: deviceId=%s, switch=%s", deviceId, switch)
         viewModelScope.launch {
-            commandLoading.value = true
+            screenState.update { it.copy(loading = true) }
             val success = deviceControlUseCase.setPower(deviceId, switch)
             if (!success) {
                 SnackbarManager.showGenericError()
             }
-            commandLoading.value = false
+            screenState.update { it.copy(loading = false) }
         }
     }
 
     override fun connectDevice(deviceId: DeviceId) {
-        connectionManager.requestConnect(deviceId)
+        Timber.tag(TAG).d("connectDevice: deviceId=%s", deviceId)
+        viewModelScope.launch {
+            screenState.update { it.copy(loading = true) }
+            val success = deviceControlUseCase.connectDevice(deviceId)
+            if (!success) {
+                SnackbarManager.showGenericError()
+            }
+            screenState.update { it.copy(loading = false) }
+        }
     }
 
     override fun disconnectDevice(deviceId: DeviceId) {
+        Timber.tag(TAG).d("disconnectDevice: deviceId=%s", deviceId)
         connectionManager.disconnect(deviceId)
     }
 
@@ -126,13 +137,18 @@ internal class HomeViewModel @Inject constructor(
     }
 
     override fun onDeleteDevice(deviceId: DeviceId) {
+        Timber.tag(TAG).d("onDeleteDevice: deviceId=%s", deviceId)
         viewModelScope.launch {
-            commandLoading.value = true
+            screenState.update { it.copy(loading = true) }
             val result = runCatching { deleteDeviceUseCase(deviceId) }
             if (result.isFailure) {
                 SnackbarManager.showGenericError()
             }
-            commandLoading.value = false
+            screenState.update { it.copy(loading = false) }
         }
     }
+
+    private data class ScreenState(
+        val loading: Boolean = false,
+    )
 }

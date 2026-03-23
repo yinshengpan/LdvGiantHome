@@ -2,6 +2,7 @@ package com.ledvance.database.di
 
 import com.ledvance.database.AppDatabase
 import com.ledvance.database.dao.DeviceDao
+import com.ledvance.database.dao.DeviceRuntimeConfigDao
 import com.ledvance.database.dao.TimerDao
 import dagger.Module
 import dagger.Provides
@@ -23,4 +24,7 @@ object DaoModule {
 
     @Provides
     fun providesTimerDao(database: AppDatabase): TimerDao = database.timerDao()
+
+    @Provides
+    fun providesDeviceRuntimeConfigDao(database: AppDatabase): DeviceRuntimeConfigDao = database.deviceRuntimeConfigDao()
 }

@@ -5,10 +5,8 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
-import com.ledvance.domain.bean.WorkMode
 import com.ledvance.domain.bean.command.ModeId
 import com.ledvance.domain.bean.command.ModeType
-import com.ledvance.domain.bean.command.LineSequence
 
 /**
  * @author : jason yin
@@ -24,12 +22,8 @@ data class DeviceEntity(
     val name: String,
     @ColumnInfo(name = "device_type")
     val deviceType: DeviceType,
-    @ColumnInfo(name = "work_mode")
-    val workMode: WorkMode = WorkMode.Colour,
     @ColumnInfo(name = "power")
     val power: Boolean = true,
-    @ColumnInfo(name = "line_sequence")
-    val lineSequence: LineSequence = LineSequence.RGB,
     @ColumnInfo(name = "mode_type")
     val modeType: ModeType? = null,
     @ColumnInfo(name = "mode_id")

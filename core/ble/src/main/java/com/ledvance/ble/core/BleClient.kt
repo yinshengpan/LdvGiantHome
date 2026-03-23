@@ -12,6 +12,7 @@ import com.ledvance.utils.extensions.tryCatch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -125,6 +126,12 @@ class BleClient(
         }
     }
 
+    fun close() {
+        Timber.tag(TAG).i("close(deviceId=$deviceId)")
+        disconnect()
+        scope.cancel()
+    }
+
     private suspend fun observeNotify() {
         Timber.tag(TAG).d("observeNotify: starting notification stream")
         notifyChar?.getNotifications()
@@ -163,8 +170,10 @@ class BleClient(
     }
 
     @SuppressLint("MissingPermission")
-    suspend fun write(data: ByteArray, writeType: BleWriteType = BleWriteType.NO_RESPONSE): Boolean {
-        delay(Constants.FRAME_INTERVAL_MS)
+    suspend fun write(data: ByteArray, writeType: BleWriteType = BleWriteType.NO_RESPONSE, isDelay: Boolean = true): Boolean {
+        if (isDelay) {
+            delay(Constants.FRAME_INTERVAL_MS)
+        }
         val snapshot = writeChar
         if (snapshot == null) {
             Timber.tag(TAG).e("write failed: writeChar is null for device $deviceId")

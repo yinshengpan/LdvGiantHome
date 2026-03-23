@@ -1,14 +1,17 @@
 package com.ledvance.light.screen.music
 
-import com.ledvance.ui.component.SnackbarManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.command.DeviceMicRhythm
 import com.ledvance.light.bean.LightCommand
 import com.ledvance.light.bean.MusicSegment
+import com.ledvance.light.screen.music.fft.AudioLightController
+import com.ledvance.ui.component.SnackbarManager
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceStateUseCase
+import com.ledvance.usecase.device.GetDeviceUseCase
+import com.ledvance.usecase.device.UpdatePhoneMicSensitivityUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -33,8 +36,10 @@ import kotlinx.coroutines.launch
 @HiltViewModel(assistedFactory = MusicViewModel.Factory::class)
 internal class MusicViewModel @AssistedInject constructor(
     @Assisted private val deviceId: DeviceId,
+    private val getDeviceUseCase: GetDeviceUseCase,
     private val getDeviceStateUseCase: GetDeviceStateUseCase,
     private val deviceControlUseCase: DeviceControlUseCase,
+    private val updatePhoneMicSensitivityUseCase: UpdatePhoneMicSensitivityUseCase,
 ) : ViewModel(), MusicContract {
 
     @AssistedFactory
@@ -45,17 +50,19 @@ internal class MusicViewModel @AssistedInject constructor(
     private val lightCommandFlow = MutableStateFlow<LightCommand?>(null)
     private val screenState = MutableStateFlow(ScreenState())
     override val uiState: StateFlow<MusicContract.UiState> = combine(
-        flow = getDeviceStateUseCase(deviceId),
-        flow2 = screenState
-    ) { deviceState, state ->
+        flow = getDeviceUseCase(deviceId),
+        flow2 = getDeviceStateUseCase(deviceId),
+        flow3 = screenState
+    ) { device, deviceState, state ->
         MusicContract.UiState.Success(
-            loading = state.commandLoading,
+            loading = state.loading,
             isOnline = deviceState.isOnline,
             musicSegment = state.selectedMusicSegment,
             musicSegmentList = state.musicSegments,
             deviceMicRhythm = state.selectedDeviceMicRhythm,
             deviceMicRhythmList = state.deviceMicRhythms,
-            deviceMicSensitivity = state.deviceMicSensitivity
+            phoneMicSensitivity = device.phoneMicSensitivity,
+            deviceMicSensitivity = state.deviceMicSensitivity,
         )
     }.stateIn(
         scope = viewModelScope,
@@ -76,11 +83,33 @@ internal class MusicViewModel @AssistedInject constructor(
                 }
             }
         }
+
+        // Handle Audio Visualizer commands with 50ms throttling (20 FPS)
+        viewModelScope.launch {
+            AudioLightController.lightFlow.sample(50).collectLatest { data ->
+                val (r, g, b, brightness) = data
+                // Send RGB and Brightness
+                deviceControlUseCase.setRgb(deviceId, r, g, b)
+                deviceControlUseCase.setBrightness(deviceId, brightness)
+            }
+        }
     }
 
-    override fun onSensitivityChange(sensitivity: Int) {
+    override fun onDeviceMicSensitivityChange(sensitivity: Int) {
         screenState.update { it.copy(deviceMicSensitivity = sensitivity) }
         lightCommandFlow.tryEmit(LightCommand.DeviceMicSensitivity(sensitivity))
+    }
+
+    override fun onPhoneMicSensitivityChange(sensitivity: Int) {
+        viewModelScope.launch {
+            updatePhoneMicSensitivityUseCase(
+                parameter =
+                    UpdatePhoneMicSensitivityUseCase.Param(
+                        deviceId = deviceId,
+                        sensitivity = sensitivity
+                    )
+            )
+        }
     }
 
     override fun onMusicSegmentChange(musicSegment: MusicSegment) {
@@ -90,23 +119,23 @@ internal class MusicViewModel @AssistedInject constructor(
     override fun onRhythmChange(deviceMicRhythm: DeviceMicRhythm) {
         screenState.update { it.copy(selectedDeviceMicRhythm = deviceMicRhythm) }
         viewModelScope.launch {
-            screenState.update { it.copy(commandLoading = true) }
+            screenState.update { it.copy(loading = true) }
             val success = deviceControlUseCase.setDeviceMicRhythm(deviceId, deviceMicRhythm)
             if (!success) {
                 SnackbarManager.showGenericError()
             }
-            screenState.update { it.copy(commandLoading = false) }
+            screenState.update { it.copy(loading = false) }
         }
     }
 
     override fun onReconnect() {
         viewModelScope.launch {
-            screenState.update { it.copy(commandLoading = true) }
+            screenState.update { it.copy(loading = true) }
             val success = deviceControlUseCase.onReconnect(deviceId)
             if (!success) {
                 SnackbarManager.showGenericError()
             }
-            screenState.update { it.copy(commandLoading = false) }
+            screenState.update { it.copy(loading = false) }
         }
     }
 
@@ -129,7 +158,7 @@ internal class MusicViewModel @AssistedInject constructor(
         ),
         val selectedDeviceMicRhythm: DeviceMicRhythm = DeviceMicRhythm.Energy1,
         val deviceMicSensitivity: Int = 80,
-        val commandLoading: Boolean = false,
+        val loading: Boolean = false,
     )
 
 }

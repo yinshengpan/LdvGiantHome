@@ -20,5 +20,5 @@ object Constants {
     internal val FIRMWARE_REVISION_UUID: UUID = UUID.fromString("00002A26-0000-1000-8000-00805F9B34FB")
 
     internal const val DEFAULT_PART_SIZE = 240
-    internal const val FRAME_INTERVAL_MS = 100L // ≥50ms, pick 60ms safety margin
+    internal const val FRAME_INTERVAL_MS = 60L // ≥50ms, pick 60ms safety margin
 }

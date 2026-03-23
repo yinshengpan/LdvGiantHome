@@ -24,7 +24,6 @@ import com.ledvance.domain.bean.DeviceId
 import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceButton
 import com.ledvance.ui.component.LedvancePrimaryScreen
-import com.ledvance.ui.component.LoadingOverlay
 import com.ledvance.ui.dialog.LedvanceDialog
 import com.ledvance.ui.state.rememberBluetoothBusinessState
 import com.ledvance.ui.theme.AppTheme
@@ -63,6 +62,7 @@ internal fun HomeScreen(
         title = "LDV Home",
         actionIconPainter = painterResource(R.drawable.ic_add),
         onActionPressed = onToAddNewDevice,
+        isLoading = (uiState as? HomeContract.UiState.Success)?.loading ?: false
     ) {
         when (uiState) {
             HomeContract.UiState.Loading -> {}
@@ -90,8 +90,6 @@ internal fun HomeScreen(
                 } else {
                     EmptyData(onToAddNewDevice = onToAddNewDevice)
                 }
-                val loading = (uiState as HomeContract.UiState.Success).commandLoading
-                LoadingOverlay(visible = loading)
             }
         }
     }

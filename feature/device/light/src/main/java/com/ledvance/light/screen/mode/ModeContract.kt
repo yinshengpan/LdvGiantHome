@@ -17,7 +17,10 @@ internal interface ModeContract {
         @Immutable
         data class Success(
             val modeId: ModeId?,
-            val commandLoading: Boolean = false
+            val brightness: Int,
+            val speed: Int,
+            val isOnline: Boolean,
+            val loading: Boolean = false,
         ) : UiState
         @Immutable
         data object Error : UiState
@@ -26,4 +29,7 @@ internal interface ModeContract {
     val uiState: StateFlow<UiState>
 
     fun onModeIdChange(modeId: ModeId)
+    fun onBrightnessChange(brightness: Int)
+    fun onSpeedChange(speed: Int)
+    fun onReconnect()
 }

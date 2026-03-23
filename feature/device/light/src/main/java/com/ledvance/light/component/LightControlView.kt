@@ -3,7 +3,9 @@ package com.ledvance.light.component
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -42,6 +44,7 @@ fun LightControlView(
     whiteModeBrightness: Int,
     modifier: Modifier = Modifier,
     workMode: WorkMode = WorkMode.Colour,
+    isSupportWhiteMode: Boolean = true,
     onWorkModeChange: (WorkMode) -> Unit,
     onColourModeHsChange: (Int, Int) -> Unit,
     onColourModeBrightnessChange: (Int) -> Unit,
@@ -83,19 +86,23 @@ fun LightControlView(
             }
 
             if (switch) {
-                LedvanceRadioGroup(
-                    selectorItem = selectedWorkMode,
-                    items = allWorkMode,
-                    modifier = Modifier.padding(top = 15.dp, bottom = 10.dp),
-                    shape = RoundedCornerShape(8.dp),
-                    checkedColor = Color.White,
-                    backgroundColor = AppTheme.colors.divider,
-                    checkedTextColor = AppTheme.colors.title,
-                    textColor = AppTheme.colors.title,
-                    onCheckedChange = {
-                        onWorkModeChange(it.value)
-                    }
-                )
+                if (isSupportWhiteMode) {
+                    LedvanceRadioGroup(
+                        selectorItem = selectedWorkMode,
+                        items = allWorkMode,
+                        modifier = Modifier.padding(top = 15.dp, bottom = 10.dp),
+                        shape = RoundedCornerShape(8.dp),
+                        checkedColor = Color.White,
+                        backgroundColor = AppTheme.colors.divider,
+                        checkedTextColor = AppTheme.colors.title,
+                        textColor = AppTheme.colors.title,
+                        onCheckedChange = {
+                            onWorkModeChange(it.value)
+                        }
+                    )
+                } else {
+                    Spacer(modifier = Modifier.height(10.dp))
+                }
 
                 if (selectedWorkMode == WorkModeSegment.ColorMode) {
                     ColourModePicker(

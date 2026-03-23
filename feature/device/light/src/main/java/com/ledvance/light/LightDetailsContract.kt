@@ -2,15 +2,9 @@ package com.ledvance.light
 
 import androidx.compose.runtime.Immutable
 import com.ledvance.domain.bean.DeviceType
-import com.ledvance.domain.bean.TimerUiItem
-import com.ledvance.domain.bean.TimerType
 import com.ledvance.domain.bean.WorkMode
-import com.ledvance.domain.bean.command.ModeId
-import com.ledvance.domain.bean.command.ModeType
-import com.ledvance.domain.bean.command.scenes.Scene
 import com.ledvance.light.component.CardFeature
 import kotlinx.coroutines.flow.StateFlow
-import java.time.DayOfWeek
 
 /**
  * @author : jason yin
@@ -39,7 +33,7 @@ internal interface LightDetailsContract {
             val whiteModeCct: Int,
             val whiteModeBrightness: Int,
             val cardFeatureList: List<CardFeature> = listOf(),
-            val commandLoading: Boolean = false,
+            val loading: Boolean = false,
         ) : UiState
 
         @Immutable

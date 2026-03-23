@@ -8,7 +8,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.ui.component.LedvanceScreen
-import com.ledvance.ui.component.LoadingOverlay
 import com.ledvance.ui.component.OfflineBanner
 
 /**
@@ -29,6 +28,7 @@ internal fun ScenesScreen(
     LedvanceScreen(
         title = "Scenes",
         onBackPressed = onBackClick,
+        isLoading = (uiState as? ScenesContract.UiState.Success)?.loading ?: false
     ) {
         when (uiState) {
             is ScenesContract.UiState.Loading, ScenesContract.UiState.Error -> {}
@@ -41,7 +41,6 @@ internal fun ScenesScreen(
                     onSpeedChange = viewModel::onSpeedChange,
                     onBrightnessChange = viewModel::onBrightnessChange,
                 )
-                LoadingOverlay(visible = state.commandLoading)
                 OfflineBanner(
                     visible = !state.isOnline,
                     onReconnectClick = viewModel::onReconnect,
