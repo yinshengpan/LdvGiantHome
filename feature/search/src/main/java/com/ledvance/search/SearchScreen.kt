@@ -10,16 +10,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceScreen
 import com.ledvance.ui.component.LottieAsset
 import com.ledvance.ui.state.rememberBluetoothBusinessState
 import com.ledvance.ui.theme.AppTheme
 import com.ledvance.utils.BluetoothManager
-import com.ledvance.vivares.directeasy.core.ui.util.OneTimeActionEffect
+import com.ledvance.ui.utils.OneTimeActionEffect
 
 /**
  * @author : jason yin
@@ -35,7 +37,7 @@ internal fun SearchScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val bluetoothEnableState by BluetoothManager.bluetoothEnableState.collectAsStateWithLifecycle()
     var bluetoothPermission by remember { mutableStateOf(false) }
-    val bluetoothBusinessState by rememberBluetoothBusinessState()
+    val bluetoothBusinessState = rememberBluetoothBusinessState()
 
     LifecycleResumeEffect(Unit) {
         bluetoothPermission = bluetoothBusinessState.hasAllow()
@@ -68,7 +70,7 @@ internal fun SearchScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         onBackPressed = onBackClick,
         verticalArrangement = Arrangement.Center,
-        title = "Search For Devices",
+        title = stringResource(R.string.title_search),
         isLoading = uiState.loading
     ) {
         when {

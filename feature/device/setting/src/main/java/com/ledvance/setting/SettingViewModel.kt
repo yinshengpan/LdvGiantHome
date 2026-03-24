@@ -10,8 +10,8 @@ import com.ledvance.ui.component.SnackbarManager
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceStateUseCase
 import com.ledvance.usecase.device.GetDeviceUseCase
-import com.ledvance.vivares.directeasy.core.ui.util.OneTimeActionPublisherContract
-import com.ledvance.vivares.directeasy.core.ui.util.createDefaultMutableActionFlow
+import com.ledvance.ui.utils.OneTimeActionPublisherContract
+import com.ledvance.ui.utils.createDefaultMutableActionFlow
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject

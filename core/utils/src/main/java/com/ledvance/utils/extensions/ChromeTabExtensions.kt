@@ -1,11 +1,10 @@
-package com.ledvance.energy.manager.extensions
+package com.ledvance.utils.extensions
 
 import android.content.Context
 import android.net.Uri
 import androidx.annotation.ColorInt
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
-import com.ledvance.utils.extensions.tryCatch
 
 /**
  * @author : jason yin

@@ -6,257 +6,257 @@ package com.ledvance.domain.bean.command
  * Created date 2026/3/21 09:31
  * Describe : ModeId
  */
-enum class ModeId(val title: String, override val command: Byte) : Command {
-    // Base
-    AutomaticCycle("1. Automatic cycle", 0x00.toByte()),
-    PositiveIllusion("2. Positive Illusion", 0x01.toByte()),
-    ReverseIllusion("3. Reverse Illusion", 0x02.toByte()),
-    ColorfulEnergy("4. Colorful Energy", 0xD4.toByte()),
-    ColorfulJumpingTransformation("5. Colorful Jumping Transformation", 0xC2.toByte()),
-    RedGreenBlueJump("6. Red Green Blue Jump", 0xC2.toByte()),
-    HuangQingziJumpingTransformation("7. Huang Qingzi Jumping Transformation", 0xC3.toByte()),
-    SevenColorStrobeLight("8. Seven color strobe light", 0xC4.toByte()),
-    RedGreenBlueStrobeLight("9. Red green blue strobe light", 0xC5.toByte()),
-    YellowGreenPurpleFlicker("10. Yellow green purple flicker", 0xC6.toByte()),
-    SevenColorGradient("11. Seven color gradient", 0xC7.toByte()),
-    RedAndYellowAlternatingGradient("12. Red and yellow alternating gradient", 0xC8.toByte()),
-    RedPurpleAlternatingGradient("13. Red purple alternating gradient", 0xC9.toByte()),
-    GreenYellowAlternatingGradient("15. Green yellow alternating gradient", 0xCB.toByte()),
-    BluePurpleAlternatingGradient("16. Blue purple alternating gradient", 0xCC.toByte()),
-    RedRacehorse("17. Red racehorse", 0xCD.toByte()),
-    GreenRacehorse("18. Green racehorse", 0xCE.toByte()),
-    BlueRacehorse("19. Blue racehorse", 0xCF.toByte()),
-    YellowRacehorse("20. Yellow racehorse", 0xD0.toByte()),
-    CyanRacehorse("21. Cyan racehorse", 0xD1.toByte()),
-    PurpleRacehorse("22. Purple racehorse", 0xD2.toByte()),
-    WhiteRacehorse("23. White racehorse", 0xD3.toByte()),
-    PositiveRainbowChasingLight("24. Positive Rainbow Chasing Light", 0x4D.toByte()),
-    ReverseRainbowChasingLight("25. Reverse Rainbow Chasing Light", 0x4E.toByte()),
-    PositiveRedGreenBlueChasingLight("26. Positive red green blue Chasing Light", 0x4F.toByte()),
-    ReverseRedGreenBlueChasingLight("27. Reverse red green blue Chasing Light", 0x50.toByte()),
-    PositiveYellowCyanPurpleChasingLight("28. Positive yellow cyan purple Chasing Light", 0x51.toByte()),
-    ReverseYellowCyanPurpleChasingLight("29. Reverse yellow cyan purple Chasing Light", 0x52.toByte()),
-    PositiveColorfulFluttering("30. Positive Colorful Fluttering", 0x53.toByte()),
-    ReverseColorfulFluttering("31. Reverse Colorful Fluttering", 0x54.toByte()),
-    PositiveRedGreenBlueFluttering("32. Positive red green blue fluttering", 0x55.toByte()),
-    ReverseRedGreenBlueFluttering("33. Reverse red green blue fluttering", 0x56.toByte()),
-    PositiveYellowCyanPurpleFluttering("34. Positive yellow cyan purple fluttering", 0x57.toByte()),
-    ReverseYellowCyanPurpleFluttering("35. Reverse yellow cyan purple fluttering", 0x58.toByte()),
-    PositiveRainbowPainting("36. Positive Rainbow Painting", 0xB5.toByte()),
-    ReverseRainbowPainting("37. Reverse Rainbow Painting", 0xB6.toByte()),
-    PositiveRedGreenBluePainting("38. Positive red green blue painting", 0xB7.toByte()),
-    ReverseRedGreenBluePainting("39. Reverse red green blue painting", 0xB8.toByte()),
-    PositiveYellowCyanPurplePainting("40. Positive yellow cyan purple painting", 0xB9.toByte()),
-    ReverseYellowCyanPurplePainting("41. Reverse yellow cyan purple painting", 0xBA.toByte()),
-    ColorfulPaintingClosingCeremony("42. Colorful Painting Closing Ceremony", 0xBB.toByte()),
-    ColorfulSaladScreenBrushing("43. Colorful Salad Screen Brushing", 0xBC.toByte()),
-    RedGreenBluePaintingClosingCeremony("44. Red green blue painting closing ceremony", 0xBD.toByte()),
-    RedGreenBlueSaladScreenBrushing("45. Red green blue salad screen brushing", 0xBE.toByte()),
-    YellowCyanPurplePaintingClosingCeremony("46. Yellow cyan purple painting closing ceremony", 0xBF.toByte()),
-    YellowCyanPurpleSaladScreenBrushing("47. Yellow cyan purple salad screen brushing", 0xC0.toByte()),
+enum class ModeId(override val command: Byte) : Command {
+    // ========== Base 基础灯光效果 ==========
+    AutomaticCycle(0x00.toByte()),                          // 自动循环
+    PositiveIllusion(0x01.toByte()),                        // 正向幻彩
+    ReverseIllusion(0x02.toByte()),                         // 反向幻彩
+    ColorfulEnergy(0xD4.toByte()),                          // 炫彩能量
+    ColorfulJumpingTransformation(0xC2.toByte()),           // 炫彩跳变
+    RedGreenBlueJump(0xC2.toByte()),                        // 红绿蓝跳变
+    HuangQingziJumpingTransformation(0xC3.toByte()),        // 黄青紫跳变
+    SevenColorStrobeLight(0xC4.toByte()),                   // 七彩爆闪
+    RedGreenBlueStrobeLight(0xC5.toByte()),                 // 红绿蓝爆闪
+    YellowGreenPurpleFlicker(0xC6.toByte()),                // 黄绿紫爆闪
+    SevenColorGradient(0xC7.toByte()),                      // 七彩渐变
+    RedAndYellowAlternatingGradient(0xC8.toByte()),         // 红黄交替渐变
+    RedPurpleAlternatingGradient(0xC9.toByte()),            // 红紫交替渐变
+    GreenYellowAlternatingGradient(0xCB.toByte()),          // 绿黄交替渐变
+    BluePurpleAlternatingGradient(0xCC.toByte()),           // 蓝紫交替渐变
+    RedRacehorse(0xCD.toByte()),                            // 红色跑马
+    GreenRacehorse(0xCE.toByte()),                          // 绿色跑马
+    BlueRacehorse(0xCF.toByte()),                           // 蓝色跑马
+    YellowRacehorse(0xD0.toByte()),                         // 黄色跑马
+    CyanRacehorse(0xD1.toByte()),                           // 青色跑马
+    PurpleRacehorse(0xD2.toByte()),                         // 紫色跑马
+    WhiteRacehorse(0xD3.toByte()),                          // 白色跑马
+    PositiveRainbowChasingLight(0x4D.toByte()),             // 正向彩虹追逐
+    ReverseRainbowChasingLight(0x4E.toByte()),              // 反向彩虹追逐
+    PositiveRedGreenBlueChasingLight(0x4F.toByte()),        // 正向红绿蓝追逐
+    ReverseRedGreenBlueChasingLight(0x50.toByte()),         // 反向红绿蓝追逐
+    PositiveYellowCyanPurpleChasingLight(0x51.toByte()),    // 正向黄青紫追逐
+    ReverseYellowCyanPurpleChasingLight(0x52.toByte()),     // 反向黄青紫追逐
+    PositiveColorfulFluttering(0x53.toByte()),              // 正向炫彩飘移
+    ReverseColorfulFluttering(0x54.toByte()),               // 反向炫彩飘移
+    PositiveRedGreenBlueFluttering(0x55.toByte()),          // 正向红绿蓝飘移
+    ReverseRedGreenBlueFluttering(0x56.toByte()),           // 反向红绿蓝飘移
+    PositiveYellowCyanPurpleFluttering(0x57.toByte()),      // 正向黄青紫飘移
+    ReverseYellowCyanPurpleFluttering(0x58.toByte()),       // 反向黄青紫飘移
+    PositiveRainbowPainting(0xB5.toByte()),                 // 正向彩虹绘画
+    ReverseRainbowPainting(0xB6.toByte()),                  // 反向彩虹绘画
+    PositiveRedGreenBluePainting(0xB7.toByte()),            // 正向红绿蓝绘画
+    ReverseRedGreenBluePainting(0xB8.toByte()),             // 反向红绿蓝绘画
+    PositiveYellowCyanPurplePainting(0xB9.toByte()),        // 正向黄青紫绘画
+    ReverseYellowCyanPurplePainting(0xBA.toByte()),         // 反向黄青紫绘画
+    ColorfulPaintingClosingCeremony(0xBB.toByte()),         // 炫彩绘画闭幕
+    ColorfulSaladScreenBrushing(0xBC.toByte()),             // 炫彩沙拉刷屏
+    RedGreenBluePaintingClosingCeremony(0xBD.toByte()),     // 红绿蓝绘画闭幕
+    RedGreenBlueSaladScreenBrushing(0xBE.toByte()),         // 红绿蓝沙拉刷屏
+    YellowCyanPurplePaintingClosingCeremony(0xBF.toByte()), // 黄青紫绘画闭幕
+    YellowCyanPurpleSaladScreenBrushing(0xC0.toByte()),     // 黄青紫沙拉刷屏
 
-    // 窗帘/闭幕式相关
-    ColorfulClosingCeremony("1. Colorful Closing Ceremony", 0x39.toByte()),
-    ColorfulCurtainPulling("2. Colorful Curtain Pulling", 0x3A.toByte()),
-    RedGreenBlueClosingCeremony("3. Red, Green, and Blue Closing Ceremony", 0x3B.toByte()),
-    RedGreenBlueCurtains("4. Red, green, and blue curtains", 0x3C.toByte()),
-    HuangQingziClosingCeremony("5. Huang Qingzi Closing Ceremony", 0x3D.toByte()),
-    HuangQingziPulledCurtain("6. Huang Qingzi pulled the curtain", 0x3E.toByte()),
-    RedClosing("7. Red Closing", 0x3F.toByte()),
-    RedCurtainPulling("8. Red Curtain Pulling", 0x40.toByte()),
-    GreenClosing("9. Green Closing", 0x41.toByte()),
-    GreenCurtainPulling("10. Green Curtain Pulling", 0x42.toByte()),
-    BlueClosing("11. Blue Closing", 0x43.toByte()),
-    BlueCurtainPulling("12. Blue Curtain Pulling", 0x44.toByte()),
-    YellowClosing("13. Yellow Closing", 0x45.toByte()),
-    YellowCurtainPulling("14. Yellow Curtain Pulling", 0x46.toByte()),
-    CyanClosing("15. Cyan Closing", 0x47.toByte()),
-    CyanCurtainPulling("16. Cyan Curtain Pulling", 0x48.toByte()),
-    PurpleClosing("17. Purple Closing", 0x49.toByte()),
-    PurpleCurtainPulling("18. Purple Curtain Pulling", 0x4A.toByte()),
-    WhiteClosing("19. White Closing", 0x4B.toByte()),
-    WhiteCurtainPulling("20. White Curtain Pulling", 0x4C.toByte()),
+    // ========== 窗帘/闭幕式相关 ==========
+    ColorfulClosingCeremony(0x39.toByte()),                 // 炫彩闭幕
+    ColorfulCurtainPulling(0x3A.toByte()),                  // 炫彩拉幕
+    RedGreenBlueClosingCeremony(0x3B.toByte()),             // 红绿蓝闭幕
+    RedGreenBlueCurtains(0x3C.toByte()),                    // 红绿蓝拉幕
+    HuangQingziClosingCeremony(0x3D.toByte()),              // 黄青紫闭幕
+    HuangQingziPulledCurtain(0x3E.toByte()),                // 黄青紫拉幕
+    RedClosing(0x3F.toByte()),                              // 红色闭幕
+    RedCurtainPulling(0x40.toByte()),                       // 红色拉幕
+    GreenClosing(0x41.toByte()),                            // 绿色闭幕
+    GreenCurtainPulling(0x42.toByte()),                     // 绿色拉幕
+    BlueClosing(0x43.toByte()),                             // 蓝色闭幕
+    BlueCurtainPulling(0x44.toByte()),                      // 蓝色拉幕
+    YellowClosing(0x45.toByte()),                           // 黄色闭幕
+    YellowCurtainPulling(0x46.toByte()),                    // 黄色拉幕
+    CyanClosing(0x47.toByte()),                             // 青色闭幕
+    CyanCurtainPulling(0x48.toByte()),                      // 青色拉幕
+    PurpleClosing(0x49.toByte()),                           // 紫色闭幕
+    PurpleCurtainPulling(0x4A.toByte()),                    // 紫色拉幕
+    WhiteClosing(0x4B.toByte()),                            // 白色闭幕
+    WhiteCurtainPulling(0x4C.toByte()),                     // 白色拉幕
 
-    // 明暗过渡相关
-    PositiveSevenColorLightDarkTransition("1. Positive Seven Color Light and Dark Transition", 0x03.toByte()),
-    ReverseSevenColorLightDarkTransition("2. Reverse seven color light dark transition", 0x04.toByte()),
-    PositiveRedGreenBlueLightDarkTransition("3. Positive red green blue light dark transition", 0x05.toByte()),
-    ReverseRedGreenBlueLightDarkTransition("4. Reverse red green blue light dark transition", 0x06.toByte()),
-    PositiveYellowCyanPurpleLightDarkTransition("5. Positive yellow cyan purple light dark transition", 0x07.toByte()),
-    ReverseYellowCyanPurpleLightDarkTransition("6. Reverse yellow cyan purple light dark transition", 0x08.toByte()),
-    PositiveSixColorLightDarkTransitionRed("7. Positive six color light dark transition red", 0x09.toByte()),
-    ReverseSixColorLightDarkTransitionRed("8. Reverse six color light dark transition red", 0x0A.toByte()),
-    PositiveSixColorLightDarkTransitionGreen("9. Positive six color light dark transition green", 0x0B.toByte()),
-    ReverseSixColorLightDarkTransitionGreen("10. Reverse six color light dark transition green", 0x0C.toByte()),
-    PositiveSixColorLightDarkTransitionBlue("11. Positive six color light dark transition blue", 0x0D.toByte()),
-    ReverseSixColorLightDarkTransitionBlue("12. Reverse six color light dark transition blue", 0x0E.toByte()),
-    PositiveSixColorLightDarkTransitionCyan("13. Positive six color light dark transition cyan", 0x0F.toByte()),
-    ReverseSixColorLightDarkTransitionCyan("14. Reverse six color light dark transition cyan", 0x10.toByte()),
-    PositiveSixColorLightDarkTransitionYellow("15. Positive six color light dark transition yellow", 0x11.toByte()),
-    ReverseSixColorLightDarkTransitionYellow("16. Reverse six color light dark transition yellow", 0x12.toByte()),
-    PositiveSixColorLightDarkTransitionPurple("17. Positive six color light dark transition purple", 0x13.toByte()),
-    ReverseSixColorLightDarkTransitionPurple("18. Reverse six color light dark transition purple", 0x14.toByte()),
-    PositiveSixColorLightDarkTransitionWhite("19. Positive six color light dark transition white", 0x15.toByte()),
-    ReverseSixColorLightDarkTransitionWhite("20. Reverse six color light dark transition white", 0x16.toByte()),
+    // ========== 明暗过渡相关 ==========
+    PositiveSevenColorLightDarkTransition(0x03.toByte()),   // 正向七彩明暗过渡
+    ReverseSevenColorLightDarkTransition(0x04.toByte()),    // 反向七彩明暗过渡
+    PositiveRedGreenBlueLightDarkTransition(0x05.toByte()), // 正向红绿蓝明暗过渡
+    ReverseRedGreenBlueLightDarkTransition(0x06.toByte()),  // 反向红绿蓝明暗过渡
+    PositiveYellowCyanPurpleLightDarkTransition(0x07.toByte()), // 正向黄青紫明暗过渡
+    ReverseYellowCyanPurpleLightDarkTransition(0x08.toByte()),  // 反向黄青紫明暗过渡
+    PositiveSixColorLightDarkTransitionRed(0x09.toByte()),  // 正向六色明暗过渡(红)
+    ReverseSixColorLightDarkTransitionRed(0x0A.toByte()),   // 反向六色明暗过渡(红)
+    PositiveSixColorLightDarkTransitionGreen(0x0B.toByte()), // 正向六色明暗过渡(绿)
+    ReverseSixColorLightDarkTransitionGreen(0x0C.toByte()),  // 反向六色明暗过渡(绿)
+    PositiveSixColorLightDarkTransitionBlue(0x0D.toByte()),  // 正向六色明暗过渡(蓝)
+    ReverseSixColorLightDarkTransitionBlue(0x0E.toByte()),   // 反向六色明暗过渡(蓝)
+    PositiveSixColorLightDarkTransitionCyan(0x0F.toByte()),  // 正向六色明暗过渡(青)
+    ReverseSixColorLightDarkTransitionCyan(0x10.toByte()),   // 反向六色明暗过渡(青)
+    PositiveSixColorLightDarkTransitionYellow(0x11.toByte()), // 正向六色明暗过渡(黄)
+    ReverseSixColorLightDarkTransitionYellow(0x12.toByte()),  // 反向六色明暗过渡(黄)
+    PositiveSixColorLightDarkTransitionPurple(0x13.toByte()), // 正向六色明暗过渡(紫)
+    ReverseSixColorLightDarkTransitionPurple(0x14.toByte()),  // 反向六色明暗过渡(紫)
+    PositiveSixColorLightDarkTransitionWhite(0x15.toByte()),  // 正向六色明暗过渡(白)
+    ReverseSixColorLightDarkTransitionWhite(0x16.toByte()),   // 反向六色明暗过渡(白)
 
-    // 流水效果相关
-    PositiveRainbowFlowingWater("1. Positive Rainbow Flowing Water", 0x27.toByte()),
-    ReverseRainbowFlowingWater("2. Reverse Rainbow Flowing Water", 0x28.toByte()),
-    ForwardFlowingRedGreenBlueWater("3. Forward flowing red green blue water", 0x29.toByte()),
-    ReverseRedGreenBlueFlowingWater("4. Reverse red green blue flowing water", 0x2A.toByte()),
-    ForwardFlowingYellowCyanPurpleWater("5. Forward flowing yellow cyan purple water", 0x2B.toByte()),
-    ReverseYellowCyanPurpleFlowingWater("6. Reverse yellow cyan purple flowing water", 0x2C.toByte()),
-    ForwardFlowingRedGreenWater("7. Forward flowing red green water", 0x2D.toByte()),
-    ReverseRedGreenFlowingWater("8. Reverse red green flowing water", 0x2E.toByte()),
-    ForwardFlowingGreenBlueWater("9. Forward flowing green blue water", 0x2F.toByte()),
-    ReverseGreenBlueFlowingWater("10. Reverse green blue flowing water", 0x30.toByte()),
-    ForwardFlowingYellowBlueWater("11. Forward flowing yellow blue water", 0x31.toByte()),
-    ReverseYellowBlueFlowingWater("12. Reverse yellow blue flowing water", 0x32.toByte()),
-    ForwardFlowingYellowCyanWater("13. Forward flowing yellow cyan water", 0x33.toByte()),
-    ReverseYellowCyanFlowingWater("14. Reverse yellow cyan flowing water", 0x34.toByte()),
-    ForwardFlowingCyanPurpleWater("15. Forward flowing cyan purple water", 0x35.toByte()),
-    ReverseCyanPurpleFlowingWater("16. Reverse cyan purple flowing water", 0x36.toByte()),
-    ForwardFlowingBlackWhiteWater("17. Forward flowing black white water", 0x37.toByte()),
-    ReverseBlackWhiteFlowingWater("18. Reverse black white flowing water", 0x38.toByte()),
+    // ========== 流水效果相关 ==========
+    PositiveRainbowFlowingWater(0x27.toByte()),             // 正向彩虹流水
+    ReverseRainbowFlowingWater(0x28.toByte()),              // 反向彩虹流水
+    ForwardFlowingRedGreenBlueWater(0x29.toByte()),         // 正向红绿蓝流水
+    ReverseRedGreenBlueFlowingWater(0x2A.toByte()),         // 反向红绿蓝流水
+    ForwardFlowingYellowCyanPurpleWater(0x2B.toByte()),     // 正向黄青紫流水
+    ReverseYellowCyanPurpleFlowingWater(0x2C.toByte()),     // 反向黄青紫流水
+    ForwardFlowingRedGreenWater(0x2D.toByte()),             // 正向红绿流水
+    ReverseRedGreenFlowingWater(0x2E.toByte()),             // 反向红绿流水
+    ForwardFlowingGreenBlueWater(0x2F.toByte()),            // 正向绿蓝流水
+    ReverseGreenBlueFlowingWater(0x30.toByte()),            // 反向绿蓝流水
+    ForwardFlowingYellowBlueWater(0x31.toByte()),           // 正向黄蓝流水
+    ReverseYellowBlueFlowingWater(0x32.toByte()),           // 反向黄蓝流水
+    ForwardFlowingYellowCyanWater(0x33.toByte()),          // 正向黄青流水
+    ReverseYellowCyanFlowingWater(0x34.toByte()),          // 反向黄青流水
+    ForwardFlowingCyanPurpleWater(0x35.toByte()),           // 正向青紫流水
+    ReverseCyanPurpleFlowingWater(0x36.toByte()),           // 反向青紫流水
+    ForwardFlowingBlackWhiteWater(0x37.toByte()),           // 正向黑白流水
+    ReverseBlackWhiteFlowingWater(0x38.toByte()),           // 反向黑白流水
 
-    // 白彩交替流水
-    PositiveFlowWhiteRedWhite("1. Positive flow of white, red, and white", 0x8F.toByte()),
-    ReverseFlowWhiteRedWhite("2. Reverse flow of white, red, and white", 0x90.toByte()),
-    PositiveFlowWhiteGreenWhite("3. Positive flow of white, green, and white", 0x91.toByte()),
-    ReverseFlowWhiteGreenWhite("4. Reverse flow of white, green, and white", 0x92.toByte()),
-    PositiveFlowWhiteBlueWhite("5. Positive flow of white, blue, and white", 0x93.toByte()),
-    ReverseFlowWhiteBlueWhite("6. Reverse flow of white, blue, and white", 0x94.toByte()),
-    PositiveFlowWhiteYellowWhite("7. Positive flow of white, yellow, and white", 0x95.toByte()),
-    ReverseFlowWhiteYellowWhite("8. Reverse flow of white, yellow, and white", 0x96.toByte()),
-    PositiveFlowWhiteCyanWhite("9. Positive flow of white, cyan, and white", 0x97.toByte()),
-    ReverseFlowWhiteCyanWhite("10. Reverse flow of white, cyan, and white", 0x98.toByte()),
-    PositiveFlowWhitePurpleWhite("11. Positive flow of white, purple, and white", 0x99.toByte()),
-    ReverseFlowWhitePurpleWhite("12. Reverse flow of white, purple, and white", 0x9A.toByte()),
-    PositiveFlowRedWhiteRed("13. Positive flow of red, white, and red", 0x9B.toByte()),
-    ReverseFlowRedWhiteRed("14. Reverse flow of red, white, and red", 0x9C.toByte()),
-    PositiveFlowGreenWhiteGreen("15. Positive flow of green, white, and green", 0x9D.toByte()),
-    ReverseFlowGreenWhiteGreen("16. Reverse flow of green, white, and green", 0x9E.toByte()),
-    PositiveFlowBlueWhiteBlue("17. Positive flow of blue, white, and blue", 0x9F.toByte()),
-    ReverseFlowBlueWhiteBlue("18. Reverse flow of blue, white, and blue", 0xA0.toByte()),
-    PositiveFlowYellowWhiteYellow("19. Positive flow of yellow, white, and yellow", 0xA1.toByte()),
-    ReverseFlowYellowWhiteYellow("20. Reverse flow of yellow, white, and yellow", 0xA2.toByte()),
-    PositiveFlowCyanWhiteCyan("21. Positive flow of cyan, white, and cyan", 0xA3.toByte()),
-    ReverseFlowCyanWhiteCyan("22. Reverse flow of cyan, white, and cyan", 0xA4.toByte()),
-    PositiveFlowPurpleWhitePurple("23. Positive flow of purple, white, and purple", 0xA5.toByte()),
-    ReverseFlowPurpleWhitePurple("24. Reverse flow of purple, white, and purple", 0xA6.toByte()),
+    // ========== 白彩交替流水 ==========
+    PositiveFlowWhiteRedWhite(0x8F.toByte()),               // 正向流白红白
+    ReverseFlowWhiteRedWhite(0x90.toByte()),                // 反向流白红白
+    PositiveFlowWhiteGreenWhite(0x91.toByte()),             // 正向流白绿白
+    ReverseFlowWhiteGreenWhite(0x92.toByte()),              // 反向流白绿白
+    PositiveFlowWhiteBlueWhite(0x93.toByte()),              // 正向流白蓝白
+    ReverseFlowWhiteBlueWhite(0x94.toByte()),               // 反向流白蓝白
+    PositiveFlowWhiteYellowWhite(0x95.toByte()),            // 正向流白黄白
+    ReverseFlowWhiteYellowWhite(0x96.toByte()),             // 反向流白黄白
+    PositiveFlowWhiteCyanWhite(0x97.toByte()),              // 正向流白青白
+    ReverseFlowWhiteCyanWhite(0x98.toByte()),               // 反向流白青白
+    PositiveFlowWhitePurpleWhite(0x99.toByte()),            // 正向流白紫白
+    ReverseFlowWhitePurpleWhite(0x9A.toByte()),             // 反向流白紫白
+    PositiveFlowRedWhiteRed(0x9B.toByte()),                 // 正向流红白红
+    ReverseFlowRedWhiteRed(0x9C.toByte()),                  // 反向流红白红
+    PositiveFlowGreenWhiteGreen(0x9D.toByte()),             // 正向流绿白绿
+    ReverseFlowGreenWhiteGreen(0x9E.toByte()),              // 反向流绿白绿
+    PositiveFlowBlueWhiteBlue(0x9F.toByte()),               // 正向流蓝白蓝
+    ReverseFlowBlueWhiteBlue(0xA0.toByte()),                // 反向流蓝白蓝
+    PositiveFlowYellowWhiteYellow(0xA1.toByte()),           // 正向流黄白黄
+    ReverseFlowYellowWhiteYellow(0xA2.toByte()),            // 反向流黄白黄
+    PositiveFlowCyanWhiteCyan(0xA3.toByte()),               // 正向流青白青
+    ReverseFlowCyanWhiteCyan(0xA4.toByte()),                // 反向流青白青
+    PositiveFlowPurpleWhitePurple(0xA5.toByte()),           // 正向流紫白紫
+    ReverseFlowPurpleWhitePurple(0xA6.toByte()),            // 反向流紫白紫
 
-    // 彩色尾迹
-    PositiveRainbowTail("1. Positive Rainbow Tail", 0x17.toByte()),
-    ReverseRainbowTail("2. Reverse Rainbow Tail", 0x18.toByte()),
-    PositiveRedTail("3. Positive red tail", 0x19.toByte()),
-    ReverseRedTail("4. Reverse red tail", 0x1A.toByte()),
-    PositiveGreenTail("5. Positive green tail", 0x1B.toByte()),
-    ReverseGreenTail("6. Reverse green tail", 0x1C.toByte()),
-    PositiveBlueTail("7. Positive blue tail", 0x1D.toByte()),
-    ReverseBlueTail("8. Reverse blue tail", 0x1E.toByte()),
-    PositiveYellowTail("9. Positive yellow tail", 0x1F.toByte()),
-    ReverseYellowTail("10. Reverse yellow tail", 0x20.toByte()),
-    PositiveCyanTail("11. Positive cyan tail", 0x21.toByte()),
-    ReverseCyanTail("12. Reverse cyan tail", 0x22.toByte()),
-    PositivePurpleTail("13. Positive purple tail", 0x23.toByte()),
-    ReversePurpleTail("14. Reverse purple tail", 0x24.toByte()),
-    PositiveWhiteTail("15. Positive white tail", 0x25.toByte()),
-    ReverseWhiteTail("16. Reverse white tail", 0x26.toByte()),
+    // ========== 彩色尾迹 ==========
+    PositiveRainbowTail(0x17.toByte()),                     // 正向彩虹尾迹
+    ReverseRainbowTail(0x18.toByte()),                      // 反向彩虹尾迹
+    PositiveRedTail(0x19.toByte()),                         // 正向红色尾迹
+    ReverseRedTail(0x1A.toByte()),                          // 反向红色尾迹
+    PositiveGreenTail(0x1B.toByte()),                       // 正向绿色尾迹
+    ReverseGreenTail(0x1C.toByte()),                        // 反向绿色尾迹
+    PositiveBlueTail(0x1D.toByte()),                        // 正向蓝色尾迹
+    ReverseBlueTail(0x1E.toByte()),                         // 反向蓝色尾迹
+    PositiveYellowTail(0x1F.toByte()),                      // 正向黄色尾迹
+    ReverseYellowTail(0x20.toByte()),                       // 反向黄色尾迹
+    PositiveCyanTail(0x21.toByte()),                        // 正向青色尾迹
+    ReverseCyanTail(0x22.toByte()),                         // 反向青色尾迹
+    PositivePurpleTail(0x23.toByte()),                      // 正向紫色尾迹
+    ReversePurpleTail(0x24.toByte()),                       // 反向紫色尾迹
+    PositiveWhiteTail(0x25.toByte()),                       // 正向白色尾迹
+    ReverseWhiteTail(0x26.toByte()),                        // 反向白色尾迹
 
-    // 正向跑动效果
-    RunningForwardRed("1. Running forward red", 0x59.toByte()),
-    RunningForwardGreen("2. Running forward green", 0x5B.toByte()),
-    RunningForwardBlue("3. Running forward blue", 0x5D.toByte()),
-    RunningForwardYellow("4. Running forward yellow", 0x5F.toByte()),
-    RunningForwardCyan("5. Running forward cyan", 0x61.toByte()),
-    RunningForwardPurple("6. Running forward purple", 0x63.toByte()),
-    RunningForwardWhite("7. Running forward white", 0x65.toByte()),
-    RunningForwardSevenColors("8. Running forward seven colors", 0x67.toByte()),
-    RunningForwardRedBlueGreen("9. Running forward red blue green", 0x69.toByte()),
-    RunningForwardYellowPurpleCyan("10. Running forward yellow purple cyan", 0x6B.toByte()),
-    RunningForwardBluePurpleCyanYellow("11. Running forward blue purple cyan yellow", 0x6D.toByte()),
-    RunningForwardBlueGreenCyanYellow("12. Running forward blue green cyan yellow", 0x6F.toByte()),
-    RunningForwardWhiteBackgroundRedDots("13. Running forward white background red dots", 0x71.toByte()),
-    RunningForwardRedBackgroundGreenDots14("14. Running forward red background green dots", 0x73.toByte()),
-    RunningForwardGreenBackgroundBlueDots("15. Running forward green background blue dots", 0x75.toByte()),
-    RunningForwardBlueBackgroundYellowDots("16. Running forward blue background yellow dots", 0x77.toByte()),
-    RunningForwardYellowBackgroundCyanDots17("17. Running forward yellow background cyan dots", 0x79.toByte()),
-    RunningForwardCyanBackgroundPurpleDots("18. Running forward cyan background purple dots", 0x7B.toByte()),
-    RunningForwardPurpleBackgroundWhiteDots("19. Running forward purple background white dots", 0x7D.toByte()),
-    RunningForwardRedBackgroundWhiteDots("20. Running forward red background white dots", 0x7F.toByte()),
-    RunningForwardRedBackgroundSevenColors("21. Running forward red background seven colors", 0x81.toByte()),
-    RunningForwardGreenBackgroundSevenColors("22. Running forward green background seven colors", 0x83.toByte()),
-    RunningForwardBlueBackgroundSevenColors("23. Running forward blue background seven colors", 0x85.toByte()),
-    RunningForwardYellowBackgroundSevenColors("24. Running forward yellow background seven colors", 0x87.toByte()),
-    RunningForwardCyanBackgroundSevenColors("25. Running forward cyan background seven colors", 0x89.toByte()),
-    RunningForwardPurpleBackgroundSevenColors("26. Running forward purple background seven colors", 0x8B.toByte()),
-    RunningForwardWhiteBackgroundSevenColors("27. Running forward white background seven colors", 0x8D.toByte()),
-    RunningForwardBlueBackgroundGreenDots("28. Running forward blue background green dots", 0xA7.toByte()),
-    RunningForwardRedBackgroundGreenDots("29. Running forward red background green dots", 0xA9.toByte()),
-    RunningForwardBlueBackgroundRedDots("30. Running forward blue background red dots", 0xAB.toByte()),
-    RunningForwardYellowBackgroundCyanDots("31. Running forward yellow background cyan dots", 0xAD.toByte()),
-    RunningForwardPurpleBackgroundYellowDots("32. Running forward purple background yellow dots", 0xAF.toByte()),
-    RunningForwardYellowBackgroundWhiteDots("33. Running forward yellow background white dots", 0xB1.toByte()),
-    RunningForwardWhiteBackgroundYellowDots("34. Running forward white background yellow dots", 0xB3.toByte()),
+    // ========== 正向跑动效果 ==========
+    RunningForwardRed(0x59.toByte()),                       // 正向跑动-红
+    RunningForwardGreen(0x5B.toByte()),                     // 正向跑动-绿
+    RunningForwardBlue(0x5D.toByte()),                      // 正向跑动-蓝
+    RunningForwardYellow(0x5F.toByte()),                    // 正向跑动-黄
+    RunningForwardCyan(0x61.toByte()),                      // 正向跑动-青
+    RunningForwardPurple(0x63.toByte()),                    // 正向跑动-紫
+    RunningForwardWhite(0x65.toByte()),                     // 正向跑动-白
+    RunningForwardSevenColors(0x67.toByte()),               // 正向跑动-七彩
+    RunningForwardRedBlueGreen(0x69.toByte()),              // 正向跑动-红绿蓝
+    RunningForwardYellowPurpleCyan(0x6B.toByte()),          // 正向跑动-黄青紫
+    RunningForwardBluePurpleCyanYellow(0x6D.toByte()),       // 正向跑动-蓝紫青黄
+    RunningForwardBlueGreenCyanYellow(0x6F.toByte()),       // 正向跑动-蓝绿青黄
+    RunningForwardWhiteBackgroundRedDots(0x71.toByte()),    // 正向跑动-白底红点
+    RunningForwardRedBackgroundGreenDots14(0x73.toByte()),  // 正向跑动-红底绿点14
+    RunningForwardGreenBackgroundBlueDots(0x75.toByte()),   // 正向跑动-绿底蓝点
+    RunningForwardBlueBackgroundYellowDots(0x77.toByte()),  // 正向跑动-蓝底黄点
+    RunningForwardYellowBackgroundCyanDots17(0x79.toByte()), // 正向跑动-黄底青点17
+    RunningForwardCyanBackgroundPurpleDots(0x7B.toByte()),  // 正向跑动-青底紫点
+    RunningForwardPurpleBackgroundWhiteDots(0x7D.toByte()), // 正向跑动-紫底白点
+    RunningForwardRedBackgroundWhiteDots(0x7F.toByte()),    // 正向跑动-红底白点
+    RunningForwardRedBackgroundSevenColors(0x81.toByte()),  // 正向跑动-红底七彩
+    RunningForwardGreenBackgroundSevenColors(0x83.toByte()), // 正向跑动-绿底七彩
+    RunningForwardBlueBackgroundSevenColors(0x85.toByte()), // 正向跑动-蓝底七彩
+    RunningForwardYellowBackgroundSevenColors(0x87.toByte()), // 正向跑动-黄底七彩
+    RunningForwardCyanBackgroundSevenColors(0x89.toByte()), // 正向跑动-青底七彩
+    RunningForwardPurpleBackgroundSevenColors(0x8B.toByte()), // 正向跑动-紫底七彩
+    RunningForwardWhiteBackgroundSevenColors(0x8D.toByte()), // 正向跑动-白底七彩
+    RunningForwardBlueBackgroundGreenDots(0xA7.toByte()),   // 正向跑动-蓝底绿点
+    RunningForwardRedBackgroundGreenDots(0xA9.toByte()),    // 正向跑动-红底绿点
+    RunningForwardBlueBackgroundRedDots(0xAB.toByte()),     // 正向跑动-蓝底红点
+    RunningForwardYellowBackgroundCyanDots(0xAD.toByte()),  // 正向跑动-黄底青点
+    RunningForwardPurpleBackgroundYellowDots(0xAF.toByte()), // 正向跑动-紫底黄点
+    RunningForwardYellowBackgroundWhiteDots(0xB1.toByte()), // 正向跑动-黄底白点
+    RunningForwardWhiteBackgroundYellowDots(0xB3.toByte()), // 正向跑动-白底黄点
 
-    // 反向跑动效果
-    ReverseRunningRed("1. Reverse running red", 0x5A.toByte()),
-    ReverseRunningGreen("2. Reverse running green", 0x5C.toByte()),
-    ReverseRunningBlue("3. Reverse running blue", 0x5E.toByte()),
-    ReverseRunningYellow("4. Reverse running yellow", 0x60.toByte()),
-    ReverseRunningCyan("5. Reverse running cyan", 0x62.toByte()),
-    ReverseRunningPurple("6. Reverse running purple", 0x64.toByte()),
-    ReverseRunningWhite("7. Reverse running white", 0x66.toByte()),
-    ReverseRunningSevenColors("8. Reverse running seven colors", 0x68.toByte()),
-    ReverseRunningRedBlueGreen("9. Reverse running red blue green", 0x6A.toByte()),
-    ReverseRunningYellowPurpleCyan("10. Reverse running yellow purple cyan", 0x6C.toByte()),
-    ReverseRunningBluePurpleCyanYellow("11. Reverse running blue purple cyan yellow", 0x6E.toByte()),
-    ReverseRunningBlueGreenCyanYellow("12. Reverse running blue green cyan yellow", 0x70.toByte()),
-    ReverseRunningWhiteBackgroundRedDots("13. Reverse running white background red dots", 0x72.toByte()),
-    ReverseRunningRedBackgroundGreenDots14("14. Reverse running red background green dots", 0x74.toByte()),
-    ReverseRunningGreenBackgroundBlueDots("15. Reverse running green background blue dots", 0x76.toByte()),
-    ReverseRunningBlueBackgroundYellowDots("16. Reverse running blue background yellow dots", 0x78.toByte()),
-    ReverseRunningYellowBackgroundCyanDots17("17. Reverse running yellow background cyan dots", 0x7A.toByte()),
-    ReverseRunningCyanBackgroundPurpleDots("18. Reverse running cyan background purple dots", 0x7C.toByte()),
-    ReverseRunningPurpleBackgroundWhiteDots("19. Reverse running purple background white dots", 0x7E.toByte()),
-    ReverseRunningRedBackgroundWhiteDots("20. Reverse running red background white dots", 0x80.toByte()),
-    ReverseRunningRedBackgroundSevenColors("21. Reverse running red background seven colors", 0x82.toByte()),
-    ReverseRunningGreenBackgroundSevenColors("22. Reverse running green background seven colors", 0x84.toByte()),
-    ReverseRunningBlueBackgroundSevenColors("23. Reverse running blue background seven colors", 0x86.toByte()),
-    ReverseRunningYellowBackgroundSevenColors("24. Reverse running yellow background seven colors", 0x88.toByte()),
-    ReverseRunningCyanBackgroundSevenColors("25. Reverse running cyan background seven colors", 0x8A.toByte()),
-    ReverseRunningPurpleBackgroundSevenColors("26. Reverse running purple background seven colors", 0x8C.toByte()),
-    ReverseRunningWhiteBackgroundSevenColors("27. Reverse running white background seven colors", 0x8E.toByte()),
-    ReverseRunningBlueBackgroundGreenDots("28. Reverse running blue background green dots", 0xA8.toByte()),
-    ReverseRunningRedBackgroundGreenDots("29. Reverse running red background green dots", 0xAA.toByte()),
-    ReverseRunningBlueBackgroundRedDots("30. Reverse running blue background red dots", 0xAC.toByte()),
-    ReverseRunningYellowBackgroundCyanDots("31. Reverse running yellow background cyan dots", 0xAE.toByte()),
-    ReverseRunningPurpleBackgroundYellowDots("32. Reverse running purple background yellow dots", 0xB0.toByte()),
-    ReverseRunningYellowBackgroundWhiteDots("33. Reverse running yellow background white dots", 0xB2.toByte()),
-    ReverseRunningWhiteBackgroundYellowDots("34. Reverse running white background yellow dots", 0xB4.toByte()),
+    // ========== 反向跑动效果 ==========
+    ReverseRunningRed(0x5A.toByte()),                       // 反向跑动-红
+    ReverseRunningGreen(0x5C.toByte()),                     // 反向跑动-绿
+    ReverseRunningBlue(0x5E.toByte()),                      // 反向跑动-蓝
+    ReverseRunningYellow(0x60.toByte()),                    // 反向跑动-黄
+    ReverseRunningCyan(0x62.toByte()),                      // 反向跑动-青
+    ReverseRunningPurple(0x64.toByte()),                    // 反向跑动-紫
+    ReverseRunningWhite(0x66.toByte()),                     // 反向跑动-白
+    ReverseRunningSevenColors(0x68.toByte()),               // 反向跑动-七彩
+    ReverseRunningRedBlueGreen(0x6A.toByte()),              // 反向跑动-红绿蓝
+    ReverseRunningYellowPurpleCyan(0x6C.toByte()),          // 反向跑动-黄青紫
+    ReverseRunningBluePurpleCyanYellow(0x6E.toByte()),      // 反向跑动-蓝紫青黄
+    ReverseRunningBlueGreenCyanYellow(0x70.toByte()),       // 反向跑动-蓝绿青黄
+    ReverseRunningWhiteBackgroundRedDots(0x72.toByte()),    // 反向跑动-白底红点
+    ReverseRunningRedBackgroundGreenDots14(0x74.toByte()),  // 反向跑动-红底绿点14
+    ReverseRunningGreenBackgroundBlueDots(0x76.toByte()),   // 反向跑动-绿底蓝点
+    ReverseRunningBlueBackgroundYellowDots(0x78.toByte()),  // 反向跑动-蓝底黄点
+    ReverseRunningYellowBackgroundCyanDots17(0x7A.toByte()), // 反向跑动-黄底青点17
+    ReverseRunningCyanBackgroundPurpleDots(0x7C.toByte()),  // 反向跑动-青底紫点
+    ReverseRunningPurpleBackgroundWhiteDots(0x7E.toByte()), // 反向跑动-紫底白点
+    ReverseRunningRedBackgroundWhiteDots(0x80.toByte()),    // 反向跑动-红底白点
+    ReverseRunningRedBackgroundSevenColors(0x82.toByte()),  // 反向跑动-红底七彩
+    ReverseRunningGreenBackgroundSevenColors(0x84.toByte()), // 反向跑动-绿底七彩
+    ReverseRunningBlueBackgroundSevenColors(0x86.toByte()), // 反向跑动-蓝底七彩
+    ReverseRunningYellowBackgroundSevenColors(0x88.toByte()), // 反向跑动-黄底七彩
+    ReverseRunningCyanBackgroundSevenColors(0x8A.toByte()), // 反向跑动-青底七彩
+    ReverseRunningPurpleBackgroundSevenColors(0x8C.toByte()), // 反向跑动-紫底七彩
+    ReverseRunningWhiteBackgroundSevenColors(0x8E.toByte()), // 反向跑动-白底七彩
+    ReverseRunningBlueBackgroundGreenDots(0xA8.toByte()),   // 反向跑动-蓝底绿点
+    ReverseRunningRedBackgroundGreenDots(0xAA.toByte()),    // 反向跑动-红底绿点
+    ReverseRunningBlueBackgroundRedDots(0xAC.toByte()),     // 反向跑动-蓝底红点
+    ReverseRunningYellowBackgroundCyanDots(0xAE.toByte()),  // 反向跑动-黄底青点
+    ReverseRunningPurpleBackgroundYellowDots(0xB0.toByte()), // 反向跑动-紫底黄点
+    ReverseRunningYellowBackgroundWhiteDots(0xB2.toByte()), // 反向跑动-黄底白点
+    ReverseRunningWhiteBackgroundYellowDots(0xB4.toByte()), // 反向跑动-白底黄点
 
-    // 特殊效果/堆叠/过渡
-    SpecialSevenColorsOpening25PM("1. Special Seven Colors Opening at 25 PM", 0xD5.toByte()),
-    OrangeRedDarkBrightDarkFilteredFlowingWater("2. Orange red dark bright dark filtered flowing water", 0xD6.toByte()),
-    YellowGreenDarkBrightDarkFilteredFlowingWater("3. Yellow green dark bright dark filtered flowing water", 0xD7.toByte()),
-    GreenDarkBrightDarkFilteredFlowingWater("4. Green dark bright dark filtered flowing water", 0xD8.toByte()),
-    CyanBlueDarkBrightDarkFilteredFlowingWater("5. Cyan blue dark bright dark filtered flowing water", 0xD9.toByte()),
-    BlueDarkBrightDarkFilteredFlowingWater("6. Blue dark bright dark filtered flowing water", 0xDA.toByte()),
-    PurpleDarkBrightDarkFilteredFlowingWater("7. Purple dark bright dark filtered flowing water", 0xDB.toByte()),
-    RedDarkBrightDarkFilteredFlowingWater("8. Red dark bright dark filtered flowing water", 0xDC.toByte()),
-    SevenColorStacking("9. Seven color stacking", 0xDD.toByte()),
-    OrangeStacking("10. Orange stacking", 0xDE.toByte()),
-    YellowGreenStacking("11. Yellow green stacking", 0xDF.toByte()),
-    GreenStacking("12. Green stacking", 0xE0.toByte()),
-    CyanBlueStacking("13. Cyan blue stacking", 0xE1.toByte()),
-    BlueStacking("14. Blue stacking", 0xE2.toByte()),
-    PurpleStacking("15. Purple stacking", 0xE3.toByte()),
-    RedStacking("16. Red stacking", 0xE4.toByte()),
-    ColorfulGradient("17. Colorful gradient", 0xE5.toByte()),
-    ColorfulTransition("18. Colorful transition", 0xE6.toByte()),
-    RedPurpleTransition("19. Red purple transition", 0xE7.toByte()),
-    YellowWhiteTransition("20. Yellow white transition", 0xE8.toByte()),
-    YellowOrangeTransition("21. Yellow orange transition", 0xE9.toByte());
+    // ========== 特殊效果/堆叠/过渡 ==========
+    SpecialSevenColorsOpening25PM(0xD5.toByte()),           // 特殊-七彩开场25PM
+    OrangeRedDarkBrightDarkFilteredFlowingWater(0xD6.toByte()), // 橙红暗亮暗过滤流水
+    YellowGreenDarkBrightDarkFilteredFlowingWater(0xD7.toByte()), // 黄绿暗亮暗过滤流水
+    GreenDarkBrightDarkFilteredFlowingWater(0xD8.toByte()), // 绿色暗亮暗过滤流水
+    CyanBlueDarkBrightDarkFilteredFlowingWater(0xD9.toByte()), // 青蓝暗亮暗过滤流水
+    BlueDarkBrightDarkFilteredFlowingWater(0xDA.toByte()),  // 蓝色暗亮暗过滤流水
+    PurpleDarkBrightDarkFilteredFlowingWater(0xDB.toByte()), // 紫色暗亮暗过滤流水
+    RedDarkBrightDarkFilteredFlowingWater(0xDC.toByte()),   // 红色暗亮暗过滤流水
+    SevenColorStacking(0xDD.toByte()),                      // 七彩堆叠
+    OrangeStacking(0xDE.toByte()),                          // 橙色堆叠
+    YellowGreenStacking(0xDF.toByte()),                     // 黄绿堆叠
+    GreenStacking(0xE0.toByte()),                           // 绿色堆叠
+    CyanBlueStacking(0xE1.toByte()),                        // 青蓝堆叠
+    BlueStacking(0xE2.toByte()),                            // 蓝色堆叠
+    PurpleStacking(0xE3.toByte()),                          // 紫色堆叠
+    RedStacking(0xE4.toByte()),                             // 红色堆叠
+    ColorfulGradient(0xE5.toByte()),                        // 炫彩渐变
+    ColorfulTransition(0xE6.toByte()),                      // 炫彩过渡
+    RedPurpleTransition(0xE7.toByte()),                     // 红紫过渡
+    YellowWhiteTransition(0xE8.toByte()),                   // 黄白过渡
+    YellowOrangeTransition(0xE9.toByte());                  // 黄橙过渡
 
 
     companion object {

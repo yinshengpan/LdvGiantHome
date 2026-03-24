@@ -1,4 +1,4 @@
-package com.ledvance.vivares.directeasy.core.ui.util
+package com.ledvance.ui.utils
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

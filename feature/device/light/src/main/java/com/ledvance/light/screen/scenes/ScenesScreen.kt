@@ -2,11 +2,11 @@ package com.ledvance.light.screen.scenes
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ledvance.domain.bean.DeviceId
+import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceScreen
 import com.ledvance.ui.component.OfflineBanner
 
@@ -26,7 +26,7 @@ internal fun ScenesScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LedvanceScreen(
-        title = "Scenes",
+        title = stringResource(R.string.title_scene),
         onBackPressed = onBackClick,
         isLoading = (uiState as? ScenesContract.UiState.Success)?.loading ?: false
     ) {
@@ -44,7 +44,6 @@ internal fun ScenesScreen(
                 OfflineBanner(
                     visible = !state.isOnline,
                     onReconnectClick = viewModel::onReconnect,
-                    modifier = Modifier.align(Alignment.BottomCenter)
                 )
             }
         }

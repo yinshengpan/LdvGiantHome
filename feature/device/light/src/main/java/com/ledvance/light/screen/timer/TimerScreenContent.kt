@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -42,6 +43,7 @@ import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceSwitch
 import com.ledvance.ui.component.TimePicker
 import com.ledvance.ui.extensions.debouncedClickable
+import com.ledvance.ui.extensions.getFullNameResId
 import com.ledvance.ui.theme.AppTheme
 import java.time.DayOfWeek
 import java.time.format.TextStyle
@@ -79,7 +81,7 @@ internal fun TimerScreenContent(
                 .padding(15.dp)
         ) {
             TimerItem(
-                title = "Regularly turn on the lights",
+                title = stringResource(R.string.timer_regularly_on),
                 switch = onTimer.enabled,
                 onSwitchChange = { onTimerSwitchChange(TimerType.ON, it) },
                 time = onTimer.displayTime,
@@ -89,7 +91,7 @@ internal fun TimerScreenContent(
             )
             TimerItem(
                 modifier = Modifier.padding(top = 10.dp),
-                title = "Regularly turn off the lights",
+                title = stringResource(R.string.timer_regularly_off),
                 switch = offTimer.enabled,
                 onSwitchChange = { onTimerSwitchChange(TimerType.OFF, it) },
                 time = offTimer.displayTime,
@@ -163,7 +165,7 @@ private fun RepeatPicker(
             .padding(24.dp)
     ) {
         Text(
-            text = "Select Repeat",
+            text = stringResource(R.string.dialog_select_time_repeat_title),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
@@ -187,7 +189,7 @@ private fun RepeatPicker(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = day.getDisplayName(TextStyle.FULL, Locale.getDefault()),
+                        text = stringResource(day.getFullNameResId()),
                         modifier = Modifier.weight(1f),
                         color = Color.Black
                     )
@@ -214,7 +216,7 @@ private fun RepeatPicker(
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF2F2F2), contentColor = Color.Black),
                 shape = RoundedCornerShape(28.dp)
             ) {
-                Text(text = "Cancel")
+                Text(text = stringResource(R.string.cancel))
             }
 
             Button(
@@ -225,7 +227,7 @@ private fun RepeatPicker(
                 colors = ButtonDefaults.buttonColors(containerColor = AppTheme.colors.primary, contentColor = Color.White),
                 shape = RoundedCornerShape(28.dp)
             ) {
-                Text(text = "Confirm")
+                Text(text = stringResource(R.string.confirm))
             }
         }
     }
@@ -252,8 +254,8 @@ private fun TimerItem(
             ),
     ) {
         Item(title = title, switch = switch, onSwitchChange = onSwitchChange)
-        Item(title = "Time", content = time, onContentClick = onTimeClick)
-        Item(title = "Repeat", content = repeat, onContentClick = onRepeatClick)
+        Item(title = stringResource(R.string.timer_time), content = time, onContentClick = onTimeClick)
+        Item(title = stringResource(R.string.timer_repeat), content = repeat, onContentClick = onRepeatClick)
     }
 }
 

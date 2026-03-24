@@ -14,6 +14,7 @@ dependencies {
     implementation(projects.core.database)
     implementation(projects.core.domain)
     implementation(projects.core.utils)
+    implementation(projects.core.ui)
 
     implementation(libs.timber)
 }

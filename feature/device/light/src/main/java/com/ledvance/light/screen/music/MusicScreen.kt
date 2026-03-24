@@ -2,11 +2,11 @@ package com.ledvance.light.screen.music
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ledvance.domain.bean.DeviceId
+import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceScreen
 import com.ledvance.ui.component.OfflineBanner
 
@@ -26,7 +26,7 @@ internal fun MusicScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LedvanceScreen(
-        title = "Music",
+        title = stringResource(R.string.title_music),
         onBackPressed = onBackClick,
         isLoading = (uiState as? MusicContract.UiState.Success)?.loading ?: false
     ) {
@@ -46,7 +46,6 @@ internal fun MusicScreen(
                 OfflineBanner(
                     visible = !state.isOnline,
                     onReconnectClick = viewModel::onReconnect,
-                    modifier = Modifier.align(Alignment.BottomCenter)
                 )
             }
         }

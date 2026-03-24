@@ -19,8 +19,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.ledvance.domain.bean.WorkMode
+import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceRadioGroup
 import com.ledvance.ui.component.LedvanceSwitch
 import com.ledvance.ui.component.workmode.ColourModePicker
@@ -74,7 +76,7 @@ fun LightControlView(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Lighting",
+                    text = stringResource(R.string.lighting),
                     style = AppTheme.typography.titleMedium,
                     color = AppTheme.colors.title,
                     modifier = Modifier.weight(1f)

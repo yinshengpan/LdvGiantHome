@@ -2,8 +2,8 @@ package com.ledvance.setting
 
 import androidx.compose.runtime.Immutable
 import com.ledvance.domain.bean.command.LineSequence
-import com.ledvance.vivares.directeasy.core.ui.util.OneTimeAction
-import com.ledvance.vivares.directeasy.core.ui.util.OneTimeActionConsumerContract
+import com.ledvance.ui.utils.OneTimeAction
+import com.ledvance.ui.utils.OneTimeActionConsumerContract
 import kotlinx.coroutines.flow.StateFlow
 
 /**

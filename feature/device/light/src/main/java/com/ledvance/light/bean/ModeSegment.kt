@@ -1,7 +1,9 @@
 package com.ledvance.light.bean
 
 import com.ledvance.domain.bean.command.ModeId
+import com.ledvance.ui.R
 import com.ledvance.ui.component.IRadioGroupItem
+import com.ledvance.utils.extensions.getString
 
 /**
  * @author : jason yin
@@ -10,15 +12,15 @@ import com.ledvance.ui.component.IRadioGroupItem
  * Describe : ModeSegment
  */
 enum class ModeSegment(override val title: String, override val value: String) : IRadioGroupItem<String> {
-    Base("Base", "Base"),
-    Curtain("Curtain", "Curtain"),
-    Transition("Transition", "Transition"),
-    FlowingWater("Flowing Water", "FlowingWater"),
-    Flow("Flow", "Flow"),
-    Tail("Tail", "Tail"),
-    Run("Run", "Run"),
-    RunBack("Run Back", "RunBack"),
-    Other("Other", "Other"),
+    Base(getString(R.string.mode_base), "Base"),
+    Curtain(getString(R.string.mode_curtain), "Curtain"),
+    Transition(getString(R.string.mode_transition), "Transition"),
+    FlowingWater(getString(R.string.mode_flowing_water), "FlowingWater"),
+    Flow(getString(R.string.mode_flow), "Flow"),
+    Tail(getString(R.string.mode_tail), "Tail"),
+    Run(getString(R.string.mode_run), "Run"),
+    RunBack(getString(R.string.mode_run_back), "RunBack"),
+    Other(getString(R.string.mode_other), "Other"),
     ;
 
     companion object {

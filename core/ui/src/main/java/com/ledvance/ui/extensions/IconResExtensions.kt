@@ -1,20 +1,19 @@
-package com.ledvance.light.bean
+package com.ledvance.ui.extensions
 
-/**
- * @author : jason yin
- * Email : j.yin@ledvance.com
- * Created date 2026/3/22 20:50
- * Describe : SceneResource
- */
+import com.ledvance.domain.bean.command.DeviceMicRhythm
 import com.ledvance.domain.bean.command.scenes.FloorScenes
 import com.ledvance.domain.bean.command.scenes.Scene
 import com.ledvance.domain.bean.command.scenes.TableScenes
 import com.ledvance.ui.R
 
-class SceneResource {
-}
+/**
+ * @author : jason yin
+ * Email : j.yin@ledvance.com
+ * Created date 3/24/26 14:40
+ * Describe : IconResExtensions
+ */
 
-fun Scene.getSceneIcon(): Int {
+fun Scene.getIconResId(): Int {
     return when (this) {
         is TableScenes -> {
             when (this) {
@@ -103,5 +102,21 @@ fun Scene.getSceneIcon(): Int {
         }
 
         else -> 0
+    }
+}
+
+
+fun DeviceMicRhythm.getIconResId(): Int {
+    return when (this) {
+        DeviceMicRhythm.Energy -> R.mipmap.energy_icon    // 能量模式1
+        DeviceMicRhythm.Energy1 -> R.mipmap.energy_icon    // 能量模式1
+        DeviceMicRhythm.Energy2 -> R.mipmap.energy_icon    // 能量模式2
+        DeviceMicRhythm.Rhythm -> R.mipmap.rhythm_icon    // 律动模式1
+        DeviceMicRhythm.Rhythm1 -> R.mipmap.rhythm_icon    // 律动模式1
+        DeviceMicRhythm.Rhythm2 -> R.mipmap.rhythm_icon    // 律动模式2
+        DeviceMicRhythm.Spectrum1 -> R.mipmap.spectrum_icon// 频谱模式1
+        DeviceMicRhythm.Spectrum2 -> R.mipmap.spectrum_icon// 频谱模式2
+        DeviceMicRhythm.Roll1 -> R.mipmap.roll_icon        // 滚动模式1
+        DeviceMicRhythm.Roll2 -> R.mipmap.roll_icon        // 滚动模式2
     }
 }

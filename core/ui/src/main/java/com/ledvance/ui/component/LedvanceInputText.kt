@@ -207,7 +207,7 @@ fun LedvanceInputText(
                 contentAlignment = Alignment.Center,
             ) {
                 Text(
-                    text = stringResource(R.string.send),
+                    text = stringResource(R.string.confirm),
                     style = AppTheme.typography.bodyMedium.copy(
                         color = AppTheme.colors.buttonContent,
                         textAlign = TextAlign.Center,

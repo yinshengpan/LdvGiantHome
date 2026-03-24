@@ -51,7 +51,7 @@ fun <T> WheelPicker(
     onSelectionChanged: (T) -> Unit = {},
     onPickCompleted: (T) -> Unit = {},
     isInfinite: Boolean = false,
-    label: (T) -> String
+    label:@Composable (T) -> String
 ) {
     val totalItems = if (isInfinite && items.isNotEmpty()) Int.MAX_VALUE else items.size
     val scrollToIndex = remember(items, initialIndex, isInfinite) {

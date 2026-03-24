@@ -15,7 +15,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
@@ -28,6 +30,7 @@ import com.ledvance.ui.dialog.LedvanceDialog
 import com.ledvance.ui.state.rememberBluetoothBusinessState
 import com.ledvance.ui.theme.AppTheme
 import com.ledvance.utils.BluetoothManager
+import com.ledvance.utils.extensions.getAppName
 
 @Composable
 internal fun HomeScreen(
@@ -35,6 +38,7 @@ internal fun HomeScreen(
     onToAddNewDevice: () -> Unit,
     onNavigateToControlPanel: (DeviceId) -> Unit,
 ) {
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val bluetoothEnableState by BluetoothManager.bluetoothEnableState.collectAsStateWithLifecycle()
     var bluetoothPermission by remember { mutableStateOf(false) }
@@ -51,15 +55,19 @@ internal fun HomeScreen(
     }
 
     // 当前台 + 数据就绪时触发连接，无论谁先到达
-    LaunchedEffect(uiState, isResumed) {
+    LaunchedEffect(uiState, isResumed, bluetoothEnableState, bluetoothPermission) {
         val currentState = uiState
-        if (isResumed && currentState is HomeContract.UiState.Success) {
+        if (isResumed && currentState is HomeContract.UiState.Success
+            && bluetoothBusinessState.hasAllow()
+        ) {
             viewModel.connectDevices(currentState.devices.take(3))
         }
     }
 
+    val appName = remember { context.getAppName() ?: "" }
+
     LedvancePrimaryScreen(
-        title = "LDV Home",
+        title = appName,
         actionIconPainter = painterResource(R.drawable.ic_add),
         onActionPressed = onToAddNewDevice,
         isLoading = (uiState as? HomeContract.UiState.Success)?.loading ?: false
@@ -75,7 +83,9 @@ internal fun HomeScreen(
                             viewModel.onSwitchChange(deviceId, switch)
                         },
                         onConnectClick = {
-                            viewModel.connectDevice(it)
+                            if (bluetoothBusinessState.hasAllow()) {
+                                viewModel.connectDevice(it)
+                            }
                         },
                         onDisconnectClick = {
                             viewModel.disconnectDevice(it)
@@ -96,8 +106,8 @@ internal fun HomeScreen(
 
     if (deviceToDelete != null) {
         LedvanceDialog(
-            title = "Delete Device",
-            message = "Are you sure you want to delete this device? This action cannot be undone.",
+            title = stringResource(R.string.dialog_delete_device_title),
+            message = stringResource(R.string.dialog_delete_device_message),
             onCancel = { deviceToDelete = null },
             onConfirm = {
                 viewModel.onDeleteDevice(deviceToDelete!!)
@@ -115,13 +125,13 @@ private fun EmptyData(onToAddNewDevice: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "No device added, please add a device",
+            text = stringResource(R.string.empty_devices),
             style = AppTheme.typography.bodyMedium,
             color = AppTheme.colors.body
         )
         Spacer(modifier = Modifier.height(24.dp))
         LedvanceButton(
-            text = "Add Device",
+            text = stringResource(R.string.add_device),
             modifier = Modifier.width(150.dp),
             onClick = onToAddNewDevice
         )

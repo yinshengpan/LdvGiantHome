@@ -14,6 +14,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ledvance.domain.bean.command.ModeId
@@ -22,6 +23,7 @@ import com.ledvance.ui.component.BrightnessSlider
 import com.ledvance.ui.component.LedvanceRadioGroup
 import com.ledvance.ui.component.SpeedSlider
 import com.ledvance.ui.component.WheelPicker
+import com.ledvance.ui.extensions.getNameResId
 import com.ledvance.ui.theme.AppTheme
 
 /**
@@ -102,7 +104,7 @@ internal fun ModeScreenContent(
                     onModeChange(mode)
                 },
                 isInfinite = true,
-                label = { it.title }
+                label = { stringResource(it.getNameResId()) }
             )
         }
     }

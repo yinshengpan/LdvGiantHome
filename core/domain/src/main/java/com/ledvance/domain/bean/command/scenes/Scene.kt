@@ -8,7 +8,4 @@ import com.ledvance.domain.bean.command.Command
  * Created date 3/19/26 11:23
  * Describe : Scene
  */
-interface Scene : Command {
-    // 统一的标题属性
-    val title: String
-}
+interface Scene : Command

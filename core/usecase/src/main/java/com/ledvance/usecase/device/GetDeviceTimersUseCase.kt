@@ -5,9 +5,9 @@ import com.ledvance.database.repo.TimerRepo
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.TimerUiItem
 import com.ledvance.domain.bean.command.timer.toTimerRepeat
-import com.ledvance.domain.bean.toDisplayText
 import com.ledvance.domain.di.Dispatcher
 import com.ledvance.domain.di.Dispatchers
+import com.ledvance.ui.extensions.toDisplayText
 import com.ledvance.usecase.base.FlowUseCase
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineDispatcher

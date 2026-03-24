@@ -14,4 +14,5 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.startup.runtime)
     implementation(libs.mmkv)
+    implementation(libs.browser)
 }

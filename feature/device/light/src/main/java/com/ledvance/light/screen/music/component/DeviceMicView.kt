@@ -1,24 +1,32 @@
 package com.ledvance.light.screen.music.component
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.FlowRowScope
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ledvance.domain.bean.command.DeviceMicRhythm
+import com.ledvance.ui.R
 import com.ledvance.ui.component.MicSensitivitySlider
 import com.ledvance.ui.extensions.debouncedClickable
+import com.ledvance.ui.extensions.getIconResId
+import com.ledvance.ui.extensions.getNameResId
 import com.ledvance.ui.theme.AppTheme
 
 /**
@@ -42,7 +50,7 @@ internal fun DeviceMicView(
             .padding(horizontal = 15.dp),
     ) {
         Text(
-            text = "Transform lighting effects according to music rhythm",
+            text = stringResource(R.string.music_mic_desc),
             style = AppTheme.typography.bodyMedium,
             color = AppTheme.colors.title,
             modifier = Modifier.padding(bottom = 15.dp)
@@ -54,41 +62,59 @@ internal fun DeviceMicView(
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
             rhythmList.forEach {
-                Box(
-                    modifier = Modifier
-                        .weight(1f)
-                        .height(48.dp)
-                        .background(
-                            color = AppTheme.colors.screenSecondaryBackground,
-                            shape = RoundedCornerShape(4.dp)
-                        )
-                        .then(
-                            other = if (selectedRhythm == it) Modifier.border(
-                                width = 1.dp,
-                                color = AppTheme.colors.primary,
-                                shape = RoundedCornerShape(4.dp)
-                            ) else Modifier
-                        )
-                        .debouncedClickable(
-                            onClick = {
-                                onRhythmChange.invoke(it)
-                            },
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = it.title,
-                        style = AppTheme.typography.bodyMedium,
-                        color = AppTheme.colors.title,
-                        textAlign = TextAlign.Center,
-                    )
-                }
+                RhythmItem(
+                    rhythm = it,
+                    isSelected = it == selectedRhythm,
+                    onRhythmChange = onRhythmChange
+                )
             }
         }
         MicSensitivitySlider(
             sensitivity = deviceMicSensitivity,
             modifier = Modifier.padding(vertical = 15.dp),
             onSensitivityChange = onDeviceMicSensitivityChange,
+        )
+    }
+}
+
+@Composable
+private fun FlowRowScope.RhythmItem(rhythm: DeviceMicRhythm, isSelected: Boolean, onRhythmChange: (DeviceMicRhythm) -> Unit) {
+    Row(
+        modifier = Modifier
+            .weight(1f)
+            .height(48.dp)
+            .background(
+                color = AppTheme.colors.screenSecondaryBackground,
+                shape = RoundedCornerShape(4.dp)
+            )
+            .then(
+                other = if (isSelected) Modifier.border(
+                    width = 2.dp,
+                    color = AppTheme.colors.primary,
+                    shape = RoundedCornerShape(4.dp)
+                ) else Modifier
+            )
+            .padding(horizontal = 10.dp)
+            .debouncedClickable(
+                onClick = {
+                    onRhythmChange.invoke(rhythm)
+                },
+            ),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Text(
+            text = stringResource(rhythm.getNameResId()),
+            style = AppTheme.typography.bodyMedium,
+            color = if (isSelected) AppTheme.colors.primary else AppTheme.colors.title,
+            textAlign = TextAlign.Start,
+            modifier = Modifier.weight(1f)
+        )
+
+        Image(
+            painter = painterResource(rhythm.getIconResId()),
+            contentDescription = null,
+            modifier = Modifier.size(36.dp)
         )
     }
 }

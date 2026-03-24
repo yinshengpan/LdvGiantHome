@@ -15,10 +15,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ledvance.ui.R
 import com.ledvance.ui.extensions.debouncedClickable
 import com.ledvance.ui.theme.AppTheme
 
@@ -29,13 +31,13 @@ import com.ledvance.ui.theme.AppTheme
  * Describe : CardFeatureItem
  */
 internal sealed class CardFeature(
-    val title: String,
+    val titleResId: Int,
     val enable: Boolean? = null
 ) {
-    data object Scene : CardFeature(title = "Scene", enable = false)
-    data object Timer : CardFeature(title = "Timer", enable = false)
-    data object Music : CardFeature(title = "Music")
-    data object Mode : CardFeature(title = "Mode", enable = false)
+    data object Scene : CardFeature(titleResId = R.string.title_scene, enable = false)
+    data object Timer : CardFeature(titleResId = R.string.title_timer, enable = false)
+    data object Music : CardFeature(titleResId = R.string.title_music,)
+    data object Mode : CardFeature(titleResId = R.string.title_mode, enable = false)
 }
 
 @Composable
@@ -67,7 +69,7 @@ internal fun CardFeatureItem(cardFeature: CardFeature, onItemClick: (CardFeature
                 )
             }
             Text(
-                text = cardFeature.title,
+                text = stringResource(cardFeature.titleResId),
                 modifier = Modifier.align(Alignment.Center),
                 color = AppTheme.colors.title,
                 fontSize = 14.sp,

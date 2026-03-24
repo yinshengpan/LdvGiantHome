@@ -10,15 +10,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ledvance.domain.bean.DeviceId
+import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceScreen
 import com.ledvance.ui.component.OfflineBanner
 import com.ledvance.ui.dialog.LedvanceDialog
 import com.ledvance.ui.theme.AppTheme
-import com.ledvance.vivares.directeasy.core.ui.util.OneTimeActionEffect
+import com.ledvance.ui.utils.OneTimeActionEffect
 
 /**
  * @author : jason yin
@@ -56,7 +57,7 @@ internal fun SettingScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         onBackPressed = onBackClick,
         verticalArrangement = Arrangement.Center,
-        title = "Setting",
+        title = stringResource(R.string.title_setting),
         isLoading = (uiState as? SettingContract.UiState.Success)?.loading ?: false
     ) {
         when (uiState) {
@@ -75,7 +76,6 @@ internal fun SettingScreen(
                 OfflineBanner(
                     visible = !state.isOnline,
                     onReconnectClick = { viewModel.onReconnect() },
-                    modifier = Modifier.align(Alignment.BottomCenter)
                 )
             }
         }
@@ -87,6 +87,7 @@ internal fun SettingScreen(
         ModalBottomSheet(
             onDismissRequest = { showLineSequencePicker = false },
             sheetState = sheetState,
+            sheetGesturesEnabled = false,
             dragHandle = null
         ) {
             LineSequencePicker(
@@ -102,8 +103,8 @@ internal fun SettingScreen(
 
     if (showResetDialog) {
         LedvanceDialog(
-            title = "Factory Reset",
-            message = "Are you sure you want to reset this device to factory settings? This action cannot be undone.",
+            title = stringResource(R.string.dialog_reset_title),
+            message = stringResource(R.string.dialog_reset_message),
             onCancel = { showResetDialog = false },
             onConfirm = {
                 viewModel.resetDevice()
@@ -114,8 +115,8 @@ internal fun SettingScreen(
 
     if (showUpgradeDialog) {
         LedvanceDialog(
-            title = "Firmware Upgrade",
-            message = "A new firmware version is available. Would you like to upgrade now?",
+            title = stringResource(R.string.dialog_firmware_upgrade_title),
+            message = stringResource(R.string.dialog_firmware_upgrade_message),
             onCancel = { showUpgradeDialog = false },
             onConfirm = {
                 viewModel.upgradeFirmware()
@@ -126,8 +127,8 @@ internal fun SettingScreen(
 
     if (showDeleteDialog) {
         LedvanceDialog(
-            title = "Delete Device",
-            message = "Are you sure you want to delete this device? This action cannot be undone.",
+            title = stringResource(R.string.dialog_delete_device_title),
+            message = stringResource(R.string.dialog_delete_device_message),
             onCancel = { showDeleteDialog = false },
             onConfirm = {
                 viewModel.deleteDevice()

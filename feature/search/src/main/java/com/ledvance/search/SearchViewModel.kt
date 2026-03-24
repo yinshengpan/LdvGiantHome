@@ -9,8 +9,8 @@ import com.ledvance.usecase.device.BleSearchUseCase
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetAllDeviceIdUseCase
 import com.ledvance.utils.extensions.tryCatch
-import com.ledvance.vivares.directeasy.core.ui.util.OneTimeActionPublisherContract
-import com.ledvance.vivares.directeasy.core.ui.util.createDefaultMutableActionFlow
+import com.ledvance.ui.utils.OneTimeActionPublisherContract
+import com.ledvance.ui.utils.createDefaultMutableActionFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow

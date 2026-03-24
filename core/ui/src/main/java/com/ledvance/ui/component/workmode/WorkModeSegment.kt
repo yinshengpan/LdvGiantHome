@@ -1,7 +1,9 @@
 package com.ledvance.ui.component.workmode
 
 import com.ledvance.domain.bean.WorkMode
+import com.ledvance.ui.R
 import com.ledvance.ui.component.IRadioGroupItem
+import com.ledvance.utils.extensions.getString
 
 /**
  * @author : jason yin
@@ -11,8 +13,8 @@ import com.ledvance.ui.component.IRadioGroupItem
  */
 enum class WorkModeSegment(override val title: String, override val value: WorkMode) :
     IRadioGroupItem<WorkMode> {
-    ColorMode("Color mode", value = WorkMode.Colour),
-    WhiteMode("White mode", value = WorkMode.White),
+    ColorMode(getString(R.string.color_mode), value = WorkMode.Colour),
+    WhiteMode(getString(R.string.white_mode), value = WorkMode.White),
     ;
 
     companion object {

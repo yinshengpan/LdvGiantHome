@@ -23,17 +23,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ledvance.domain.bean.command.scenes.Scene
 import com.ledvance.light.bean.SceneSegment
-import com.ledvance.light.bean.getSceneIcon
-import com.ledvance.ui.R
 import com.ledvance.ui.component.BrightnessSlider
 import com.ledvance.ui.component.LedvanceRadioGroup
 import com.ledvance.ui.component.SpeedSlider
 import com.ledvance.ui.extensions.debouncedClickable
+import com.ledvance.ui.extensions.getIconResId
+import com.ledvance.ui.extensions.getNameResId
 import com.ledvance.ui.theme.AppTheme
 
 /**
@@ -121,7 +122,7 @@ private fun SceneItem(scene: Scene, isSelected: Boolean, onItemClick: (Scene) ->
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
-            painter = painterResource(scene.getSceneIcon()),
+            painter = painterResource(scene.getIconResId()),
             contentDescription = null,
             modifier = Modifier
                 .size(54.dp)
@@ -138,7 +139,7 @@ private fun SceneItem(scene: Scene, isSelected: Boolean, onItemClick: (Scene) ->
                 )
         )
         Text(
-            text = scene.title,
+            text = stringResource(scene.getNameResId()),
             style = AppTheme.typography.bodySmall,
             color = if (isSelected) AppTheme.colors.primary else AppTheme.colors.title,
             maxLines = 2,

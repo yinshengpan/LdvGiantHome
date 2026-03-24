@@ -3,8 +3,8 @@ package com.ledvance.search
 import androidx.compose.runtime.Immutable
 import com.ledvance.ble.bean.ScannedDevice
 import com.ledvance.domain.bean.DeviceId
-import com.ledvance.vivares.directeasy.core.ui.util.OneTimeAction
-import com.ledvance.vivares.directeasy.core.ui.util.OneTimeActionConsumerContract
+import com.ledvance.ui.utils.OneTimeAction
+import com.ledvance.ui.utils.OneTimeActionConsumerContract
 import kotlinx.coroutines.flow.StateFlow
 
 /**

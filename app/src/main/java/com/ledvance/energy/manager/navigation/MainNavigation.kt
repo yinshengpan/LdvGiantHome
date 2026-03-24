@@ -11,7 +11,7 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import com.ledvance.energy.manager.extensions.launchCustomChromeTab
+import com.ledvance.utils.extensions.launchCustomChromeTab
 import com.ledvance.energy.manager.state.LedvanceAppState
 import com.ledvance.home.navigation.HomeRoute
 import com.ledvance.home.navigation.homeScreen
@@ -22,7 +22,6 @@ import com.ledvance.search.navigation.navigateToSearch
 import com.ledvance.search.navigation.searchScreen
 import com.ledvance.setting.navigation.navigateToSetting
 import com.ledvance.setting.navigation.settingScreen
-import com.ledvance.ui.navigation.PageLifecycleLogger
 import com.ledvance.ui.theme.AppTheme
 
 /**

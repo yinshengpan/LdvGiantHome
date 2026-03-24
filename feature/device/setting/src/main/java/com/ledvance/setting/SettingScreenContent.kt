@@ -19,12 +19,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ledvance.ui.CardView
 import com.ledvance.ui.component.ItemView
 import com.ledvance.ui.component.LedvanceButton
 import com.ledvance.ui.theme.AppTheme
+import com.ledvance.ui.R
 
 @Composable
 internal fun SettingScreenContent(
@@ -41,53 +43,53 @@ internal fun SettingScreenContent(
             .verticalScroll(rememberScrollState())
             .padding(horizontal = 20.dp)
     ) {
-        TitleItem("Basic Information")
+        TitleItem(stringResource(R.string.setting_basic_info))
         CardView {
             ItemView(
-                title = "Device Name",
+                title = stringResource(R.string.setting_device_name),
                 content = uiState.deviceName,
                 showDivider = true
             )
             ItemView(
-                title = "Device Mac",
+                title = stringResource(R.string.setting_device_mac),
                 content = uiState.deviceMacAddress,
                 showDivider = true
             )
             ItemView(
-                title = "Device Type",
+                title = stringResource(R.string.setting_device_type),
                 content = uiState.deviceTypeName,
                 showDivider = true
             )
             ItemView(
-                title = "Device Icon",
+                title = stringResource(R.string.setting_device_icon),
                 contentIconResId = uiState.deviceIconResId,
             )
 
         }
 
-        TitleItem("Function")
+        TitleItem(stringResource(R.string.setting_function))
         CardView {
             ItemView(
-                title = "Line Sequence",
+                title = stringResource(R.string.setting_line_sequence),
                 content = uiState.lineSequence.title,
                 showDivider = true,
                 onContentClick = onLineSequenceClick
             )
             ItemView(
-                title = "Reset",
+                title = stringResource(R.string.setting_reset),
                 onContentClick = onResetClick
             )
         }
 
-        TitleItem("Firmware")
+        TitleItem(stringResource(R.string.setting_firmware))
         CardView {
             ItemView(
-                title = "Current Version",
+                title = stringResource(R.string.setting_firmware_current),
                 content = uiState.firmwareVersion,
                 showDivider = true,
             )
             ItemView(
-                title = "Latest Version",
+                title = stringResource(R.string.setting_firmware_latest),
                 content = uiState.firmwareVersion,
                 showDivider = true,
                 onContentClick = onUpgradeClick
@@ -97,7 +99,7 @@ internal fun SettingScreenContent(
         Spacer(modifier = Modifier.height(20.dp))
 
         LedvanceButton(
-            text = "Delete Device",
+            text = stringResource(R.string.setting_delete_device),
             modifier = Modifier
                 .fillMaxWidth(),
             onClick = onDeleteClick
@@ -113,7 +115,7 @@ private fun TitleItem(title: String) {
         color = AppTheme.colors.title,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 10.dp),
+            .padding(top = 20.dp, bottom = 10.dp, start = 5.dp),
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
     )

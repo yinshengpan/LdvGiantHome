@@ -1,7 +1,6 @@
 package com.ledvance.ui.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -11,10 +10,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ledvance.ui.theme.AppTheme
+import com.ledvance.ui.R
 
 /**
  * @author : jason yin
@@ -44,7 +45,7 @@ fun TimePicker(
     ) {
         // Title
         Text(
-            text = "Select Time",
+            text = stringResource(R.string.select_time),
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Black,
@@ -97,7 +98,7 @@ fun TimePicker(
                 ),
                 shape = RoundedCornerShape(28.dp)
             ) {
-                Text(text = "Cancel", fontSize = 18.sp, fontWeight = FontWeight.Medium)
+                Text(text = stringResource(R.string.cancel), fontSize = 18.sp, fontWeight = FontWeight.Medium)
             }
 
             Button(
@@ -111,7 +112,7 @@ fun TimePicker(
                 ),
                 shape = RoundedCornerShape(28.dp)
             ) {
-                Text(text = "Confirm", fontSize = 18.sp, fontWeight = FontWeight.Medium)
+                Text(text = stringResource(R.string.confirm), fontSize = 18.sp, fontWeight = FontWeight.Medium)
             }
         }
     }

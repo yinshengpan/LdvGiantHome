@@ -23,7 +23,7 @@ import javax.inject.Singleton
 
 @Singleton
 class FirmwareRepo @Inject constructor(
-    @ApplicationContext private val context: Context
+    @param:ApplicationContext private val context: Context
 ) {
     private val KEY_CLOUD_FIRMWARE_VERSION = "cloud_firmware_version"
     private val TAG = "FirmwareRepo"

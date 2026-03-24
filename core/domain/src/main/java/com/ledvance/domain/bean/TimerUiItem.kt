@@ -1,7 +1,6 @@
 package com.ledvance.domain.bean
 
 import java.time.DayOfWeek
-import java.util.Locale
 
 /**
  * @author : jason yin
@@ -15,17 +14,6 @@ data class TimerUiItem(
     val hour: Int = 0,
     val minute: Int = 0,
     val displayTime: String = "00:00",
-    val displayRepeat: String = "Never",
+    val displayRepeat: String = "",
     val days: Set<DayOfWeek> = emptySet()
 )
-
-fun Set<DayOfWeek>.toDisplayText(locale: Locale = Locale.ENGLISH): String {
-    if (isEmpty()) return "Never"
-    if (size == 7) return "Every day"
-    return this
-        .sortedBy { it.value } // 周一~周日排序
-        .joinToString(",") {
-            it.name.take(3).lowercase()
-                .replaceFirstChar { c -> c.uppercase() }
-        }
-}

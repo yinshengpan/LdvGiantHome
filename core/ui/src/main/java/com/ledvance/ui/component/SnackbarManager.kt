@@ -24,7 +24,7 @@ object SnackbarManager {
     }
 
     suspend fun showGenericError() {
-        showMessage(R.string.command_failed)
+        showMessage(R.string.operation_failed)
     }
 }
 

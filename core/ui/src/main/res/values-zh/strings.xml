@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 固件/设备设置 -->
+    <string name="setting_firmware_current">当前版本</string>
+    <string name="setting_firmware_latest">最新版本</string>
+    <string name="setting_delete_device">删除设备</string>
+    <string name="music_phone_mic_permission_required">需要获取麦克风权限</string>
+
+    <!-- 弹窗标题 -->
+    <string name="dialog_select_line_sequence_title">选择线序</string>
+    <string name="dialog_select_time_repeat_title">选择重复周期</string>
+    <string name="dialog_reset_title">恢复出厂设置</string>
+    <string name="dialog_firmware_upgrade_title">固件升级</string>
+    <string name="dialog_delete_device_title">删除设备</string>
+    <string name="dialog_bluetooth_enable_request_title">请求开启蓝牙</string>
+    <string name="dialog_bluetooth_permissions_request_title">请求蓝牙权限</string>
+    <string name="dialog_location_enable_request_title">请求开启定位</string>
+    <string name="dialog_mic_permissions_request_title">请求麦克风权限</string>
+
+    <!-- 弹窗内容 -->
+    <string name="dialog_reset_message">确定要将该设备恢复出厂设置吗？此操作不可撤销。</string>
+    <string name="dialog_firmware_upgrade_message">检测到新的固件版本，是否立即升级？</string>
+    <string name="dialog_delete_device_message">确定要删除该设备吗？此操作不可撤销。</string>
+    <string name="dialog_bluetooth_enable_request_message">蓝牙设备扫描需要开启蓝牙功能</string>
+    <string name="dialog_bluetooth_permissions_request_message">蓝牙设备扫描和连接需要获取蓝牙权限</string>
+    <string name="dialog_location_enable_request_message">蓝牙设备扫描需要获取定位权限</string>
+    <string name="dialog_mic_permissions_request_message">音乐律动效果需要获取麦克风权限</string>
+
+    <!-- 关于/设置类 -->
+    <string name="share_logs">分享日志</string>
+    <string name="open_source_licenses">开源许可证</string>
+    <string name="terms_of_use">使用条款</string>
+    <string name="privacy_policy">隐私政策</string>
+    <string name="current_version">当前版本</string>
+
+    <!-- 操作提示 -->
+    <string name="operation_successfully">操作成功</string>
+    <string name="operation_failed">操作失败，请重试</string>
+    <string name="device_offline">设备离线，请检查设备电源、网络或蓝牙连接后重试</string>
+
+    <!-- 通用按钮/跳转 -->
+    <string name="go_to_setting">前往设置</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确认</string>
+    <string name="reconnect">"重连"</string>
+
+    <!-- 灯光相关 -->
+    <string name="lighting">灯光</string>
+    <string name="color_mode">彩色模式</string>
+    <string name="white_mode">白光模式</string>
+
+    <!-- 设备管理 -->
+    <string name="add_device">添加设备</string>
+    <string name="select_time">选择时间</string>
+    <!-- 星期单字缩写（适配窄布局/勾选框等场景） -->
+    <string name="mon">一</string>
+    <string name="tue">二</string>
+    <string name="wed">三</string>
+    <string name="thu">四</string>
+    <string name="fri">五</string>
+    <string name="sat">六</string>
+    <string name="sun">日</string>
+
+    <!-- 星期全称（备用/详情场景） -->
+    <string name="monday">星期一</string>
+    <string name="tuesday">星期二</string>
+    <string name="wednesday">星期三</string>
+    <string name="thursday">星期四</string>
+    <string name="friday">星期五</string>
+    <string name="saturday">星期六</string>
+    <string name="sunday">星期日</string>
+
+    <!-- 重复频率 -->
+    <string name="everyday">每天</string>
+    <string name="never">从不</string>
+
+    <!-- 空状态提示 -->
+    <string name="empty_devices">暂无添加设备，请添加设备</string>
+
+    <!-- 页面标题 -->
+    <string name="title_search">搜索设备</string>
+    <string name="title_profile">个人中心</string>
+    <string name="title_scene">场景</string>
+    <string name="title_timer">定时</string>
+    <string name="title_music">音乐</string>
+    <string name="title_mode">模式</string>
+    <string name="title_setting">设置</string>
+
+    <!-- 底部Tab标签 -->
+    <string name="tab_home">首页</string>
+    <string name="tab_profile">我的</string>
+
+    <string name="setting_basic_info">基本信息</string>
+    <string name="setting_device_name">设备名称</string>
+    <string name="setting_device_mac">设备Mac</string>
+    <string name="setting_device_type">设备类型</string>
+    <string name="setting_device_icon">设备图标</string>
+    <string name="setting_function">功能</string>
+    <string name="setting_line_sequence">线序</string>
+    <string name="setting_reset">复位</string>
+    <string name="setting_firmware">固件</string>
+
+    <!-- 场景分类 -->
+    <string name="scene_natural">自然</string>
+    <string name="scene_festival">节日</string>
+    <string name="scene_soothing">舒缓</string>
+    <string name="scene_life">生活</string>
+
+    <!-- 模式分类 -->
+    <string name="mode_base">基本</string>
+    <string name="mode_curtain">开合</string>
+    <string name="mode_transition">过渡</string>
+    <string name="mode_flowing_water">流水</string>
+    <string name="mode_flow">流动</string>
+    <string name="mode_tail">拖尾</string>
+    <string name="mode_run">正跑</string>
+    <string name="mode_run_back">反跑</string>
+    <string name="mode_other">其他</string>
+
+    <!-- 定时相关 -->
+    <string name="timer_regularly_on">定时开灯</string>
+    <string name="timer_regularly_off">定时关灯</string>
+    <string name="timer_time">定时</string>
+    <string name="timer_repeat">重复</string>
+
+    <!-- 音乐相关 -->
+    <string name="music_device_mic">外麦</string>
+    <string name="music_phone_mic">手机麦</string>
+    <string name="music_mic_desc">根据音乐节奏变换灯光效果</string>
+
+    <!-- 场景类 -->
+    <string name="scene_birthday">生日</string>
+    <string name="scene_fireworks">烟花</string>
+    <string name="scene_appointment">约会</string>
+    <string name="scene_film">电影</string>
+    <string name="scene_christmas_eve">圣诞夜</string>
+    <string name="scene_flowing_water">流水</string>
+    <string name="scene_alert">警报</string>
+    <string name="scene_time_machine">时光机</string>
+    <string name="scene_time_machine_2">时光机 2</string>
+    <string name="scene_meteor_2">流星 2</string>
+    <string name="scene_fireworks_show">烟花秀</string>
+
+    <!-- 自然类场景 -->
+    <string name="scene_spring_breeze">春风</string>
+    <string name="scene_sky">天空</string>
+    <string name="scene_firefly">萤火虫</string>
+    <string name="scene_cherry_blossom">樱花</string>
+    <string name="scene_mountain_forest">山林</string>
+    <string name="scene_lake">湖</string>
+    <string name="scene_forest">森林</string>
+    <string name="scene_aurora">极光</string>
+    <string name="scene_flame">火焰</string>
+    <string name="scene_rainbow">彩虹</string>
+    <string name="scene_starry_sky">星空</string>
+    <string name="scene_lightning">闪电</string>
+    <string name="scene_meteor">流星</string>
+    <string name="scene_sea_wave">海浪</string>
+    <string name="scene_rippling_wheat">麦浪</string>
+    <string name="scene_snowflake">雪花</string>
+    <string name="scene_ripples">涟漪</string>
+    <string name="scene_ocean">海洋</string>
+    <string name="scene_rain">下雨</string>
+
+    <!-- 节日类场景 -->
+    <string name="scene_christmas">圣诞节</string>
+    <string name="scene_halloween">万圣节</string>
+    <string name="scene_easter">复活节</string>
+    <string name="scene_valentines_day">情人节</string>
+    <string name="scene_carnival">狂欢节</string>
+
+    <!-- 氛围类场景 -->
+    <string name="scene_sunrise">日出</string>
+    <string name="scene_sunset">日落</string>
+    <string name="scene_candlelight">烛光</string>
+    <string name="scene_romantic">浪漫</string>
+    <string name="scene_soft">柔和</string>
+    <string name="scene_dreamy">梦幻</string>
+    <string name="scene_accompany">陪伴</string>
+    <string name="scene_heal">治愈</string>
+    <string name="scene_comfortable">安慰的</string>
+    <string name="scene_feather">羽毛</string>
+
+    <!-- 生活类场景 -->
+    <string name="scene_work">工作</string>
+    <string name="scene_read">阅读</string>
+    <string name="scene_sleep">睡眠</string>
+    <string name="scene_happy">快乐</string>
+    <string name="scene_colorful">炫彩</string>
+    <string name="scene_party">聚会</string>
+    <string name="scene_disco">迪斯科</string>
+    <string name="scene_wedding_day">结婚纪念日</string>
+    <string name="scene_kitchen_aroma">厨房香气</string>
+
+    <!-- 音乐相关 -->
+    <string name="music_device_mic_energy">能量</string>
+    <string name="music_device_mic_energy_1">能量 1</string>
+    <string name="music_device_mic_energy_2">能量 2</string>
+    <string name="music_device_mic_rhythm">韵律</string>
+    <string name="music_device_mic_rhythm_1">韵律 1</string>
+    <string name="music_device_mic_rhythm_2">韵律 2</string>
+    <string name="music_device_mic_spectrum_1">频谱 1</string>
+    <string name="music_device_mic_spectrum_2">频谱 2</string>
+    <string name="music_device_mic_roll_1">滚动 1</string>
+    <string name="music_device_mic_roll_2">滚动 2</string>
+
+    <!-- Mode - 基础灯光效果 -->
+    <string name="light_effect_automatic_cycle">1、自动循环</string>
+    <string name="light_effect_positive_illusion">2、正向幻彩</string>
+    <string name="light_effect_reverse_illusion">3、反向幻彩</string>
+    <string name="light_effect_colorful_energy">4、七彩能量</string>
+    <string name="light_effect_colorful_jumping_transformation">5、七彩跳变</string>
+    <string name="light_effect_red_green_blue_jump">6、红绿蓝跳变</string>
+    <string name="light_effect_huang_qingzi_jumping_transformation">7、黄青紫跳变</string>
+    <string name="light_effect_seven_color_strobe_light">8、七色频闪</string>
+    <string name="light_effect_red_green_blue_strobe_light">9、红绿蓝频闪</string>
+    <string name="light_effect_yellow_green_purple_flicker">10、黄青紫频闪</string>
+    <string name="light_effect_seven_color_gradient">11、七色渐变</string>
+    <string name="light_effect_red_and_yellow_alternating_gradient">12、红黄交替渐变</string>
+    <string name="light_effect_red_purple_alternating_gradient">13、红紫交替渐变</string>
+    <string name="light_effect_green_yellow_alternating_gradient">15、绿黄交替渐变</string>
+    <string name="light_effect_blue_purple_alternating_gradient">16、蓝紫交替渐变</string>
+    <string name="light_effect_red_racehorse">17、红色跑马</string>
+    <string name="light_effect_green_racehorse">18、绿色跑马</string>
+    <string name="light_effect_blue_racehorse">19、蓝色跑马</string>
+    <string name="light_effect_yellow_racehorse">20、黄色跑马</string>
+    <string name="light_effect_cyan_racehorse">21、青色跑马</string>
+    <string name="light_effect_purple_racehorse">22、紫色跑马</string>
+    <string name="light_effect_white_racehorse">23、白色跑马</string>
+    <string name="light_effect_positive_rainbow_chasing_light">24、正向七彩追光</string>
+    <string name="light_effect_reverse_rainbow_chasing_light">25、反向七彩追光</string>
+    <string name="light_effect_positive_red_green_blue_chasing_light">26、正向红绿蓝追光</string>
+    <string name="light_effect_reverse_red_green_blue_chasing_light">27、反向红绿蓝追光</string>
+    <string name="light_effect_positive_yellow_cyan_purple_chasing_light">28、正向黄青紫追光</string>
+    <string name="light_effect_reverse_yellow_cyan_purple_chasing_light">29、反向黄青紫追光</string>
+    <string name="light_effect_positive_colorful_fluttering">30、正向七彩飘动</string>
+    <string name="light_effect_reverse_colorful_fluttering">31、反向七彩飘动</string>
+    <string name="light_effect_positive_red_green_blue_fluttering">32、正向红绿蓝飘动</string>
+    <string name="light_effect_reverse_red_green_blue_fluttering">33、反向红绿蓝飘动</string>
+    <string name="light_effect_positive_yellow_cyan_purple_fluttering">34、正向黄青紫飘动</string>
+    <string name="light_effect_reverse_yellow_cyan_purple_fluttering">35、反向黄青紫飘动</string>
+    <string name="light_effect_positive_rainbow_painting">36、正向七彩刷色</string>
+    <string name="light_effect_reverse_rainbow_painting">37、反向七彩刷色</string>
+    <string name="light_effect_positive_red_green_blue_painting">38、正向红绿蓝刷色</string>
+    <string name="light_effect_reverse_red_green_blue_painting">39、反向红绿蓝刷色</string>
+    <string name="light_effect_positive_yellow_cyan_purple_painting">40、正向黄青紫刷色</string>
+    <string name="light_effect_reverse_yellow_cyan_purple_painting">41、反向黄青紫刷色</string>
+    <string name="light_effect_colorful_painting_closing_ceremony">42、七彩刷色闭幕</string>
+    <string name="light_effect_colorful_salad_screen_brushing">43、七彩刷色拉幕</string>
+    <string name="light_effect_red_green_blue_painting_closing_ceremony">44、红绿蓝刷色闭幕</string>
+    <string name="light_effect_red_green_blue_salad_screen_brushing">45、红绿蓝刷色拉幕</string>
+    <string name="light_effect_yellow_cyan_purple_painting_closing_ceremony">46、黄青紫刷色闭幕</string>
+    <string name="light_effect_yellow_cyan_purple_salad_screen_brushing">47、黄青紫刷色拉幕</string>
+
+    <!-- 窗帘/闭幕式相关 -->
+    <string name="light_effect_colorful_closing_ceremony">1、七彩闭幕</string>
+    <string name="light_effect_colorful_curtain_pulling">2、七彩拉幕</string>
+    <string name="light_effect_red_green_blue_closing_ceremony">3、红绿蓝闭幕</string>
+    <string name="light_effect_red_green_blue_curtains">4、红绿蓝拉幕</string>
+    <string name="light_effect_huang_qingzi_closing_ceremony">5、黄青紫闭幕</string>
+    <string name="light_effect_huang_qingzi_pulled_curtain">6、黄青紫拉幕</string>
+    <string name="light_effect_red_closing">7、红色闭幕</string>
+    <string name="light_effect_red_curtain_pulling">8、红色拉幕</string>
+    <string name="light_effect_green_closing">9、绿色闭幕</string>
+    <string name="light_effect_green_curtain_pulling">10、绿色拉幕</string>
+    <string name="light_effect_blue_closing">11、蓝色闭幕</string>
+    <string name="light_effect_blue_curtain_pulling">12、蓝色拉幕</string>
+    <string name="light_effect_yellow_closing">13、黄色闭幕</string>
+    <string name="light_effect_yellow_curtain_pulling">14、黄色拉幕</string>
+    <string name="light_effect_cyan_closing">15、青色闭幕</string>
+    <string name="light_effect_cyan_curtain_pulling">16、青色拉幕</string>
+    <string name="light_effect_purple_closing">17、紫色闭幕</string>
+    <string name="light_effect_purple_curtain_pulling">18、紫色拉幕</string>
+    <string name="light_effect_white_closing">19、白色闭幕</string>
+    <string name="light_effect_white_curtain_pulling">20、白色拉幕</string>
+
+    <!-- 明暗过渡相关 -->
+    <string name="light_effect_positive_seven_color_light_dark_transition">1、正向七色明暗过渡</string>
+    <string name="light_effect_reverse_seven_color_light_dark_transition">2、反向七色明暗过渡</string>
+    <string name="light_effect_positive_red_green_blue_light_dark_transition">3、正向红绿蓝明暗过渡</string>
+    <string name="light_effect_reverse_red_green_blue_light_dark_transition">4、反向红绿蓝明暗过渡</string>
+    <string name="light_effect_positive_yellow_cyan_purple_light_dark_transition">5、正向黄青紫明暗过渡</string>
+    <string name="light_effect_reverse_yellow_cyan_purple_light_dark_transition">6、反向黄青紫明暗过渡</string>
+    <string name="light_effect_positive_six_color_light_dark_transition_red">7、正向六色明暗过渡红色</string>
+    <string name="light_effect_reverse_six_color_light_dark_transition_red">8、反向六色明暗过渡红色</string>
+    <string name="light_effect_positive_six_color_light_dark_transition_green">9、正向六色明暗过渡绿色</string>
+    <string name="light_effect_reverse_six_color_light_dark_transition_green">10、反向六色明暗过渡绿色</string>
+    <string name="light_effect_positive_six_color_light_dark_transition_blue">11、正向六色明暗过渡蓝色</string>
+    <string name="light_effect_reverse_six_color_light_dark_transition_blue">12、反向六色明暗过渡蓝色</string>
+    <string name="light_effect_positive_six_color_light_dark_transition_cyan">13、正向六色明暗过渡青色</string>
+    <string name="light_effect_reverse_six_color_light_dark_transition_cyan">14、反向六色明暗过渡青色</string>
+    <string name="light_effect_positive_six_color_light_dark_transition_yellow">15、正向六色明暗过渡黄色</string>
+    <string name="light_effect_reverse_six_color_light_dark_transition_yellow">16、反向六色明暗过渡黄色</string>
+    <string name="light_effect_positive_six_color_light_dark_transition_purple">17、正向六色明暗过渡紫色</string>
+    <string name="light_effect_reverse_six_color_light_dark_transition_purple">18、反向六色明暗过渡紫色</string>
+    <string name="light_effect_positive_six_color_light_dark_transition_white">19、正向六色明暗过渡白色</string>
+    <string name="light_effect_reverse_six_color_light_dark_transition_white">20、反向六色明暗过渡白色</string>
+
+    <!-- 流水效果相关 -->
+    <string name="light_effect_positive_rainbow_flowing_water">1、正向七彩流水</string>
+    <string name="light_effect_reverse_rainbow_flowing_water">2、反向七彩流水</string>
+    <string name="light_effect_forward_flowing_red_green_blue_water">3、正向红绿蓝流水</string>
+    <string name="light_effect_reverse_red_green_blue_flowing_water">4、反向红绿蓝流水</string>
+    <string name="light_effect_forward_flowing_yellow_cyan_purple_water">5、正向黄青紫流水</string>
+    <string name="light_effect_reverse_yellow_cyan_purple_flowing_water">6、反向黄青紫流水</string>
+    <string name="light_effect_forward_flowing_red_green_water">7、正向红绿流水</string>
+    <string name="light_effect_reverse_red_green_flowing_water">8、反向红绿流水</string>
+    <string name="light_effect_forward_flowing_green_blue_water">9、正向绿蓝流水</string>
+    <string name="light_effect_reverse_green_blue_flowing_water">10、反向绿蓝流水</string>
+    <string name="light_effect_forward_flowing_yellow_blue_water">11、正向黄蓝流水</string>
+    <string name="light_effect_reverse_yellow_blue_flowing_water">12、反向黄蓝流水</string>
+    <string name="light_effect_forward_flowing_yellow_cyan_water">13、正向黄青流水</string>
+    <string name="light_effect_reverse_yellow_cyan_flowing_water">14、反向黄青流水</string>
+    <string name="light_effect_forward_flowing_cyan_purple_water">15、正向青紫流水</string>
+    <string name="light_effect_reverse_cyan_purple_flowing_water">16、反向青紫流水</string>
+    <string name="light_effect_forward_flowing_black_white_water">17、正向黑白流水</string>
+    <string name="light_effect_reverse_black_white_flowing_water">18、反向黑白流水</string>
+
+    <!-- 白彩交替流水 -->
+    <string name="light_effect_positive_flow_white_red_white">1、正向白红白流动</string>
+    <string name="light_effect_reverse_flow_white_red_white">2、反向白红白流动</string>
+    <string name="light_effect_positive_flow_white_green_white">3、正向白绿白流动</string>
+    <string name="light_effect_reverse_flow_white_green_white">4、反向白绿白流动</string>
+    <string name="light_effect_positive_flow_white_blue_white">5、正向白蓝白流动</string>
+    <string name="light_effect_reverse_flow_white_blue_white">6、反向白蓝白流动</string>
+    <string name="light_effect_positive_flow_white_yellow_white">7、正向白黄白流动</string>
+    <string name="light_effect_reverse_flow_white_yellow_white">8、反向白黄白流动</string>
+    <string name="light_effect_positive_flow_white_cyan_white">9、正向白青白流动</string>
+    <string name="light_effect_reverse_flow_white_cyan_white">10、反向白青白流动</string>
+    <string name="light_effect_positive_flow_white_purple_white">11、正向白紫白流动</string>
+    <string name="light_effect_reverse_flow_white_purple_white">12、反向白紫白流动</string>
+    <string name="light_effect_positive_flow_red_white_red">13、正向红白红流动</string>
+    <string name="light_effect_reverse_flow_red_white_red">14、反向红白红流动</string>
+    <string name="light_effect_positive_flow_green_white_green">15、正向绿白绿流动</string>
+    <string name="light_effect_reverse_flow_green_white_green">16、反向绿白绿流动</string>
+    <string name="light_effect_positive_flow_blue_white_blue">17、正向蓝白蓝流动</string>
+    <string name="light_effect_reverse_flow_blue_white_blue">18、反向蓝白蓝流动</string>
+    <string name="light_effect_positive_flow_yellow_white_yellow">19、正向黄白黄流动</string>
+    <string name="light_effect_reverse_flow_yellow_white_yellow">20、反向黄白黄流动</string>
+    <string name="light_effect_positive_flow_cyan_white_cyan">21、正向青白青流动</string>
+    <string name="light_effect_reverse_flow_cyan_white_cyan">22、反向青白青流动</string>
+    <string name="light_effect_positive_flow_purple_white_purple">23、正向紫白紫流动</string>
+    <string name="light_effect_reverse_flow_purple_white_purple">24、反向紫白紫流动</string>
+
+    <!-- 彩色尾迹 -->
+    <string name="light_effect_positive_rainbow_tail">1、正向七彩拖尾</string>
+    <string name="light_effect_reverse_rainbow_tail">2、反向七彩拖尾</string>
+    <string name="light_effect_positive_red_tail">3、正向红色拖尾</string>
+    <string name="light_effect_reverse_red_tail">4、反向红色拖尾</string>
+    <string name="light_effect_positive_green_tail">5、正向绿色拖尾</string>
+    <string name="light_effect_reverse_green_tail">6、反向绿色拖尾</string>
+    <string name="light_effect_positive_blue_tail">7、正向蓝色拖尾</string>
+    <string name="light_effect_reverse_blue_tail">8、反向蓝色拖尾</string>
+    <string name="light_effect_positive_yellow_tail">9、正向黄色拖尾</string>
+    <string name="light_effect_reverse_yellow_tail">10、反向黄色拖尾</string>
+    <string name="light_effect_positive_cyan_tail">11、正向青色拖尾</string>
+    <string name="light_effect_reverse_cyan_tail">12、反向青色拖尾</string>
+    <string name="light_effect_positive_purple_tail">13、正向紫色拖尾</string>
+    <string name="light_effect_reverse_purple_tail">14、反向紫色拖尾</string>
+    <string name="light_effect_positive_white_tail">15、正向白色拖尾</string>
+    <string name="light_effect_reverse_white_tail">16、反向白色拖尾</string>
+
+    <!-- 正向跑动效果 -->
+    <string name="light_effect_running_forward_red">1、正向红色跑动</string>
+    <string name="light_effect_running_forward_green">2、正向绿色跑动</string>
+    <string name="light_effect_running_forward_blue">3、正向蓝色跑动</string>
+    <string name="light_effect_running_forward_yellow">4、正向黄色跑动</string>
+    <string name="light_effect_running_forward_cyan">5、正向青色跑动</string>
+    <string name="light_effect_running_forward_purple">6、正向紫色跑动</string>
+    <string name="light_effect_running_forward_white">7、正向白色跑动</string>
+    <string name="light_effect_running_forward_seven_colors">8、正向七色跑动</string>
+    <string name="light_effect_running_forward_red_blue_green">9、正向红蓝绿跑动</string>
+    <string name="light_effect_running_forward_yellow_purple_cyan">10、正向黄紫青跑动</string>
+    <string name="light_effect_running_forward_blue_purple_cyan_yellow">11、正向蓝紫青黄跑动</string>
+    <string name="light_effect_running_forward_blue_green_cyan_yellow">12、正向蓝绿青黄跑动</string>
+    <string name="light_effect_running_forward_white_background_red_dots">13、正向白底红点跑动</string>
+    <string name="light_effect_running_forward_red_background_green_dots14">14、正向红底绿点跑动</string>
+    <string name="light_effect_running_forward_green_background_blue_dots">15、正向绿底蓝点跑动</string>
+    <string name="light_effect_running_forward_blue_background_yellow_dots">16、正向蓝底黄点跑动</string>
+    <string name="light_effect_running_forward_yellow_background_cyan_dots17">17、正向黄底青点跑动</string>
+    <string name="light_effect_running_forward_cyan_background_purple_dots">18、正向青底紫点跑动</string>
+    <string name="light_effect_running_forward_purple_background_white_dots">19、正向紫底白点跑动</string>
+    <string name="light_effect_running_forward_red_background_white_dots">20、正向红底白点跑动</string>
+    <string name="light_effect_running_forward_red_background_seven_colors">21、正向红底七色跑动</string>
+    <string name="light_effect_running_forward_green_background_seven_colors">22、正向绿底七色跑动</string>
+    <string name="light_effect_running_forward_blue_background_seven_colors">23、正向蓝底七色跑动</string>
+    <string name="light_effect_running_forward_yellow_background_seven_colors">24、正向黄底七色跑动</string>
+    <string name="light_effect_running_forward_cyan_background_seven_colors">25、正向青底七色跑动</string>
+    <string name="light_effect_running_forward_purple_background_seven_colors">26、正向紫底七色跑动</string>
+    <string name="light_effect_running_forward_white_background_seven_colors">27、正向白底七色跑动</string>
+    <string name="light_effect_running_forward_blue_background_green_dots">28、正向蓝底绿点跑动</string>
+    <string name="light_effect_running_forward_red_background_green_dots">29、正向红底绿点跑动</string>
+    <string name="light_effect_running_forward_blue_background_red_dots">30、正向蓝底红点跑动</string>
+    <string name="light_effect_running_forward_yellow_background_cyan_dots">31、正向黄底青点跑动</string>
+    <string name="light_effect_running_forward_purple_background_yellow_dots">32、正向紫底黄点跑动</string>
+    <string name="light_effect_running_forward_yellow_background_white_dots">33、正向黄底白点跑动</string>
+    <string name="light_effect_running_forward_white_background_yellow_dots">34、正向白底黄点跑动</string>
+
+    <!-- 反向跑动效果 -->
+    <string name="light_effect_reverse_running_red">1、反向红色跑动</string>
+    <string name="light_effect_reverse_running_green">2、反向绿色跑动</string>
+    <string name="light_effect_reverse_running_blue">3、反向蓝色跑动</string>
+    <string name="light_effect_reverse_running_yellow">4、反向黄色跑动</string>
+    <string name="light_effect_reverse_running_cyan">5、反向青色跑动</string>
+    <string name="light_effect_reverse_running_purple">6、反向紫色跑动</string>
+    <string name="light_effect_reverse_running_white">7、反向白色跑动</string>
+    <string name="light_effect_reverse_running_seven_colors">8、反向七色跑动</string>
+    <string name="light_effect_reverse_running_red_blue_green">9、反向红蓝绿跑动</string>
+    <string name="light_effect_reverse_running_yellow_purple_cyan">10、反向黄紫青跑动</string>
+    <string name="light_effect_reverse_running_blue_purple_cyan_yellow">11、反向蓝紫青黄跑动</string>
+    <string name="light_effect_reverse_running_blue_green_cyan_yellow">12、反向蓝绿青黄跑动</string>
+    <string name="light_effect_reverse_running_white_background_red_dots">13、反向白底红点跑动</string>
+    <string name="light_effect_reverse_running_red_background_green_dots14">14、反向红底绿点跑动</string>
+    <string name="light_effect_reverse_running_green_background_blue_dots">15、反向绿底蓝点跑动</string>
+    <string name="light_effect_reverse_running_blue_background_yellow_dots">16、反向蓝底黄点跑动</string>
+    <string name="light_effect_reverse_running_yellow_background_cyan_dots17">17、反向黄底青点跑动</string>
+    <string name="light_effect_reverse_running_cyan_background_purple_dots">18、反向青底紫点跑动</string>
+    <string name="light_effect_reverse_running_purple_background_white_dots">19、反向紫底白点跑动</string>
+    <string name="light_effect_reverse_running_red_background_white_dots">20、反向红底白点跑动</string>
+    <string name="light_effect_reverse_running_red_background_seven_colors">21、反向红底七色跑动</string>
+    <string name="light_effect_reverse_running_green_background_seven_colors">22、反向绿底七色跑动</string>
+    <string name="light_effect_reverse_running_blue_background_seven_colors">23、反向蓝底七色跑动</string>
+    <string name="light_effect_reverse_running_yellow_background_seven_colors">24、反向黄底七色跑动</string>
+    <string name="light_effect_reverse_running_cyan_background_seven_colors">25、反向青底七色跑动</string>
+    <string name="light_effect_reverse_running_purple_background_seven_colors">26、反向紫底七色跑动</string>
+    <string name="light_effect_reverse_running_white_background_seven_colors">27、反向白底七色跑动</string>
+    <string name="light_effect_reverse_running_blue_background_green_dots">28、反向蓝底绿点跑动</string>
+    <string name="light_effect_reverse_running_red_background_green_dots">29、反向红底绿点跑动</string>
+    <string name="light_effect_reverse_running_blue_background_red_dots">30、反向蓝底红点跑动</string>
+    <string name="light_effect_reverse_running_yellow_background_cyan_dots">31、反向黄底青点跑动</string>
+    <string name="light_effect_reverse_running_purple_background_yellow_dots">32、反向紫底黄点跑动</string>
+    <string name="light_effect_reverse_running_yellow_background_white_dots">33、反向黄底白点跑动</string>
+    <string name="light_effect_reverse_running_white_background_yellow_dots">34、反向白底黄点跑动</string>
+
+    <!-- 特殊效果/堆叠/过渡 -->
+    <string name="light_effect_special_seven_colors_opening_25_pm">1、特别七色25点开幕</string>
+    <string name="light_effect_orange_red_dark_bright_dark_filtered_flowing_water">2、橙红暗亮暗过滤流水</string>
+    <string name="light_effect_yellow_green_dark_bright_dark_filtered_flowing_water">3、黄绿暗亮暗过滤流水</string>
+    <string name="light_effect_green_dark_bright_dark_filtered_flowing_water">4、绿色暗亮暗过滤流水</string>
+    <string name="light_effect_cyan_blue_dark_bright_dark_filtered_flowing_water">5、青蓝暗亮暗过滤流水</string>
+    <string name="light_effect_blue_dark_bright_dark_filtered_flowing_water">6、蓝暗亮暗过滤流水</string>
+    <string name="light_effect_purple_dark_bright_dark_filtered_flowing_water">7、紫色暗亮暗过滤流水</string>
+    <string name="light_effect_red_dark_bright_dark_filtered_flowing_water">8、红色暗亮暗过滤流水</string>
+    <string name="light_effect_seven_color_stacking">9、七色堆砌</string>
+    <string name="light_effect_orange_stacking">10、橙色堆砌</string>
+    <string name="light_effect_yellow_green_stacking">11、黄绿堆砌</string>
+    <string name="light_effect_green_stacking">12、绿色堆砌</string>
+    <string name="light_effect_cyan_blue_stacking">13、青蓝堆砌</string>
+    <string name="light_effect_blue_stacking">14、蓝色堆砌</string>
+    <string name="light_effect_purple_stacking">15、紫色堆砌</string>
+    <string name="light_effect_red_stacking">16、红色堆砌</string>
+    <string name="light_effect_colorful_gradient">17、七彩渐变</string>
+    <string name="light_effect_colorful_transition">18、七彩过渡</string>
+    <string name="light_effect_red_purple_transition">19、红紫过渡</string>
+    <string name="light_effect_yellow_white_transition">20、黄白过渡</string>
+    <string name="light_effect_yellow_orange_transition">21、黄橙过渡</string>
+</resources>

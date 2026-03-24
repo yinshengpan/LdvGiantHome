@@ -1,23 +1,45 @@
 package com.ledvance.domain.bean.command
 
+import com.ledvance.domain.bean.DeviceType
+
 /**
  * @author : jason yin
  * Email : j.yin@ledvance.com
  * Created date 3/19/26 18:25
  * Describe : DeviceMicRhythm
  */
-enum class DeviceMicRhythm(val title: String, override val command: Byte) : Command {
-    Energy1("Energy 1", 0x01),
-    Energy2("Energy 2", 0x02),
-    Rhythm1("Rhythm 1", 0x03),
-    Rhythm2("Rhythm 2", 0x04),
-    Spectrum1("Spectrum 1", 0x05),
-    Spectrum2("Spectrum 2", 0x06),
-    Roll1("Roll 1", 0x07),
-    Roll2("Roll 2", 0x08),
-    ;
+enum class DeviceMicRhythm(override val command: Byte) : Command {
+    Energy(0x01),      // 能量模式1
+    Energy1(0x01),      // 能量模式1
+    Energy2(0x02),      // 能量模式2
+    Rhythm(0x03),      // 律动模式1
+    Rhythm1(0x03),      // 律动模式1
+    Rhythm2(0x04),      // 律动模式2
+    Spectrum1(0x05),    // 频谱模式1
+    Spectrum2(0x06),    // 频谱模式2
+    Roll1(0x07),        // 滚动模式1
+    Roll2(0x08);        // 滚动模式2
 
     companion object {
-        val items = DeviceMicRhythm.entries.toList()
+        val itemsMap = mapOf(
+            DeviceType.Table to listOf(
+                Energy1,
+                Energy2,
+                Rhythm1,
+                Rhythm2,
+                Spectrum1,
+                Spectrum2,
+                Roll1,
+                Roll2
+            ),
+            DeviceType.Floor to listOf(
+                Energy,
+                Rhythm,
+                Spectrum1,
+                Spectrum2,
+                Roll1,
+                Roll2
+            ),
+        )
     }
 }

@@ -36,7 +36,8 @@ fun EntryProviderScope<Any>.profileNavGraph(
     profileScreen(
         onNavigateToLicenses = {
             backStack.navigateToLicenses()
-        }
+        },
+        onLaunchCustomChromeTab = onLaunchCustomChromeTab
     )
 
     licensesScreen(
@@ -56,13 +57,15 @@ fun EntryProviderScope<Any>.profileNavGraph(
 
 internal fun EntryProviderScope<Any>.profileScreen(
     onNavigateToLicenses: () -> Unit,
+    onLaunchCustomChromeTab: (uri: android.net.Uri) -> Unit,
 ) {
     entry<ProfileRoute>(
         metadata = noAnimationMetadata
     ) {
         PageLifecycleLogger("ProfileRoute")
         ProfileScreen(
-            onNavigateToLicenses = onNavigateToLicenses
+            onNavigateToLicenses = onNavigateToLicenses,
+            onLaunchCustomChromeTab = onLaunchCustomChromeTab,
         )
     }
 }

@@ -1,6 +1,8 @@
 package com.ledvance.light.bean
 
+import com.ledvance.ui.R
 import com.ledvance.ui.component.IRadioGroupItem
+import com.ledvance.utils.extensions.getString
 
 /**
  * @author : jason yin
@@ -9,9 +11,9 @@ import com.ledvance.ui.component.IRadioGroupItem
  * Describe : ModeSegment
  */
 enum class MusicSegment(override val title: String, override val value: String) : IRadioGroupItem<String> {
-    DeviceMic("Device Mic", "DeviceMic"),
-    PhoneMic("Phone Mic", "PhoneMic"),
-    Music("Music", "Music"),
+    DeviceMic(getString(R.string.music_device_mic), "DeviceMic"),
+    PhoneMic(getString(R.string.music_phone_mic), "PhoneMic"),
+    Music(getString(R.string.title_music), "Music"),
     ;
 
     companion object {

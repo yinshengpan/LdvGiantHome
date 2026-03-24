@@ -49,7 +49,6 @@ dependencies {
     implementation(libs.splashscreen)
     implementation(libs.datastore)
     implementation(libs.startup.runtime)
-    implementation(libs.browser)
     implementation(libs.media3.exoplayer)
     implementation(libs.accompanist.permissions)
     implementation(libs.work)
@@ -68,14 +67,6 @@ dependencies {
 
     implementation(libs.timber)
     implementation(libs.tracing.ktx)
-
-    implementation(libs.coil.compose)
-    implementation(libs.coil.gif)
-
-    implementation(libs.barcode.scanning)
-    implementation(libs.camera.camera2)
-    implementation(libs.camera.lifecycle)
-    implementation(libs.camera.view)
 }
 
 

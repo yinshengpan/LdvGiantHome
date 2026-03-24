@@ -24,6 +24,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import com.ledvance.light.state.rememberMicRecorderState
@@ -74,7 +75,7 @@ internal fun PhoneMicView(
             ) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text(
-                        text = "Microphone permission is required.",
+                        text = stringResource(R.string.music_phone_mic_permission_required),
                         style = AppTheme.typography.bodyMedium,
                         color = AppTheme.colors.title,
                         modifier = Modifier.padding(top = 8.dp)
@@ -98,7 +99,7 @@ private fun PhoneMicPulseUI(amplitude: Float) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Transform lighting effects according to music rhythm",
+            text = stringResource(R.string.music_mic_desc),
             style = AppTheme.typography.bodyMedium,
             color = AppTheme.colors.title,
             modifier = Modifier.padding(bottom = 20.dp)

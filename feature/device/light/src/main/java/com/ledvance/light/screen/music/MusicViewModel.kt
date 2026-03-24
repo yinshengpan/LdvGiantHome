@@ -60,7 +60,7 @@ internal class MusicViewModel @AssistedInject constructor(
             musicSegment = state.selectedMusicSegment,
             musicSegmentList = state.musicSegments,
             deviceMicRhythm = state.selectedDeviceMicRhythm,
-            deviceMicRhythmList = state.deviceMicRhythms,
+            deviceMicRhythmList = DeviceMicRhythm.itemsMap[device.deviceType] ?: listOf(),
             phoneMicSensitivity = device.phoneMicSensitivity,
             deviceMicSensitivity = state.deviceMicSensitivity,
         )
@@ -146,19 +146,8 @@ internal class MusicViewModel @AssistedInject constructor(
             MusicSegment.PhoneMic,
             MusicSegment.Music
         ),
-        val deviceMicRhythms: List<DeviceMicRhythm> = listOf(
-            DeviceMicRhythm.Energy1,
-            DeviceMicRhythm.Energy2,
-            DeviceMicRhythm.Rhythm1,
-            DeviceMicRhythm.Rhythm2,
-            DeviceMicRhythm.Spectrum1,
-            DeviceMicRhythm.Spectrum2,
-            DeviceMicRhythm.Roll1,
-            DeviceMicRhythm.Roll2
-        ),
         val selectedDeviceMicRhythm: DeviceMicRhythm = DeviceMicRhythm.Energy1,
         val deviceMicSensitivity: Int = 80,
         val loading: Boolean = false,
     )
-
 }

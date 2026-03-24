@@ -15,13 +15,13 @@ internal interface HomeContract {
 
     @Immutable
     sealed interface UiState {
-
         @Immutable
         data object Loading : UiState
 
         @Immutable
         data class Success(
-            val devices: List<DeviceUiItem>,
+            val appName: String = "",
+            val devices: List<DeviceUiItem> = listOf(),
             val loading: Boolean = false,
         ) : UiState
     }

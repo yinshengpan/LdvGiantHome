@@ -19,6 +19,7 @@ import com.ledvance.usecase.device.GetDeviceListStateUseCase
 import com.ledvance.usecase.device.GetDevicesUseCase
 import com.ledvance.usecase.device.SyncDeviceInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

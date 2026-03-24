@@ -28,7 +28,7 @@ import javax.inject.Inject
  * Describe : BleRepository
  */
 class BleRepository @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @param:ApplicationContext private val context: Context,
     private val deviceRegistry: DeviceRegistry
 ) {
     private val TAG = "BleRepository"
