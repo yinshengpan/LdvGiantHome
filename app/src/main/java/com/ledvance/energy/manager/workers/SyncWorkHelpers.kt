@@ -25,7 +25,7 @@ import androidx.core.app.NotificationCompat
 import androidx.work.Constraints
 import androidx.work.ForegroundInfo
 import androidx.work.NetworkType
-import com.ledvance.giant.R
+import com.ledvance.smart.home.R
 
 private const val SYNC_NOTIFICATION_ID = 0
 private const val SYNC_NOTIFICATION_CHANNEL_ID = "SyncNotificationChannel"
@@ -56,7 +56,7 @@ private fun Context.syncWorkNotification(): Notification {
             "Sync data",
             NotificationManager.IMPORTANCE_DEFAULT,
         ).apply {
-            description = "Background tasks for Home Energy Manager"
+            description = "Background tasks for Smart Home"
         }
         // Register the channel with the system
         val notificationManager: NotificationManager? =
