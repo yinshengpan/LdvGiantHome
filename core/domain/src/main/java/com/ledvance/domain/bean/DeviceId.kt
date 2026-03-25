@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
 
 @OptIn(kotlinx.serialization.InternalSerializationApi::class)
 @Serializable
-data class DeviceId(val macAddress: String) {
+data class DeviceId(val macAddress: String, val deviceType: DeviceType) {
     override fun toString() = macAddress
 }
 

@@ -1,11 +1,14 @@
 package com.ledvance.domain.bean
 
+import kotlinx.serialization.Serializable
+
 /**
  * @author : jason yin
  * Email : j.yin@ledvance.com
  * Created date 3/18/26 15:16
  * Describe : DeviceType
  */
+@Serializable
 enum class DeviceType(val type: Int) {
     Table(0),
     Floor(1)

@@ -1,26 +1,26 @@
-package com.ledvance.light.screen.music.engine
+package com.ledvance.light.screen.music.effect
 
-import com.ledvance.light.screen.music.fft.AudioFeatures
+import com.ledvance.light.screen.music.analyzer.AudioFeature
 
 /**
  * @author : jason yin
  * Email : j.yin@ledvance.com
  * Created date 3/23/26 10:37
- * Describe : PartyStrategy
+ * Describe : PartyLightEffect
  */
-class PartyStrategy : LightStrategy {
+class PartyLightEffect : LightEffectProvider {
 
     private var hue = 0f
 
-    override fun map(f: AudioFeatures): LightState {
+    override fun calculateLightState(f: AudioFeature): LightEffectState {
         if (f.beat) {
             hue = (0..360).random().toFloat() // 节拍换色
         }
 
         val value = if (f.beat) 1f else f.amplitude
-        val (r, g, b) = ColorMapper.hsvToRgb(hue, 1f, value)
+        val (r, g, b) = ColorConverter.convertHsvToRgb(hue, 1f, value)
 
-        return LightState(
+        return LightEffectState(
             (r * 255).toInt(),
             (g * 255).toInt(),
             (b * 255).toInt(),

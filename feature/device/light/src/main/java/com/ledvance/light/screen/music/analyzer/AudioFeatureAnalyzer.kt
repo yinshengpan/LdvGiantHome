@@ -1,4 +1,4 @@
-package com.ledvance.light.screen.music.fft
+package com.ledvance.light.screen.music.analyzer
 
 import kotlin.math.abs
 import kotlin.math.ln
@@ -7,14 +7,14 @@ import kotlin.math.ln
  * @author : jason yin
  * Email : j.yin@ledvance.com
  * Created date 3/23/26 10:19
- * Describe : FeatureExtractor
+ * Describe : AudioFeatureAnalyzer
  */
-object FeatureExtractor {
+object AudioFeatureAnalyzer {
 
     private var lastLow = 0f
     private var lastBeatTime = 0L
 
-    fun from(fft: FloatArray, amplitude: Float): AudioFeatures {
+    fun extractFeatures(fft: FloatArray, amplitude: Float): AudioFeature {
         val size = fft.size
 
         val lowEnd = size / 8
@@ -25,8 +25,9 @@ object FeatureExtractor {
         val high = avgAbs(fft, midEnd, size)
 
         val beat = detectBeatFromLow(low)
+        timber.log.Timber.tag("AudioFeatureAnalyzer").d("extractFeatures: amplitude=$amplitude, beat=$beat")
 
-        return AudioFeatures(
+        return AudioFeature(
             amplitude = compress(amplitude),
             low = normalize(low),
             mid = normalize(mid),

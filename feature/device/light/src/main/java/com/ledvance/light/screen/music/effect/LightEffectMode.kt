@@ -1,12 +1,12 @@
-package com.ledvance.light.screen.music.engine
+package com.ledvance.light.screen.music.effect
 
 /**
  * @author : jason yin
  * Email : j.yin@ledvance.com
  * Created date 3/23/26 10:19
- * Describe : LightMode
+ * Describe : LightEffectMode
  */
-enum class LightMode {
+enum class LightEffectMode {
     CLASSIC,
     PARTY,
     RELAX,

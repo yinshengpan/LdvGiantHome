@@ -20,7 +20,8 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import com.ledvance.domain.bean.MusicItem
-import com.ledvance.light.screen.music.fft.AudioLightController
+import com.ledvance.light.screen.music.analyzer.AudioLightDispatcher
+import com.ledvance.light.screen.music.effect.LightEffectMode
 import com.ledvance.utils.extensions.tryCatch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -118,6 +119,9 @@ class MusicPlayerState(
                 setDataCaptureListener(object : Visualizer.OnDataCaptureListener {
                     override fun onWaveFormDataCapture(v: Visualizer?, waveform: ByteArray?, samplingRate: Int) {}
                     override fun onFftDataCapture(v: Visualizer?, fft: ByteArray?, samplingRate: Int) {
+                        if (exoPlayer?.isPlaying != true) {
+                            return
+                        }
                         fft?.let { data ->
                             tryCatch {
                                 val n = data.size / 2
@@ -125,11 +129,13 @@ class MusicPlayerState(
                                 for (i in 0 until n) {
                                     val real = data[2 * i].toFloat()
                                     val imag = data[2 * i + 1].toFloat()
-                                    magnitude[i] = sqrt(real * real + imag * imag)
+                                    // Amplify the magnitudes so they fall in the same range as the Mic PCM records (~1000+)
+                                    magnitude[i] = sqrt(real * real + imag * imag) * 20f
                                 }
                                 // 🎯 振幅（推荐用 RMS）
-                                val amplitude = magnitude.average().toFloat() / 128f
-                                AudioLightController.onAudio(magnitude, amplitude)
+                                // Calculate un-amplified amplitude to preserve the expected 0..1 scale correctly
+                                val amplitude = (magnitude.average().toFloat() / 20f) / 128f
+                                AudioLightDispatcher.dispatchAudioData(magnitude, amplitude,LightEffectMode.RELAX)
                             }
                         }
                     }

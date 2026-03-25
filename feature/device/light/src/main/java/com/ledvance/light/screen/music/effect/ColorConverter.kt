@@ -1,4 +1,4 @@
-package com.ledvance.light.screen.music.engine
+package com.ledvance.light.screen.music.effect
 
 import kotlin.math.abs
 
@@ -6,11 +6,11 @@ import kotlin.math.abs
  * @author : jason yin
  * Email : j.yin@ledvance.com
  * Created date 3/23/26 10:39
- * Describe : ColorMapper
+ * Describe : ColorConverter
  */
-object ColorMapper {
+object ColorConverter {
 
-    fun hsvToRgb(h: Float, s: Float, v: Float): FloatArray {
+    fun convertHsvToRgb(h: Float, s: Float, v: Float): FloatArray {
         val hf = ((h % 360f) + 360f) % 360f
         val sf = s.coerceIn(0f, 1f)
         val vf = v.coerceIn(0f, 1f)

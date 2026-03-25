@@ -115,7 +115,7 @@ private fun PhoneMicPulseUI(amplitude: Float) {
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val center = Offset(size.width / 2, size.height / 2)
                 val baseRadius = 60.dp.toPx()
-                val pulseExtra = animatedAmplitude * 40.dp.toPx()
+                val pulseExtra = animatedAmplitude * 60.dp.toPx()
 
                 // Outer glow rings
                 drawCircle(

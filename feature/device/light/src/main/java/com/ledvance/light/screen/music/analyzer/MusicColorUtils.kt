@@ -1,4 +1,4 @@
-package com.ledvance.light.screen.music.fft
+package com.ledvance.light.screen.music.analyzer
 
 import kotlin.math.abs
 import kotlin.random.Random

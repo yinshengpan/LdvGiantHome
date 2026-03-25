@@ -1,4 +1,4 @@
-package com.ledvance.light.screen.music.fft
+package com.ledvance.light.screen.music.analyzer
 
 import kotlin.math.sqrt
 
@@ -6,11 +6,11 @@ import kotlin.math.sqrt
  * @author : jason yin
  * Email : j.yin@ledvance.com
  * Created date 3/23/26 10:18
- * Describe : FFTProcessor
+ * Describe : FftProcessor
  */
-object FFTProcessor {
+object FftProcessor {
 
-    fun computeMagnitude(pcm: ShortArray): FloatArray {
+    fun calculateMagnitude(pcm: ShortArray): FloatArray {
         val n = pcm.size
         val fft = FloatArray(n * 2)
 

@@ -23,11 +23,12 @@ class BleScanResultAggregator {
         val rssi = scanItem.data?.rssi ?: -99
         val isConnectable = rssi > -85
         if (isConnectable) {
+            val deviceType = DeviceType.fromName(name)
             devices[scanItem.device.address] = ScannedDevice(
                 name = name,
-                deviceId = DeviceId(scanItem.device.address),
+                deviceId = DeviceId(scanItem.device.address, deviceType),
                 rssi = rssi,
-                deviceType = DeviceType.fromName(name),
+                deviceType = deviceType,
                 scanTime = SystemClock.elapsedRealtime()
             )
         } else {

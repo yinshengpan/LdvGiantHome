@@ -6,7 +6,7 @@ import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.command.DeviceMicRhythm
 import com.ledvance.light.bean.LightCommand
 import com.ledvance.light.bean.MusicSegment
-import com.ledvance.light.screen.music.fft.AudioLightController
+import com.ledvance.light.screen.music.analyzer.AudioLightDispatcher
 import com.ledvance.ui.component.SnackbarManager
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceStateUseCase
@@ -86,11 +86,11 @@ internal class MusicViewModel @AssistedInject constructor(
 
         // Handle Audio Visualizer commands with 50ms throttling (20 FPS)
         viewModelScope.launch {
-            AudioLightController.lightFlow.sample(50).collectLatest { data ->
+            AudioLightDispatcher.lightFlow.sample(50).collectLatest { data ->
                 val (r, g, b, brightness) = data
                 // Send RGB and Brightness
                 deviceControlUseCase.setRgb(deviceId, r, g, b)
-                deviceControlUseCase.setBrightness(deviceId, brightness)
+//                deviceControlUseCase.setBrightness(deviceId, brightness)
             }
         }
     }

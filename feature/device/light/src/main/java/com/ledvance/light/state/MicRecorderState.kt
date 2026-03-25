@@ -15,8 +15,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LifecycleResumeEffect
-import com.ledvance.light.screen.music.fft.AudioLightController
-import com.ledvance.light.screen.music.fft.FFTProcessor
+import com.ledvance.light.screen.music.analyzer.AudioLightDispatcher
+import com.ledvance.light.screen.music.analyzer.FftProcessor
 import com.ledvance.utils.extensions.tryCatch
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -106,10 +106,13 @@ class MicRecorderState(
                         val gain = 0.5f + (sensitivity / 100f) * 2f  // 0.5x ~ 2.5x
                         val boosted = (normalized * gain).coerceIn(0f, 1f)
                         val newAmplitude = ln(1 + boosted * 9) / ln(10f)
-
-                        val fft = FFTProcessor.computeMagnitude(buffer)
+                        if (newAmplitude < 0.1) {
+                            amplitude = 0f
+                            return@tryCatch
+                        }
                         amplitude = newAmplitude
-                        AudioLightController.onAudio(fft, newAmplitude)
+                        val fft = FftProcessor.calculateMagnitude(buffer)
+                        AudioLightDispatcher.dispatchAudioData(fft, newAmplitude)
                     }
                 }
                 delay(20)
