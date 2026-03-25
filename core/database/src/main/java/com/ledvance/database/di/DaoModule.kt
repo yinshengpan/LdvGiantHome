@@ -3,6 +3,7 @@ package com.ledvance.database.di
 import com.ledvance.database.AppDatabase
 import com.ledvance.database.dao.DeviceDao
 import com.ledvance.database.dao.DeviceRuntimeConfigDao
+import com.ledvance.database.dao.FirmwareLatestDao
 import com.ledvance.database.dao.TimerDao
 import dagger.Module
 import dagger.Provides
@@ -27,4 +28,7 @@ object DaoModule {
 
     @Provides
     fun providesDeviceRuntimeConfigDao(database: AppDatabase): DeviceRuntimeConfigDao = database.deviceRuntimeConfigDao()
+
+    @Provides
+    fun providesFirmwareLatestDao(database: AppDatabase): FirmwareLatestDao = database.firmwareLatestDao()
 }

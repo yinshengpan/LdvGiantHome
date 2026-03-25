@@ -34,7 +34,7 @@ import kotlin.math.ln
  * Describe : Encapsulated State Holder for Microphone recording logic using AudioRecord for FFT
  */
 @Stable
-class MicRecorderState(
+internal class MicRecorderState(
     private val context: Context,
     sensitivity: Int,
     private val coroutineScope: CoroutineScope
@@ -143,7 +143,7 @@ class MicRecorderState(
 }
 
 @Composable
-fun rememberMicRecorderState(sensitivity: Int = 60): MicRecorderState {
+internal fun rememberMicRecorderState(sensitivity: Int = 60): MicRecorderState {
     val context = LocalContext.current.applicationContext
     val coroutineScope = rememberCoroutineScope()
     val state = remember { MicRecorderState(context, sensitivity, coroutineScope) }

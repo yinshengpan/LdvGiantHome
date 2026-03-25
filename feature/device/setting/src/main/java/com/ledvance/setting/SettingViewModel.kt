@@ -2,16 +2,19 @@ package com.ledvance.setting
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ledvance.domain.FirmwareVersion
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
-import com.ledvance.domain.bean.asMacAddress
 import com.ledvance.domain.bean.command.LineSequence
 import com.ledvance.ui.component.SnackbarManager
-import com.ledvance.usecase.device.DeviceControlUseCase
-import com.ledvance.usecase.device.GetDeviceStateUseCase
-import com.ledvance.usecase.device.GetDeviceUseCase
 import com.ledvance.ui.utils.OneTimeActionPublisherContract
 import com.ledvance.ui.utils.createDefaultMutableActionFlow
+import com.ledvance.usecase.device.DeleteDeviceUseCase
+import com.ledvance.usecase.device.DeviceControlUseCase
+import com.ledvance.usecase.device.GetDeviceFirmwareLatestUseCase
+import com.ledvance.usecase.device.GetDeviceStateUseCase
+import com.ledvance.usecase.device.GetDeviceUseCase
+import com.ledvance.usecase.device.SyncFirmwareLatestUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -40,7 +43,9 @@ internal class SettingViewModel @AssistedInject constructor(
     private val getDeviceStateUseCase: GetDeviceStateUseCase,
     private val getDeviceUseCase: GetDeviceUseCase,
     private val deviceControlUseCase: DeviceControlUseCase,
-    private val deleteDeviceUseCase: com.ledvance.usecase.device.DeleteDeviceUseCase,
+    private val getDeviceFirmwareLatestUseCase: GetDeviceFirmwareLatestUseCase,
+    private val deleteDeviceUseCase: DeleteDeviceUseCase,
+    private val syncFirmwareLatestUseCase: SyncFirmwareLatestUseCase,
 ) : ViewModel(), SettingContract,
     OneTimeActionPublisherContract<SettingContract.SettingOneTimeAction> {
 
@@ -62,23 +67,30 @@ internal class SettingViewModel @AssistedInject constructor(
         flow = getDeviceUseCase(deviceId),
         flow2 = getDeviceStateUseCase(deviceId),
         flow3 = screenState,
-    ) { device, deviceState, state ->
+        flow4 = getDeviceFirmwareLatestUseCase(deviceId),
+    ) { device, deviceState, state, firmwareLatest ->
         SettingContract.UiState.Success(
             isOnline = deviceState.isOnline,
             loading = state.loading,
             deviceName = device.name,
-            deviceMacAddress = deviceId.asMacAddress(),
+            deviceMacAddress = deviceId.macAddress,
             deviceTypeName = device.deviceType.getDisplayName(),
             deviceIconResId = device.deviceType.getIconResId(),
             lineSequence = device.lineSequence,
-            latestFirmwareVersion = "",
-            firmwareVersion = ""
+            latestFirmwareVersion = firmwareLatest?.latestVersion ?: FirmwareVersion.default,
+            firmwareVersion = device.firmwareVersion
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
         initialValue = SettingContract.UiState.Loading
     )
+
+    init {
+        viewModelScope.launch {
+            syncFirmwareLatestUseCase()
+        }
+    }
 
     override fun resetDevice() {
         Timber.tag(TAG).d("resetDevice: deviceId=%s", deviceId)
@@ -104,10 +116,6 @@ internal class SettingViewModel @AssistedInject constructor(
         }
     }
 
-    override fun upgradeFirmware() {
-
-    }
-
     override fun onReconnect() {
         viewModelScope.launch {
             screenState.update { it.copy(loading = true) }
@@ -129,15 +137,15 @@ internal class SettingViewModel @AssistedInject constructor(
 
     fun DeviceType.getDisplayName(): String {
         return when (this) {
-            DeviceType.Table -> "Table lamp"
-            DeviceType.Floor -> "Floor lamp"
+            DeviceType.GiantTable -> "Table lamp"
+            DeviceType.GiantFloor -> "Floor lamp"
         }
     }
 
     fun DeviceType.getIconResId(): Int {
         return when (this) {
-            DeviceType.Table -> com.ledvance.ui.R.mipmap.pic_tablelamp
-            DeviceType.Floor -> com.ledvance.ui.R.mipmap.pic_floorlamp
+            DeviceType.GiantTable -> com.ledvance.ui.R.mipmap.pic_tablelamp
+            DeviceType.GiantFloor -> com.ledvance.ui.R.mipmap.pic_floorlamp
         }
     }
 

@@ -7,8 +7,8 @@ import androidx.work.ForegroundInfo
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.OutOfQuotaPolicy
 import androidx.work.WorkerParameters
+import com.ledvance.usecase.device.SyncFirmwareLatestUseCase
 import com.ledvance.usecase.repo.LicensesRepo
-import com.ledvance.network.repo.FirmwareRepo
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +26,7 @@ import kotlinx.coroutines.withContext
 internal class DataSyncWorker @AssistedInject constructor(
     @Assisted private val appContext: Context,
     @Assisted workerParameters: WorkerParameters,
-    private val firmwareRepo: FirmwareRepo,
+    private val syncFirmwareLatestUseCase: SyncFirmwareLatestUseCase,
     private val licensesRepo: LicensesRepo,
 ) : CoroutineWorker(appContext, workerParameters) {
 
@@ -39,9 +39,9 @@ internal class DataSyncWorker @AssistedInject constructor(
             async {
                 licensesRepo.syncLicenses()
             },
-//            async {
-//                firmwareRepo.syncFirmware()
-//            }
+            async {
+                syncFirmwareLatestUseCase()
+            }
         )
         return@withContext Result.success()
     }

@@ -10,6 +10,7 @@
     <string name="title_music">"Music"</string>
     <string name="title_mode">"Mode"</string>
     <string name="title_setting">"Setting"</string>
+    <string name="title_firmware_update">"Firmware Update"</string>
 
     <string name="tab_home">"Home"</string>
     <string name="tab_profile">"My"</string>
@@ -25,12 +26,16 @@
     <string name="go_to_setting">"Go to Setting"</string>
     <string name="cancel">"Cancel"</string>
     <string name="confirm">"Confirm"</string>
+    <string name="got_it">"Got it"</string>
     <string name="lighting">"Lighting"</string>
     <string name="color_mode">"Color Mode"</string>
     <string name="white_mode">"White Mode"</string>
     <string name="add_device">"Add Device"</string>
     <string name="select_time">"Select Time"</string>
     <string name="reconnect">"Reconnect"</string>
+    <string name="update">"Update"</string>
+    <string name="update_failed">"Update Failed!"</string>
+    <string name="try_again">"Try again"</string>
 
     <string name="mon">Mon</string>
     <string name="monday">Monday</string>
@@ -107,6 +112,8 @@
     <string name="dialog_reset_message">"Are you sure you want to reset this device to factory settings? This action cannot be undone."</string>
     <string name="dialog_firmware_upgrade_title">"Firmware Upgrade"</string>
     <string name="dialog_firmware_upgrade_message">"A new firmware version is available. Would you like to upgrade now?"</string>
+    <string name="dialog_firmware_upgrade_learn_title">"Please Wait"</string>
+    <string name="dialog_firmware_upgrade_learn_message">"Firmware is currently updating. Please stay on this page until it finishes."</string>
     <string name="dialog_delete_device_title">"Delete Device"</string>
     <string name="dialog_delete_device_message">"Are you sure you want to delete this device? This action cannot be undone."</string>
     <string name="dialog_bluetooth_enable_request_message">"Bluetooth device scanner need bluetooth enable"</string>
@@ -406,4 +413,8 @@
     <string name="light_effect_red_purple_transition">19. Red purple transition</string>
     <string name="light_effect_yellow_white_transition">20. Yellow white transition</string>
     <string name="light_effect_yellow_orange_transition">21. Yellow orange transition</string>
+
+    <string name="firmware_updating_tips">"Firmware is updating. Please wait until it’s finished before leaving this page."</string>
+    <string name="firmware_update_found">"Update Found"</string>
+    <string name="firmware_no_updates_available">"No updates available"</string>
 </resources>

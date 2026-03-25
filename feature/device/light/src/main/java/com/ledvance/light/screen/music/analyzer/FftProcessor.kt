@@ -8,7 +8,7 @@ import kotlin.math.sqrt
  * Created date 3/23/26 10:18
  * Describe : FftProcessor
  */
-object FftProcessor {
+internal object FftProcessor {
 
     fun calculateMagnitude(pcm: ShortArray): FloatArray {
         val n = pcm.size

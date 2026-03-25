@@ -14,7 +14,7 @@ import kotlinx.coroutines.channels.BufferOverflow
  * Created date 3/23/26 10:21
  * Describe : AudioLightDispatcher
  */
-object AudioLightDispatcher {
+internal object AudioLightDispatcher {
 
     private val _lightFlow = MutableSharedFlow<LightEffectState>(
         replay = 0,

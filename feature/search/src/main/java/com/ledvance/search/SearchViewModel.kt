@@ -4,13 +4,15 @@ import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ledvance.ble.bean.ScannedDevice
+import com.ledvance.ble.bean.parseGiantFirmwareVersion
+import com.ledvance.domain.bean.Company
+import com.ledvance.ui.utils.OneTimeActionPublisherContract
+import com.ledvance.ui.utils.createDefaultMutableActionFlow
 import com.ledvance.usecase.device.AddDeviceUseCase
 import com.ledvance.usecase.device.BleSearchUseCase
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetAllDeviceIdUseCase
 import com.ledvance.utils.extensions.tryCatch
-import com.ledvance.ui.utils.OneTimeActionPublisherContract
-import com.ledvance.ui.utils.createDefaultMutableActionFlow
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -73,7 +75,11 @@ internal class SearchViewModel @Inject constructor(
             addDeviceUseCase(
                 parameter = AddDeviceUseCase.Param(
                     deviceId = scannedDevice.deviceId,
-                    name = scannedDevice.name
+                    name = scannedDevice.name,
+                    firmwareVersion = when (scannedDevice.deviceType.company) {
+                        Company.Giant -> scannedDevice.parseGiantFirmwareVersion()
+                        else -> null
+                    }
                 )
             )
             screenState.update { it.copy(loading = false) }

@@ -8,7 +8,7 @@ import com.ledvance.light.screen.music.analyzer.AudioFeature
  * Created date 3/23/26 10:32
  * Describe : ClassicLightEffect
  */
-class ClassicLightEffect : LightEffectProvider {
+internal class ClassicLightEffect : LightEffectProvider {
 
     private var hue = 0f
     private var smoothedAmp = 0f

@@ -31,7 +31,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceUiItem
-import com.ledvance.domain.bean.asMacAddress
 import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceSwitch
 import com.ledvance.ui.extensions.debouncedClickable
@@ -54,14 +53,12 @@ internal fun HomeScreenContent(
         verticalArrangement = Arrangement.spacedBy(15.dp),
         contentPadding = PaddingValues(20.dp)
     ) {
-        items(
-            items = uiState.devices,
-            key = { it.deviceId.asMacAddress() },
-            span = { GridItemSpan(1) }) { device ->
+        items(items = uiState.devices, key = { it.deviceId.macAddress }, span = { GridItemSpan(1) }) { device ->
             DeviceItem(
                 device = device,
                 isOnline = device.isOnline,
                 switch = device.power,
+                showDeleteIcon = false,
                 onSwitchChange = onSwitchChange,
                 onConnectClick = onConnectClick,
                 onDisconnectClick = onDisconnectClick,
@@ -77,6 +74,7 @@ fun DeviceItem(
     device: DeviceUiItem,
     isOnline: Boolean,
     switch: Boolean,
+    showDeleteIcon: Boolean = true,
     onSwitchChange: (DeviceId, Boolean) -> Unit,
     onConnectClick: (DeviceId) -> Unit,
     onDisconnectClick: (DeviceId) -> Unit,
@@ -139,14 +137,16 @@ fun DeviceItem(
                     style = AppTheme.typography.bodyMedium,
                     modifier = Modifier.weight(1f)
                 )
-                Icon(
-                    painter = painterResource(R.drawable.ic_delete),
-                    contentDescription = "delete",
-                    modifier = Modifier
-                        .size(20.dp)
-                        .debouncedClickable { onDeleteClick.invoke(device.deviceId) },
-                    tint = AppTheme.colors.dialogNegative
-                )
+                if (showDeleteIcon) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_delete),
+                        contentDescription = "delete",
+                        modifier = Modifier
+                            .size(20.dp)
+                            .debouncedClickable { onDeleteClick.invoke(device.deviceId) },
+                        tint = AppTheme.colors.dialogNegative
+                    )
+                }
             }
         }
     }

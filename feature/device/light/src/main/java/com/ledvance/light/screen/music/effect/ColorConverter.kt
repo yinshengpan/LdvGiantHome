@@ -8,7 +8,7 @@ import kotlin.math.abs
  * Created date 3/23/26 10:39
  * Describe : ColorConverter
  */
-object ColorConverter {
+internal object ColorConverter {
 
     fun convertHsvToRgb(h: Float, s: Float, v: Float): FloatArray {
         val hf = ((h % 360f) + 360f) % 360f

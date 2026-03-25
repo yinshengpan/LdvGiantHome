@@ -8,7 +8,7 @@ import com.ledvance.light.screen.music.analyzer.AudioFeature
  * Created date 3/23/26 10:38
  * Describe : RelaxLightEffect
  */
-class RelaxLightEffect : LightEffectProvider {
+internal class RelaxLightEffect : LightEffectProvider {
 
     private var hue = 0f
     private var smoothedAmp = 0f

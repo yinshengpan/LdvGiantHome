@@ -146,12 +146,21 @@ fun File.deleteDirFiles(predicate: (File) -> Boolean = { true }) {
     }
 }
 
+fun File.toByteArray(): ByteArray {
+    return inputStream().use { it.readBytes() }
+}
+
 private val df by lazy {
     DecimalFormat("0.00")
 }
 
 fun File.sizeString(): String {
     val size = this.length()
+    return size.sizeString()
+}
+
+fun Long.sizeString(): String {
+    val size = this
     return when {
         size < 1024 -> "$size B"
         size < 1024L * 1024 -> df.format(size / 1024.0) + " KB"

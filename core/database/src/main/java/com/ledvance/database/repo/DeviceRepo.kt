@@ -3,10 +3,11 @@ package com.ledvance.database.repo
 import com.ledvance.database.dao.DeviceDao
 import com.ledvance.database.dao.DeviceRuntimeConfigDao
 import com.ledvance.database.model.DeviceBaseUpdateEntity
-import com.ledvance.database.model.DeviceRuntimeConfigEntity
 import com.ledvance.database.model.DeviceEntity
 import com.ledvance.database.model.DevicePowerUpdateEntity
+import com.ledvance.database.model.DeviceRuntimeConfigEntity
 import com.ledvance.database.model.DeviceWithRuntimeConfig
+import com.ledvance.domain.FirmwareVersion
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.WorkMode
 import com.ledvance.domain.bean.command.LineSequence
@@ -96,9 +97,10 @@ class DeviceRepo @Inject constructor(
         tryCatch { deviceRuntimeConfigDao.updatePhoneMicSensitivity(deviceId, phoneMicSensitivity) }
     }
 
-    suspend fun updateDeviceFirmwareVersion(deviceId: DeviceId, firmwareVersion: String) = withContext(Dispatchers.IO) {
-        tryCatch { deviceDao.updateDeviceFirmwareVersion(deviceId, firmwareVersion) }
-    }
+    suspend fun updateDeviceFirmwareVersion(deviceId: DeviceId, deviceName: String, firmwareVersion: FirmwareVersion) =
+        withContext(Dispatchers.IO) {
+            tryCatch { deviceDao.updateDeviceFirmwareVersion(deviceId, deviceName, firmwareVersion) }
+        }
 
     suspend fun updateDevicePower(list: List<Pair<DeviceId, Boolean>>) = withContext(Dispatchers.IO) {
         tryCatch {

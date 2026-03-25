@@ -16,6 +16,8 @@
     <string name="dialog_bluetooth_permissions_request_title">请求蓝牙权限</string>
     <string name="dialog_location_enable_request_title">请求开启定位</string>
     <string name="dialog_mic_permissions_request_title">请求麦克风权限</string>
+    <string name="dialog_firmware_upgrade_learn_title">请稍候</string>
+    <string name="got_it">知道了</string>
 
     <!-- 弹窗内容 -->
     <string name="dialog_reset_message">确定要将该设备恢复出厂设置吗？此操作不可撤销。</string>
@@ -25,6 +27,7 @@
     <string name="dialog_bluetooth_permissions_request_message">蓝牙设备扫描和连接需要获取蓝牙权限</string>
     <string name="dialog_location_enable_request_message">蓝牙设备扫描需要获取定位权限</string>
     <string name="dialog_mic_permissions_request_message">音乐律动效果需要获取麦克风权限</string>
+    <string name="dialog_firmware_upgrade_learn_message">固件正在更新中，请保持在此页面直至更新完成。</string>
 
     <!-- 关于/设置类 -->
     <string name="share_logs">分享日志</string>
@@ -85,6 +88,10 @@
     <string name="title_music">音乐</string>
     <string name="title_mode">模式</string>
     <string name="title_setting">设置</string>
+    <string name="title_firmware_update">固件更新</string>
+    <string name="update">更新</string>
+    <string name="update_failed">更新失败！</string>
+    <string name="try_again">重试</string>
 
     <!-- 底部Tab标签 -->
     <string name="tab_home">首页</string>
@@ -454,4 +461,8 @@
     <string name="light_effect_red_purple_transition">19、红紫过渡</string>
     <string name="light_effect_yellow_white_transition">20、黄白过渡</string>
     <string name="light_effect_yellow_orange_transition">21、黄橙过渡</string>
+
+    <string name="firmware_updating_tips">固件正在更新中，请等待更新完成后再离开此页面。</string>
+    <string name="firmware_update_found">发现更新</string>
+    <string name="firmware_no_updates_available">暂无可用更新</string>
 </resources>

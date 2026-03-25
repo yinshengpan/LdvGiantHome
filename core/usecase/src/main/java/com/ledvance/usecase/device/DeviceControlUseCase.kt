@@ -13,7 +13,9 @@ import com.ledvance.domain.bean.command.ModeId
 import com.ledvance.domain.bean.command.ModeType
 import com.ledvance.domain.bean.command.scenes.Scene
 import com.ledvance.utils.extensions.toUnsignedInt
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -206,25 +208,20 @@ class DeviceControlUseCase @Inject constructor(
         }
     }
 
-    suspend fun connectDevice(deviceId: DeviceId): Boolean {
-        return executionResult("connectDevice(deviceId=$deviceId)") {
+    suspend fun connectDevice(deviceId: DeviceId): Boolean = withContext(Dispatchers.IO) {
+        return@withContext executionResult("connectDevice(deviceId=$deviceId)") {
             ensureConnected(deviceId)
         }
     }
 
-    suspend fun readFirmwareVersion(deviceId: DeviceId): String? {
-        val callInfo = "readFirmwareVersion(deviceId=$deviceId)"
-        Timber.tag(TAG).d("--> START $callInfo")
-        return try {
-            ensureConnected(deviceId)
-            val client = connectionManager.getClient(deviceId)
-            val firmwareVersion = client?.readFirmwareVersion()
-            registry.updateActive(deviceId)
-            Timber.tag(TAG).d("<-- END $callInfo: success firmwareVersion=$firmwareVersion")
-            firmwareVersion
-        } catch (e: Exception) {
-            Timber.tag(TAG).e(e, "<-- END $callInfo: failed")
-            null
+    suspend fun disconnectDevice(deviceId: DeviceId): Boolean {
+        return executionResult("disconnectDevice(deviceId=$deviceId)") {
+            val device = registry.get(deviceId)
+            Timber.tag(TAG).d("disconnectDevice($deviceId) isConnected = ${device?.isConnected}")
+            if (device?.isConnected != false) {
+                connectionManager.disconnect(deviceId)
+                waitDisconnected(deviceId)
+            }
         }
     }
 
@@ -244,6 +241,15 @@ class DeviceControlUseCase @Inject constructor(
         }
         Timber.tag(TAG).e("waitConnected: connect timeout for deviceId=%s", deviceId)
         error("connect timeout")
+    }
+
+    private suspend fun waitDisconnected(deviceId: DeviceId) {
+        repeat(20) {
+            if (registry.get(deviceId)?.isConnected == false) return
+            delay(300)
+        }
+        Timber.tag(TAG).e("waitDisconnected: disconnect timeout for deviceId=%s", deviceId)
+        error("disconnect timeout")
     }
 
     private fun getProtocol(deviceId: DeviceId): BleProtocol {

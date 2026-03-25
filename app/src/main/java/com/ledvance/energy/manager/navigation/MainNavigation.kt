@@ -11,7 +11,6 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import com.ledvance.utils.extensions.launchCustomChromeTab
 import com.ledvance.energy.manager.state.LedvanceAppState
 import com.ledvance.home.navigation.HomeRoute
 import com.ledvance.home.navigation.homeScreen
@@ -21,8 +20,9 @@ import com.ledvance.profile.navigation.profileNavGraph
 import com.ledvance.search.navigation.navigateToSearch
 import com.ledvance.search.navigation.searchScreen
 import com.ledvance.setting.navigation.navigateToSetting
-import com.ledvance.setting.navigation.settingScreen
+import com.ledvance.setting.navigation.settingNavGraph
 import com.ledvance.ui.theme.AppTheme
+import com.ledvance.utils.extensions.launchCustomChromeTab
 
 /**
  * @author : jason yin
@@ -92,10 +92,8 @@ fun MainNavigation(appState: LedvanceAppState) {
                 },
             )
 
-            settingScreen(
-                onBackClick = {
-                    backStack.back()
-                },
+            settingNavGraph(
+                backStack = backStack,
                 onDeleteSuccess = {
                     backStack.clear()
                     backStack.add(HomeRoute)

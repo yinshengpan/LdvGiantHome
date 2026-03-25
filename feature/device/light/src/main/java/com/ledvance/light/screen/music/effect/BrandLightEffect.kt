@@ -8,7 +8,7 @@ import com.ledvance.light.screen.music.analyzer.AudioFeature
  * Created date 3/23/26 10:40
  * Describe : BrandLightEffect
  */
-class BrandLightEffect : LightEffectProvider {
+internal class BrandLightEffect : LightEffectProvider {
 
     private val baseHue = 30f // 橙色
     private var smoothedAmp = 0f

@@ -39,7 +39,7 @@ import com.ledvance.ui.extensions.debouncedClickable
 import com.ledvance.ui.theme.AppTheme
 
 @Composable
-fun MusicPlayView() {
+internal fun MusicPlayView() {
     val playerState = rememberMusicPlayerState()
     Column(
         modifier = Modifier

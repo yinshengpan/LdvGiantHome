@@ -3,6 +3,7 @@ package com.ledvance.database.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.ledvance.domain.FirmwareVersion
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
 import com.ledvance.domain.bean.command.ModeId
@@ -22,6 +23,8 @@ data class DeviceEntity(
     val name: String,
     @ColumnInfo(name = "device_type")
     val deviceType: DeviceType,
+    @ColumnInfo(name = "firmware_version")
+    val firmwareVersion: FirmwareVersion,
     @ColumnInfo(name = "power")
     val power: Boolean = true,
     @ColumnInfo(name = "mode_type")
@@ -40,6 +43,4 @@ data class DeviceEntity(
     val cct: Int = 100,
     @ColumnInfo(name = "brightness")
     val brightness: Int = 100,
-    @ColumnInfo(name = "firmware_version")
-    val firmwareVersion: String = "",
 )

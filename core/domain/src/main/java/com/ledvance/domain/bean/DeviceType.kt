@@ -9,21 +9,26 @@ import kotlinx.serialization.Serializable
  * Describe : DeviceType
  */
 @Serializable
-enum class DeviceType(val type: Int) {
-    Table(0),
-    Floor(1)
+enum class DeviceType(val type: Int, val company: Company) {
+    GiantTable(0, Company.Giant),
+    GiantFloor(1, Company.Giant),
     ;
 
     companion object {
         fun fromName(name: String): DeviceType {
+            val upName = name.uppercase()
             return when {
-                name.contains("TABLE") -> Table
-                name.contains("FLOOR") -> Floor
-                else -> Table
+                upName.startsWith(Company.Giant.title) -> when {
+                    upName.contains("TABLE") -> GiantTable
+                    upName.contains("FLOOR") -> GiantFloor
+                    else -> GiantTable
+                }
+
+                else -> GiantTable
             }
         }
         fun fromType(type: Int): DeviceType {
-            return entries.find { it.type == type } ?: Table
+            return entries.find { it.type == type } ?: GiantTable
         }
     }
 }

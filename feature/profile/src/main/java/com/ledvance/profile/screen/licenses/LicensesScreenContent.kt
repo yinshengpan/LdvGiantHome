@@ -1,10 +1,9 @@
 package com.ledvance.profile.screen.licenses
 
-import com.ledvance.domain.bean.License
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ledvance.domain.bean.License
 import com.ledvance.ui.extensions.debouncedClickable
 import com.ledvance.ui.theme.AppTheme
 
@@ -34,10 +34,12 @@ internal fun LicensesScreenContent(
     uiState: LicensesContract.UiState.Success,
     onClickLicense: (License) -> Unit
 ) {
-    LazyColumn(modifier = Modifier.fillMaxWidth().padding(top = 15.dp)) {
+    LazyColumn(modifier = Modifier.fillMaxWidth()) {
+        item { Spacer(modifier = Modifier.height(20.dp)) }
         items(uiState.licenses, key = { it.libUniqueId }) {
             LicenseItem(it, onClickLicense)
         }
+        item { Spacer(modifier = Modifier.height(40.dp)) }
     }
 }
 

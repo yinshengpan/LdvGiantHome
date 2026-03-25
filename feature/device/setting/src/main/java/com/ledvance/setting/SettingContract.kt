@@ -1,6 +1,7 @@
 package com.ledvance.setting
 
 import androidx.compose.runtime.Immutable
+import com.ledvance.domain.FirmwareVersion
 import com.ledvance.domain.bean.command.LineSequence
 import com.ledvance.ui.utils.OneTimeAction
 import com.ledvance.ui.utils.OneTimeActionConsumerContract
@@ -34,8 +35,8 @@ internal interface SettingContract :
             val deviceTypeName: String,
             val deviceIconResId: Int,
             val lineSequence: LineSequence,
-            val firmwareVersion: String,
-            val latestFirmwareVersion: String
+            val firmwareVersion: FirmwareVersion,
+            val latestFirmwareVersion: FirmwareVersion
         ) : UiState
 
         @Immutable
@@ -46,7 +47,6 @@ internal interface SettingContract :
 
     fun resetDevice()
     fun setLineSequence(lineSequence: LineSequence)
-    fun upgradeFirmware()
     fun onReconnect()
     fun deleteDevice()
 }

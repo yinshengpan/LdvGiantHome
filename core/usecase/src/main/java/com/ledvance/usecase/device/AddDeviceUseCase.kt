@@ -2,6 +2,7 @@ package com.ledvance.usecase.device
 
 import com.ledvance.database.model.DeviceEntity
 import com.ledvance.database.repo.DeviceRepo
+import com.ledvance.domain.FirmwareVersion
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
 import com.ledvance.domain.di.Dispatcher
@@ -28,6 +29,7 @@ class AddDeviceUseCase @Inject constructor(
                 deviceEntity = DeviceEntity(
                     deviceId = deviceId,
                     name = name,
+                    firmwareVersion = FirmwareVersion.create(firmwareVersion),
                     deviceType = DeviceType.fromName(name)
                 )
             )
@@ -36,6 +38,7 @@ class AddDeviceUseCase @Inject constructor(
 
     data class Param(
         val deviceId: DeviceId,
-        val name: String
+        val name: String,
+        val firmwareVersion: Int?,
     )
 }

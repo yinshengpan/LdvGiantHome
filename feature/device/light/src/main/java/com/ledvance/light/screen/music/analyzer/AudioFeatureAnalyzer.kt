@@ -9,7 +9,7 @@ import kotlin.math.ln
  * Created date 3/23/26 10:19
  * Describe : AudioFeatureAnalyzer
  */
-object AudioFeatureAnalyzer {
+internal object AudioFeatureAnalyzer {
 
     private var lastLow = 0f
     private var lastBeatTime = 0L

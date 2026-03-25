@@ -6,7 +6,7 @@ package com.ledvance.light.screen.music.analyzer
  * Created date 3/23/26 10:20
  * Describe : AudioFeature
  */
-data class AudioFeature(
+internal data class AudioFeature(
     val amplitude: Float,     // 0~1
     val low: Float,           // 低频能量
     val mid: Float,           // 中频

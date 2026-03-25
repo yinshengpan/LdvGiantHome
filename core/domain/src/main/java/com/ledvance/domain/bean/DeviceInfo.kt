@@ -1,5 +1,6 @@
 package com.ledvance.domain.bean
 
+import com.ledvance.domain.FirmwareVersion
 import com.ledvance.domain.bean.command.LineSequence
 import com.ledvance.domain.bean.command.ModeId
 import com.ledvance.domain.bean.command.ModeType
@@ -17,6 +18,7 @@ data class DeviceInfo(
     val lineSequence: LineSequence,
     val name: String,
     val power: Boolean,
+    val firmwareVersion: FirmwareVersion,
     val modeType: ModeType? = null,
     val modeId: ModeId? = null,
     val speed: Int = 50,

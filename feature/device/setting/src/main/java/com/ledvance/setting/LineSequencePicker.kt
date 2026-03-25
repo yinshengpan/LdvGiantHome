@@ -30,7 +30,7 @@ import com.ledvance.ui.theme.AppTheme
  * Describe : LineSequencePicker
  */
 @Composable
-fun LineSequencePicker(
+internal fun LineSequencePicker(
     initialSequence: LineSequence?,
     onCancel: () -> Unit,
     onConfirm: (LineSequence) -> Unit

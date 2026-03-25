@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "827303458a5ec3513352782a8e76f7c9",
+    "identityHash": "1169480e6dceae0510f16e9143971405",
     "entities": [
       {
         "tableName": "devices",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` TEXT NOT NULL, `name` TEXT NOT NULL, `device_type` INTEGER NOT NULL, `power` INTEGER NOT NULL, `mode_type` INTEGER, `mode_id` INTEGER, `speed` INTEGER NOT NULL, `h` INTEGER NOT NULL, `s` INTEGER NOT NULL, `v` INTEGER NOT NULL, `cct` INTEGER NOT NULL, `brightness` INTEGER NOT NULL, `firmware_version` TEXT NOT NULL, PRIMARY KEY(`device_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` TEXT NOT NULL, `name` TEXT NOT NULL, `device_type` INTEGER NOT NULL, `firmware_version` INTEGER NOT NULL, `power` INTEGER NOT NULL, `mode_type` INTEGER, `mode_id` INTEGER, `speed` INTEGER NOT NULL, `h` INTEGER NOT NULL, `s` INTEGER NOT NULL, `v` INTEGER NOT NULL, `cct` INTEGER NOT NULL, `brightness` INTEGER NOT NULL, PRIMARY KEY(`device_id`))",
         "fields": [
           {
             "fieldPath": "deviceId",
@@ -23,6 +23,12 @@
           {
             "fieldPath": "deviceType",
             "columnName": "device_type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "firmwareVersion",
+            "columnName": "firmware_version",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -76,12 +82,6 @@
             "fieldPath": "brightness",
             "columnName": "brightness",
             "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "firmwareVersion",
-            "columnName": "firmware_version",
-            "affinity": "TEXT",
             "notNull": true
           }
         ],
@@ -202,11 +202,59 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "firmware_latest",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_type` INTEGER NOT NULL, `latest_version` INTEGER NOT NULL, `firmware_url` TEXT NOT NULL, `firmware_file_path` TEXT NOT NULL, `firmware_file_size` INTEGER NOT NULL, `firmware_md5` TEXT NOT NULL, PRIMARY KEY(`device_type`))",
+        "fields": [
+          {
+            "fieldPath": "deviceType",
+            "columnName": "device_type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "latestVersion",
+            "columnName": "latest_version",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "firmwareUrl",
+            "columnName": "firmware_url",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "firmwareFilePath",
+            "columnName": "firmware_file_path",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "firmwareFileSize",
+            "columnName": "firmware_file_size",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "firmwareMd5",
+            "columnName": "firmware_md5",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "device_type"
+          ]
+        }
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '827303458a5ec3513352782a8e76f7c9')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1169480e6dceae0510f16e9143971405')"
     ]
   }
 }

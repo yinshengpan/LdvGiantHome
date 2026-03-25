@@ -15,7 +15,7 @@ import kotlinx.serialization.Serializable
  * Describe : LightDetailsNavigation
  */
 @Serializable
-data class LightDetailsRoute(val deviceId: DeviceId) : NavigationRoute
+internal data class LightDetailsRoute(val deviceId: DeviceId) : NavigationRoute
 
 fun SnapshotStateList<Any>.navigateToLightDetails(deviceId: DeviceId) {
     add(LightDetailsRoute(deviceId))

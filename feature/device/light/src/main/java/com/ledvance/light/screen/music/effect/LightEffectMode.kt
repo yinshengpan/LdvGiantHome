@@ -6,7 +6,7 @@ package com.ledvance.light.screen.music.effect
  * Created date 3/23/26 10:19
  * Describe : LightEffectMode
  */
-enum class LightEffectMode {
+internal enum class LightEffectMode {
     CLASSIC,
     PARTY,
     RELAX,

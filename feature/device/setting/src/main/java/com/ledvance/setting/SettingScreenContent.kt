@@ -23,10 +23,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ledvance.ui.CardView
+import com.ledvance.ui.R
 import com.ledvance.ui.component.ItemView
 import com.ledvance.ui.component.LedvanceButton
 import com.ledvance.ui.theme.AppTheme
-import com.ledvance.ui.R
 
 @Composable
 internal fun SettingScreenContent(
@@ -85,14 +85,13 @@ internal fun SettingScreenContent(
         CardView {
             ItemView(
                 title = stringResource(R.string.setting_firmware_current),
-                content = uiState.firmwareVersion,
+                content = uiState.firmwareVersion.displayName,
                 showDivider = true,
             )
             ItemView(
                 title = stringResource(R.string.setting_firmware_latest),
-                content = uiState.firmwareVersion,
-                showDivider = true,
-                onContentClick = onUpgradeClick
+                content = uiState.latestFirmwareVersion.displayName,
+                onContentClick = if (uiState.firmwareVersion == uiState.latestFirmwareVersion) null else onUpgradeClick
             )
         }
 

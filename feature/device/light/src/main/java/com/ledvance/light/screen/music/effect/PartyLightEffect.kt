@@ -8,7 +8,7 @@ import com.ledvance.light.screen.music.analyzer.AudioFeature
  * Created date 3/23/26 10:37
  * Describe : PartyLightEffect
  */
-class PartyLightEffect : LightEffectProvider {
+internal class PartyLightEffect : LightEffectProvider {
 
     private var hue = 0f
 

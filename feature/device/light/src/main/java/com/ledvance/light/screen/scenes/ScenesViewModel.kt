@@ -133,19 +133,19 @@ internal class ScenesViewModel @AssistedInject constructor(
 
     private fun DeviceType.getScenes(sceneSegment: SceneSegment? = null): List<Scene> {
         return when (this) {
-            DeviceType.Table -> when (sceneSegment) {
+            DeviceType.GiantTable -> when (sceneSegment) {
                 null -> listOf()
                 else -> TableScenes.tableScenes[sceneSegment.value] ?: listOf()
             }
 
-            DeviceType.Floor -> FloorScenes.getAllScene()
+            DeviceType.GiantFloor -> FloorScenes.getAllScene()
         }
     }
 
     private fun DeviceType.getSceneSceneSegmentList(): List<SceneSegment> {
         return when (this) {
-            DeviceType.Table -> SceneSegment.allSceneSegment
-            DeviceType.Floor -> listOf()
+            DeviceType.GiantTable -> SceneSegment.allSceneSegment
+            DeviceType.GiantFloor -> listOf()
         }
     }
 

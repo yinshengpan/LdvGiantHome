@@ -35,13 +35,13 @@ import kotlin.random.Random
 private var persistentLastPlayedIndex = 0
 private var persistentPlaybackMode = PlaybackMode.SEQUENTIAL
 
-enum class PlaybackMode {
+internal enum class PlaybackMode {
     SEQUENTIAL, LOOP_ONE, SHUFFLE
 }
 
 @OptIn(markerClass = [UnstableApi::class])
 @Stable
-class MusicPlayerState(
+internal class MusicPlayerState(
     private val context: Context,
     private val coroutineScope: CoroutineScope
 ) {
@@ -289,7 +289,7 @@ class MusicPlayerState(
  * to guarantee flawless memory leak prevention.
  */
 @Composable
-fun rememberMusicPlayerState(): MusicPlayerState {
+internal fun rememberMusicPlayerState(): MusicPlayerState {
     val context = LocalContext.current.applicationContext
     val coroutineScope = rememberCoroutineScope()
     val state = remember { MusicPlayerState(context, coroutineScope) }

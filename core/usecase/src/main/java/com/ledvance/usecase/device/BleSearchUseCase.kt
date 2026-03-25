@@ -48,7 +48,7 @@ class BleSearchUseCase @Inject constructor(val bleRepository: BleRepository) {
         }
         Timber.tag(TAG).i("startScan()")
         scanJob = coroutineScope.launch {
-            BluetoothManager.checkBleScanDeviceFrequently()
+            BluetoothManager.ensureBleScanInterval()
             bleRepository.scanDevices()
                 .cancellable()
                 .sample(500L)

@@ -13,7 +13,7 @@ import kotlin.random.Random
 /**
  * Tuya音乐数据解析工具（传统方案：振幅 → 亮度 → 颜色表）
  */
-object MusicColorUtils {
+internal object MusicColorUtils {
 
     private var lastBrightness = 0
     private var lastIndex = 0

@@ -10,7 +10,7 @@ import com.ledvance.utils.extensions.getString
  * Created date 3/19/26 18:17
  * Describe : ModeSegment
  */
-enum class MusicSegment(override val title: String, override val value: String) : IRadioGroupItem<String> {
+internal enum class MusicSegment(override val title: String, override val value: String) : IRadioGroupItem<String> {
     DeviceMic(getString(R.string.music_device_mic), "DeviceMic"),
     PhoneMic(getString(R.string.music_phone_mic), "PhoneMic"),
     Music(getString(R.string.title_music), "Music"),

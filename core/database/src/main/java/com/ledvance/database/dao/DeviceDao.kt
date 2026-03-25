@@ -11,6 +11,7 @@ import com.ledvance.database.model.DeviceBaseUpdateEntity
 import com.ledvance.database.model.DeviceEntity
 import com.ledvance.database.model.DevicePowerUpdateEntity
 import com.ledvance.database.model.DeviceWithRuntimeConfig
+import com.ledvance.domain.FirmwareVersion
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.command.ModeId
 import com.ledvance.domain.bean.command.ModeType
@@ -66,8 +67,8 @@ interface DeviceDao {
     @Query("UPDATE devices SET mode_type = :modeType, mode_id = :modeId WHERE device_id = :deviceId")
     suspend fun updateModeId(deviceId: DeviceId, modeType: ModeType?, modeId: ModeId?)
 
-    @Query("UPDATE devices SET firmware_version = :firmwareVersion WHERE device_id = :deviceId")
-    suspend fun updateDeviceFirmwareVersion(deviceId: DeviceId, firmwareVersion: String)
+    @Query("UPDATE devices SET firmware_version = :firmwareVersion, name=:deviceName WHERE device_id = :deviceId")
+    suspend fun updateDeviceFirmwareVersion(deviceId: DeviceId, deviceName: String, firmwareVersion: FirmwareVersion)
 
     @Update(entity = DeviceEntity::class)
     suspend fun updateDevicePowerList(list: List<DevicePowerUpdateEntity>)

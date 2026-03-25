@@ -11,7 +11,7 @@ import com.ledvance.utils.extensions.getString
  * Created date 3/19/26 18:17
  * Describe : ModeSegment
  */
-enum class ModeSegment(override val title: String, override val value: String) : IRadioGroupItem<String> {
+internal enum class ModeSegment(override val title: String, override val value: String) : IRadioGroupItem<String> {
     Base(getString(R.string.mode_base), "Base"),
     Curtain(getString(R.string.mode_curtain), "Curtain"),
     Transition(getString(R.string.mode_transition), "Transition"),

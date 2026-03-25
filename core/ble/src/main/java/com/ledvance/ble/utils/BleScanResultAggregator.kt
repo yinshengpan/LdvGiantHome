@@ -17,7 +17,7 @@ class BleScanResultAggregator {
     private val devices = mutableMapOf<String, ScannedDevice>()
     fun aggregateDevices(scanItem: BleScanResult): List<ScannedDevice> {
         val name = scanItem.device.name ?: ""
-        if (!name.startsWith(Constants.BLE_PREFIX)) {
+        if (!name.startsWith(Constants.BLE_PREFIX_GIANT)) {
             return devices.map { it.value }
         }
         val rssi = scanItem.data?.rssi ?: -99

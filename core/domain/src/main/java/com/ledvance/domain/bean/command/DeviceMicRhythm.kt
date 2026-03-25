@@ -22,7 +22,7 @@ enum class DeviceMicRhythm(override val command: Byte) : Command {
 
     companion object {
         val itemsMap = mapOf(
-            DeviceType.Table to listOf(
+            DeviceType.GiantTable to listOf(
                 Energy1,
                 Energy2,
                 Rhythm1,
@@ -32,7 +32,7 @@ enum class DeviceMicRhythm(override val command: Byte) : Command {
                 Roll1,
                 Roll2
             ),
-            DeviceType.Floor to listOf(
+            DeviceType.GiantFloor to listOf(
                 Energy,
                 Rhythm,
                 Spectrum1,

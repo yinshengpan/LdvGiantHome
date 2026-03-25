@@ -19,7 +19,6 @@ import com.ledvance.usecase.device.GetDeviceListStateUseCase
 import com.ledvance.usecase.device.GetDevicesUseCase
 import com.ledvance.usecase.device.SyncDeviceInfoUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -54,15 +53,17 @@ internal class HomeViewModel @Inject constructor(
         val onlineMap = deviceStateList.associate { it.deviceId to it.isOnline }
         Timber.tag(TAG).d("onlineMap:$onlineMap")
         val mergedDevices = dbDevices.map { device ->
-            device.copy(isOnline = onlineMap[device.deviceId] ?: false)
+            val isOnline = onlineMap[device.deviceId] ?: false
+            Timber.tag(TAG).d("merge -> deviceId=${device.deviceId}, dbOnline=${device.isOnline}, newOnline=$isOnline")
+            device.copy(isOnline = isOnline)
         }
         HomeContract.UiState.Success(devices = mergedDevices, loading = state.loading)
     }.onStart {
-        Timber.d("Loading home page")
-    }.onEach {
-        Timber.d("Home page is loaded")
+        Timber.tag(TAG).d("Home -> start loading")
+    }.onEach { uiState ->
+        Timber.tag(TAG).d("Home -> state updated: $uiState")
     }.catch { error ->
-        Timber.e(error, "Failed to load home page")
+        Timber.tag(TAG).e(error, "Home -> failed to load")
         emit(HomeContract.UiState.Success(devices = listOf()))
     }.stateIn(
         scope = viewModelScope,

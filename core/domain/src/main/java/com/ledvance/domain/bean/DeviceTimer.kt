@@ -1,7 +1,5 @@
 package com.ledvance.domain.bean
 
-import java.time.DayOfWeek
-
 /**
  * @author : jason yin
  * Email : j.yin@ledvance.com

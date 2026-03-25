@@ -45,7 +45,7 @@ internal fun LightDetailsScreenContent(
             colourModeSat = uiState.colourModeSat,
             colourModeBrightness = uiState.colourModeBrightness,
             whiteModeCct = uiState.whiteModeCct,
-            isSupportWhiteMode = uiState.deviceType == DeviceType.Table,
+            isSupportWhiteMode = uiState.deviceType == DeviceType.GiantTable,
             whiteModeBrightness = uiState.whiteModeBrightness,
             onSwitchChange = onSwitchChange,
             onWorkModeChange = onWorkModeChange,

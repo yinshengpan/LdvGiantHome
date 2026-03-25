@@ -6,7 +6,7 @@ package com.ledvance.light.screen.music.effect
  * Created date 3/23/26 10:21
  * Describe : LightEffectState
  */
-data class LightEffectState(
+internal data class LightEffectState(
     val r: Int,
     val g: Int,
     val b: Int,

@@ -11,7 +11,7 @@ import com.ledvance.ui.R
  */
 fun DeviceType.getIconResId(): Int {
     return when (this) {
-        DeviceType.Table -> R.mipmap.pic_tablelamp
-        DeviceType.Floor -> R.mipmap.pic_floorlamp
+        DeviceType.GiantTable -> R.mipmap.pic_tablelamp
+        DeviceType.GiantFloor -> R.mipmap.pic_floorlamp
     }
 }

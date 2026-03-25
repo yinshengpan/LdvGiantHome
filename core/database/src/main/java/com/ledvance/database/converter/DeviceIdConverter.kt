@@ -21,6 +21,6 @@ class DeviceIdConverter {
 
     @TypeConverter
     fun fromDeviceId(deviceId: DeviceId): String {
-        return "${deviceId.deviceType}_${deviceId.macAddress}"
+        return "${deviceId.deviceType.type}_${deviceId.macAddress}"
     }
 }

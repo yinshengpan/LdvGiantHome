@@ -15,8 +15,8 @@ import retrofit2.http.Url
  */
 internal interface FirmwareApi {
 
-    @GET("https://www.ledvanceapp.com/homeEnergyManager/ota-config")
-    suspend fun getFirmwareInfo(): FirmwareInfo
+    @GET("https://www.ledvanceapp.com/ota-files/ledvance-giant-home/ota-config")
+    suspend fun getFirmwareList(): List<FirmwareInfo>
 
     @GET
     @Streaming

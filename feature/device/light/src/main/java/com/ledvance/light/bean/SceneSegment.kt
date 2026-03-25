@@ -11,7 +11,7 @@ import com.ledvance.utils.extensions.getString
  * Created date 3/19/26 17:40
  * Describe : SceneSegment
  */
-enum class SceneSegment(override val title: String, override val value: TableSceneType) :
+internal enum class SceneSegment(override val title: String, override val value: TableSceneType) :
     IRadioGroupItem<TableSceneType> {
     Natural(getString(R.string.scene_natural), value = TableSceneType.Natural),
     Festival(getString(R.string.scene_festival), value = TableSceneType.Festival),

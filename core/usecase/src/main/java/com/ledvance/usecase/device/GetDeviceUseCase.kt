@@ -55,6 +55,7 @@ internal fun DeviceWithRuntimeConfig.toDeviceInfo(): DeviceInfo {
         s = device.s,
         v = device.v,
         cct = device.cct,
-        brightness = device.brightness
+        brightness = device.brightness,
+        firmwareVersion = device.firmwareVersion,
     )
 }

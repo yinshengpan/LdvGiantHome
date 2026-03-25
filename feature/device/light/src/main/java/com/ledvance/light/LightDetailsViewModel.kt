@@ -11,7 +11,6 @@ import com.ledvance.ui.component.SnackbarManager
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceStateUseCase
 import com.ledvance.usecase.device.GetDeviceUseCase
-import com.ledvance.usecase.device.SyncDeviceFirmwareUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -20,12 +19,16 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.sample
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * @author : jason yin
@@ -40,9 +43,8 @@ internal class LightDetailsViewModel @AssistedInject constructor(
     private val getDeviceStateUseCase: GetDeviceStateUseCase,
     private val getDeviceUseCase: GetDeviceUseCase,
     private val deviceControlUseCase: DeviceControlUseCase,
-    private val syncDeviceFirmwareUseCase: SyncDeviceFirmwareUseCase,
 ) : ViewModel(), LightDetailsContract {
-
+    private val TAG = "LightDetailsViewModel"
 
     @AssistedFactory
     interface Factory {
@@ -53,12 +55,12 @@ internal class LightDetailsViewModel @AssistedInject constructor(
     private val lightCommandFlow = MutableStateFlow<LightCommand?>(null)
     private val cardFeatureMap by lazy {
         mapOf(
-            DeviceType.Table to listOf(
+            DeviceType.GiantTable to listOf(
                 CardFeature.Scene,
                 CardFeature.Timer,
                 CardFeature.Music,
             ),
-            DeviceType.Floor to listOf(
+            DeviceType.GiantFloor to listOf(
                 CardFeature.Scene,
                 CardFeature.Timer,
                 CardFeature.Music,
@@ -85,6 +87,12 @@ internal class LightDetailsViewModel @AssistedInject constructor(
             cardFeatureList = cardFeatureMap[device.deviceType] ?: listOf() ,
             loading = screenState.loading,
         )
+    }.onStart {
+        Timber.tag(TAG).d("Detail -> start loading (deviceId=$deviceId)")
+    }.onEach { uiState ->
+        Timber.tag(TAG).d("Detail -> state updated (deviceId=$deviceId): $uiState")
+    }.catch { error ->
+        Timber.tag(TAG).e(error, "Detail -> failed to load (deviceId=$deviceId)")
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(),
@@ -94,7 +102,6 @@ internal class LightDetailsViewModel @AssistedInject constructor(
     init {
         viewModelScope.launch {
             deviceControlUseCase.queryDeviceInfo(deviceId)
-//            syncDeviceFirmwareUseCase(deviceId)
         }
         viewModelScope.launch {
             lightCommandFlow.sample(300).collectLatest {

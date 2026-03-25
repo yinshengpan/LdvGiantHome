@@ -8,6 +8,6 @@ import com.ledvance.light.screen.music.analyzer.AudioFeature
  * Created date 3/23/26 10:32
  * Describe : LightEffectProvider
  */
-interface LightEffectProvider {
+internal interface LightEffectProvider {
     fun calculateLightState(features: AudioFeature): LightEffectState
 }

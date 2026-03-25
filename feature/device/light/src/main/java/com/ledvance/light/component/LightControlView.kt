@@ -37,7 +37,7 @@ import com.ledvance.ui.theme.AppTheme
  * Describe : LightControlView
  */
 @Composable
-fun LightControlView(
+internal fun LightControlView(
     switch: Boolean,
     colourModeHue: Int,
     colourModeSat: Int,

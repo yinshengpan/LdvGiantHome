@@ -67,12 +67,12 @@ object BluetoothManager {
         return BluetoothAdapter.STATE_ON == this
     }
 
-    suspend fun checkBleScanDeviceFrequently() {
+    suspend fun ensureBleScanInterval() {
         val elapsedRealtime = SystemClock.elapsedRealtime()
         val timeDifference = elapsedRealtime - lastScanBleDeviceTime
         // Android7.0系统以上30秒内不能超过5次扫描,所以限制6秒内只能扫一次，不足6秒做等待
         if (timeDifference < 6000L) {
-            delay(timeDifference)
+            delay(6000L - timeDifference)
         }
         lastScanBleDeviceTime = elapsedRealtime
     }

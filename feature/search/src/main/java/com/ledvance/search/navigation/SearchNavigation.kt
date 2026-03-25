@@ -14,7 +14,7 @@ import kotlinx.serialization.Serializable
  * Describe : SearchNavigation
  */
 @Serializable
-data object SearchRoute : NavigationRoute
+internal data object SearchRoute : NavigationRoute
 
 fun SnapshotStateList<Any>.navigateToSearch() {
     add(SearchRoute)

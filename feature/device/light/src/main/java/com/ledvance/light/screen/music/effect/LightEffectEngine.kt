@@ -8,7 +8,7 @@ import com.ledvance.light.screen.music.analyzer.AudioFeature
  * Created date 3/23/26 10:20
  * Describe : LightEffectEngine
  */
-class LightEffectEngine {
+internal class LightEffectEngine {
 
     private var currentStrategy: LightEffectProvider = ClassicLightEffect()
     private var currentMode: LightEffectMode = LightEffectMode.CLASSIC

@@ -36,6 +36,7 @@ internal fun SettingScreen(
     }),
     onBackClick: () -> Unit,
     onDeleteSuccess: () -> Unit,
+    onNavigateToOta: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showLineSequencePicker by remember { mutableStateOf(false) }
@@ -69,7 +70,7 @@ internal fun SettingScreen(
                     uiState = state,
                     onLineSequenceClick = { showLineSequencePicker = true },
                     onResetClick = { showResetDialog = true },
-                    onUpgradeClick = { showUpgradeDialog = true },
+                    onUpgradeClick = onNavigateToOta,
                     onDeleteClick = { showDeleteDialog = true }
                 )
 
@@ -109,18 +110,6 @@ internal fun SettingScreen(
             onConfirm = {
                 viewModel.resetDevice()
                 showResetDialog = false
-            }
-        )
-    }
-
-    if (showUpgradeDialog) {
-        LedvanceDialog(
-            title = stringResource(R.string.dialog_firmware_upgrade_title),
-            message = stringResource(R.string.dialog_firmware_upgrade_message),
-            onCancel = { showUpgradeDialog = false },
-            onConfirm = {
-                viewModel.upgradeFirmware()
-                showUpgradeDialog = false
             }
         )
     }
