@@ -3,8 +3,6 @@ package com.ledvance.setting.navigation
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.navigation3.runtime.EntryProviderScope
 import com.ledvance.domain.bean.DeviceId
-import com.ledvance.ota.navigation.navigateToOtaUpdate
-import com.ledvance.ota.navigation.otaUpdateScreen
 import com.ledvance.setting.SettingScreen
 import com.ledvance.ui.navigation.NavigationRoute
 import com.ledvance.ui.navigation.PageLifecycleLogger
@@ -23,26 +21,7 @@ fun SnapshotStateList<Any>.navigateToSetting(deviceId: DeviceId) {
     add(SettingRoute(deviceId))
 }
 
-fun EntryProviderScope<Any>.settingNavGraph(
-    backStack: SnapshotStateList<Any>,
-    onDeleteSuccess: () -> Unit,
-) {
-    settingScreen(
-        onBackClick = {
-            backStack.removeLastOrNull()
-        },
-        onDeleteSuccess = onDeleteSuccess,
-        onNavigateToOta = {
-            backStack.navigateToOtaUpdate(it)
-        }
-    )
-
-    otaUpdateScreen(onBack = {
-        backStack.removeLastOrNull()
-    })
-}
-
-internal fun EntryProviderScope<Any>.settingScreen(
+fun EntryProviderScope<Any>.settingScreen(
     onBackClick: () -> Unit,
     onDeleteSuccess: () -> Unit,
     onNavigateToOta: (DeviceId) -> Unit,

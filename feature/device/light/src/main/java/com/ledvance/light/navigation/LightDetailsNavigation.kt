@@ -5,6 +5,18 @@ import androidx.navigation3.runtime.EntryProviderScope
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.light.LightDetailsScreen
 import com.ledvance.light.component.CardFeature
+import com.ledvance.mode.navigation.modeScreen
+import com.ledvance.mode.navigation.navigateToMode
+import com.ledvance.music.navigation.musicScreen
+import com.ledvance.music.navigation.navigateToMusic
+import com.ledvance.ota.navigation.navigateToOtaUpdate
+import com.ledvance.ota.navigation.otaUpdateScreen
+import com.ledvance.scene.navigation.navigateToScenes
+import com.ledvance.scene.navigation.scenesScreen
+import com.ledvance.setting.navigation.navigateToSetting
+import com.ledvance.setting.navigation.settingScreen
+import com.ledvance.timer.navigation.navigateToTimer
+import com.ledvance.timer.navigation.timerScreen
 import com.ledvance.ui.navigation.NavigationRoute
 import com.ledvance.ui.navigation.PageLifecycleLogger
 import kotlinx.serialization.Serializable
@@ -32,11 +44,13 @@ internal fun SnapshotStateList<Any>.navigateToLightFeature(deviceId: DeviceId, f
 
 fun EntryProviderScope<Any>.lightNavGraph(
     backStack: SnapshotStateList<Any>,
-    onNavigateToSetting: (DeviceId) -> Unit,
+    onNavigateToHome: () -> Unit,
     onBackClick: () -> Unit,
 ) {
     lightScreen(
-        onNavigateToSetting = onNavigateToSetting,
+        onNavigateToSetting = {
+            backStack.navigateToSetting(it)
+        },
         onNavigateToFeature = { device, feature ->
             backStack.navigateToLightFeature(device, feature)
         },
@@ -46,6 +60,20 @@ fun EntryProviderScope<Any>.lightNavGraph(
     timerScreen(onBackClick = onBackClick)
     musicScreen(onBackClick = onBackClick)
     modeScreen(onBackClick = onBackClick)
+
+    settingScreen(
+        onBackClick = {
+            backStack.removeLastOrNull()
+        },
+        onDeleteSuccess = onNavigateToHome,
+        onNavigateToOta = {
+            backStack.navigateToOtaUpdate(it)
+        }
+    )
+
+    otaUpdateScreen(onBack = {
+        backStack.removeLastOrNull()
+    })
 }
 
 internal fun EntryProviderScope<Any>.lightScreen(

@@ -4,8 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
+import com.ledvance.domain.bean.LightCommand
 import com.ledvance.domain.bean.WorkMode
-import com.ledvance.light.bean.LightCommand
 import com.ledvance.light.component.CardFeature
 import com.ledvance.ui.component.SnackbarManager
 import com.ledvance.usecase.device.DeviceControlUseCase

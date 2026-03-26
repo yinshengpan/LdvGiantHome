@@ -114,8 +114,8 @@ class GiantOtaRepositoryImpl @Inject constructor() : OtaRepository {
                 emitState(OtaState.ModeSetSuccess)
             }
 
-            override fun otaModeSetFailCallback(deviceId: String?) {
-                Timber.tag(TAG).e("Mode -> set fail (deviceId=$deviceId)")
+            override fun otaModeSetFailCallback(error: String?) {
+                Timber.tag(TAG).e("Mode -> set fail (error=$error)")
                 emitState(OtaState.ModeSetFail)
             }
 

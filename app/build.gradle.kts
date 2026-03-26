@@ -41,7 +41,6 @@ dependencies {
     implementation(projects.feature.profile)
     implementation(projects.feature.search)
     implementation(projects.feature.device.light)
-    implementation(projects.feature.device.setting)
 
     implementation(libs.appcompat)
     implementation(libs.core.ktx)

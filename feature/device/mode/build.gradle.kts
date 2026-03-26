@@ -3,7 +3,7 @@ plugins {
 }
 
 android {
-    namespace = "com.ledvance.setting"
+    namespace = "com.ledvance.mode"
 }
 
 dependencies {

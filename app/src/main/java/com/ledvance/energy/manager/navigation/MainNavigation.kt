@@ -19,8 +19,6 @@ import com.ledvance.light.navigation.navigateToLightDetails
 import com.ledvance.profile.navigation.profileNavGraph
 import com.ledvance.search.navigation.navigateToSearch
 import com.ledvance.search.navigation.searchScreen
-import com.ledvance.setting.navigation.navigateToSetting
-import com.ledvance.setting.navigation.settingNavGraph
 import com.ledvance.ui.theme.AppTheme
 import com.ledvance.utils.extensions.launchCustomChromeTab
 
@@ -84,20 +82,13 @@ fun MainNavigation(appState: LedvanceAppState) {
 
             lightNavGraph(
                 backStack = backStack,
-                onNavigateToSetting = {
-                    backStack.navigateToSetting(it)
+                onNavigateToHome = {
+                    backStack.clear()
+                    backStack.add(HomeRoute)
                 },
                 onBackClick = {
                     backStack.back()
                 },
-            )
-
-            settingNavGraph(
-                backStack = backStack,
-                onDeleteSuccess = {
-                    backStack.clear()
-                    backStack.add(HomeRoute)
-                }
             )
         }
     )

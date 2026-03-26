@@ -14,7 +14,6 @@ import com.ledvance.domain.bean.DeviceType
 import com.ledvance.domain.bean.WorkMode
 import com.ledvance.light.component.CardFeature
 import com.ledvance.light.component.CardFeatureItem
-import com.ledvance.light.component.LightControlView
 
 /**
  * @author : jason yin
