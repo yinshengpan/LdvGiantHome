@@ -139,6 +139,7 @@ internal class SettingViewModel @AssistedInject constructor(
         return when (this) {
             DeviceType.GiantTable -> "Table lamp"
             DeviceType.GiantFloor -> "Floor lamp"
+            DeviceType.LdvBedside -> "Bedside lamp"
         }
     }
 
@@ -146,6 +147,7 @@ internal class SettingViewModel @AssistedInject constructor(
         return when (this) {
             DeviceType.GiantTable -> com.ledvance.ui.R.mipmap.pic_tablelamp
             DeviceType.GiantFloor -> com.ledvance.ui.R.mipmap.pic_floorlamp
+            DeviceType.LdvBedside -> com.ledvance.ui.R.mipmap.pic_bedsidelamp
         }
     }
 

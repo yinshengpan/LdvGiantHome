@@ -12,6 +12,7 @@ import kotlinx.serialization.Serializable
 enum class DeviceType(val type: Int, val company: Company) {
     GiantTable(0, Company.Giant),
     GiantFloor(1, Company.Giant),
+    LdvBedside(2, Company.Ledvance),
     ;
 
     companion object {
@@ -21,6 +22,7 @@ enum class DeviceType(val type: Int, val company: Company) {
                 upName.startsWith(Company.Giant.title) -> when {
                     upName.contains("TABLE") -> GiantTable
                     upName.contains("FLOOR") -> GiantFloor
+                    upName.contains("BEDSIDE") -> GiantFloor
                     else -> GiantTable
                 }
 

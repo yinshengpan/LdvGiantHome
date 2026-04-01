@@ -13,5 +13,6 @@ fun DeviceType.getIconResId(): Int {
     return when (this) {
         DeviceType.GiantTable -> R.mipmap.pic_tablelamp
         DeviceType.GiantFloor -> R.mipmap.pic_floorlamp
+        DeviceType.LdvBedside -> R.mipmap.pic_bedsidelamp
     }
 }

@@ -164,3 +164,9 @@ fun Int.toBinary8(): String {
     return String.format("%8s", Integer.toBinaryString(this and 0xFF))
         .replace(' ', '0')
 }
+
+fun ByteArray.toMacAddress(): String {
+    return this.joinToString(":") { byte ->
+        "%02X".format(byte)
+    }
+}

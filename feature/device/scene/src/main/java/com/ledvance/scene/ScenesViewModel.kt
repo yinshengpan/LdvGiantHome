@@ -139,6 +139,7 @@ internal class ScenesViewModel @AssistedInject constructor(
             }
 
             DeviceType.GiantFloor -> FloorScenes.getAllScene()
+            else -> listOf()
         }
     }
 
@@ -146,6 +147,7 @@ internal class ScenesViewModel @AssistedInject constructor(
         return when (this) {
             DeviceType.GiantTable -> SceneSegment.allSceneSegment
             DeviceType.GiantFloor -> listOf()
+            else -> listOf()
         }
     }
 

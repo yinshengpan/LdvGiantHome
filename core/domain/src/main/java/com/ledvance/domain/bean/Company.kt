@@ -9,7 +9,15 @@ import kotlinx.serialization.Serializable
  * Describe : Company
  */
 @Serializable
-enum class Company(val title: String) {
-    Giant("HYD"),
-    Ledvance("LDV"),
+enum class Company(val title: String, val type: Int) {
+    Unknown("Unknown", 0x00),
+    Ledvance("LDV", 0x01),
+    Giant("HYD", 0x02),
+    ;
+
+    companion object {
+        fun typeOf(type: Int?): Company {
+            return entries.find { it.type == type } ?: Unknown
+        }
+    }
 }
