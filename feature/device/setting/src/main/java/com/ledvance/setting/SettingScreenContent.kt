@@ -22,6 +22,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.ledvance.domain.extension.isGiantDevice
+import com.ledvance.domain.isUnknown
 import com.ledvance.ui.CardView
 import com.ledvance.ui.R
 import com.ledvance.ui.component.ItemView
@@ -46,19 +48,13 @@ internal fun SettingScreenContent(
         TitleItem(stringResource(R.string.setting_basic_info))
         CardView {
             ItemView(
-                title = stringResource(R.string.setting_device_name),
-                content = uiState.deviceName,
-                showDivider = true
+                title = stringResource(R.string.setting_device_name), content = uiState.deviceName, showDivider = true
             )
             ItemView(
-                title = stringResource(R.string.setting_device_mac),
-                content = uiState.deviceMacAddress,
-                showDivider = true
+                title = stringResource(R.string.setting_device_mac), content = uiState.deviceMacAddress, showDivider = true
             )
             ItemView(
-                title = stringResource(R.string.setting_device_type),
-                content = uiState.deviceTypeName,
-                showDivider = true
+                title = stringResource(R.string.setting_device_type), content = uiState.deviceTypeName, showDivider = true
             )
             ItemView(
                 title = stringResource(R.string.setting_device_icon),
@@ -66,41 +62,41 @@ internal fun SettingScreenContent(
             )
 
         }
-
-        TitleItem(stringResource(R.string.setting_function))
-        CardView {
-            ItemView(
-                title = stringResource(R.string.setting_line_sequence),
-                content = uiState.lineSequence.title,
-                showDivider = true,
-                onContentClick = onLineSequenceClick
-            )
-            ItemView(
-                title = stringResource(R.string.setting_reset),
-                onContentClick = onResetClick
-            )
+        if (uiState.deviceId.isGiantDevice()) {
+            TitleItem(stringResource(R.string.setting_function))
+            CardView {
+                ItemView(
+                    title = stringResource(R.string.setting_line_sequence),
+                    content = uiState.lineSequence.title,
+                    showDivider = true,
+                    onContentClick = onLineSequenceClick
+                )
+                ItemView(
+                    title = stringResource(R.string.setting_reset), onContentClick = onResetClick
+                )
+            }
         }
 
-        TitleItem(stringResource(R.string.setting_firmware))
-        CardView {
-            ItemView(
-                title = stringResource(R.string.setting_firmware_current),
-                content = uiState.firmwareVersion.displayName,
-                showDivider = true,
-            )
-            ItemView(
-                title = stringResource(R.string.setting_firmware_latest),
-                content = uiState.latestFirmwareVersion.displayName,
-                onContentClick = if (uiState.firmwareVersion == uiState.latestFirmwareVersion) null else onUpgradeClick
-            )
+        if (!uiState.firmwareVersion.isUnknown()) {
+            TitleItem(stringResource(R.string.setting_firmware))
+            CardView {
+                ItemView(
+                    title = stringResource(R.string.setting_firmware_current),
+                    content = uiState.firmwareVersion.displayName,
+                    showDivider = true,
+                )
+                ItemView(
+                    title = stringResource(R.string.setting_firmware_latest),
+                    content = if (uiState.latestFirmwareVersion.isUnknown()) uiState.firmwareVersion.displayName else uiState.latestFirmwareVersion.displayName,
+                    onContentClick = if (uiState.firmwareVersion == uiState.latestFirmwareVersion || uiState.latestFirmwareVersion.isUnknown()) null else onUpgradeClick
+                )
+            }
         }
-
         Spacer(modifier = Modifier.height(20.dp))
-
+        Spacer(modifier = Modifier.weight(1f))
         LedvanceButton(
             text = stringResource(R.string.setting_delete_device),
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             onClick = onDeleteClick
         )
         Spacer(modifier = Modifier.height(50.dp))

@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ledvance.domain.FirmwareVersion
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
-import com.ledvance.domain.bean.command.LineSequence
+import com.ledvance.domain.bean.command.giant.LineSequence
 import com.ledvance.ui.component.SnackbarManager
 import com.ledvance.ui.utils.OneTimeActionPublisherContract
 import com.ledvance.ui.utils.createDefaultMutableActionFlow
@@ -71,6 +71,7 @@ internal class SettingViewModel @AssistedInject constructor(
     ) { device, deviceState, state, firmwareLatest ->
         SettingContract.UiState.Success(
             isOnline = deviceState.isOnline,
+            deviceId = deviceId,
             loading = state.loading,
             deviceName = device.name,
             deviceMacAddress = deviceId.macAddress,

@@ -58,7 +58,10 @@ internal object MappingConverter {
         val company = byteArray?.parseCompany() ?: -1
         val macAddress = byteArray?.parseMacAddress() ?: ""
         Timber.tag(TAG).e("parseNfcInfo: driverType:$type, company:$company, macAddress:$macAddress")
-        val deviceType = DeviceType.fromType(type)
+        val deviceType = when (type) {
+            1 -> DeviceType.LdvBedside
+            else -> DeviceType.LdvBedside
+        }
         return@withContext NfcInfo(
             macAddress = macAddress,
             deviceType = deviceType,

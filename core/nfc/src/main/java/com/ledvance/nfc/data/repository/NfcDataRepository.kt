@@ -18,7 +18,7 @@ interface NfcDataRepository {
     fun hasSupportNfc(): Boolean
     val nfcEnable: StateFlow<Boolean>
     val nfcModel: StateFlow<NfcModel?>
-    fun updateDriverModel(nfcModel: NfcModel?)
+    fun updateNfcModel(nfcModel: NfcModel?)
 
     val writingProgress: StateFlow<NfcProgressState>
     val readingProgress: StateFlow<NfcProgressState>

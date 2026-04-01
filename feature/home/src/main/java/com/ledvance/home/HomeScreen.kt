@@ -49,7 +49,9 @@ internal fun HomeScreen(
     LifecycleResumeEffect(Unit) {
         bluetoothPermission = bluetoothBusinessState.hasAllow()
         isResumed = true
+        viewModel.setPageVisibility(true)
         onPauseOrDispose {
+            viewModel.setPageVisibility(false)
             isResumed = false
         }
     }
@@ -91,6 +93,7 @@ internal fun HomeScreen(
                             viewModel.disconnectDevice(it)
                         },
                         onDeviceClick = {
+                            viewModel.asyncConnectDevice(it)
                             onNavigateToControlPanel(it)
                         },
                         onDeleteClick = {

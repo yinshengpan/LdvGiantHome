@@ -1,5 +1,6 @@
 package com.ledvance.domain.bean
 
+import com.ledvance.domain.bean.command.common.TimerType
 import java.time.DayOfWeek
 
 /**

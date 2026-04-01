@@ -6,6 +6,7 @@ import com.ledvance.ble.constant.Constants
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
 import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResult
+import timber.log.Timber
 
 /**
  * @author : jason yin
@@ -14,12 +15,14 @@ import no.nordicsemi.android.kotlin.ble.core.scanner.BleScanResult
  * Describe : BleScanResultAggregator
  */
 class BleScanResultAggregator {
+    private val TAG = "BleScanResultAggregator"
     private val devices = mutableMapOf<String, ScannedDevice>()
     fun aggregateDevices(scanItem: BleScanResult): List<ScannedDevice> {
         val name = scanItem.device.name ?: ""
-        if (!name.startsWith(Constants.BLE_PREFIX_GIANT)) {
+        if (!Constants.BLE_PREFIX_LIST.any { name.startsWith(it) }) {
             return devices.map { it.value }
         }
+        Timber.tag(TAG).d("scanDevices() >>>>>> $name")
         val rssi = scanItem.data?.rssi ?: -99
         val isConnectable = rssi > -85
         if (isConnectable) {

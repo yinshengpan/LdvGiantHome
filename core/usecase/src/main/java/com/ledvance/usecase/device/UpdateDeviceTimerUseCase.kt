@@ -4,11 +4,12 @@ import com.ledvance.database.model.TimerEntity
 import com.ledvance.database.repo.TimerRepo
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.TimerUiItem
-import com.ledvance.domain.bean.command.timer.TimerRepeat
-import com.ledvance.domain.bean.command.timer.toByte
+import com.ledvance.domain.bean.command.common.TimerRepeat
+import com.ledvance.domain.bean.command.common.toGiantByte
 import com.ledvance.domain.di.Dispatcher
 import com.ledvance.domain.di.Dispatchers
 import com.ledvance.usecase.base.SuspendUseCase
+import com.ledvance.utils.extensions.toUnsignedInt
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Inject
@@ -27,7 +28,8 @@ class UpdateDeviceTimerUseCase @Inject constructor(
 ) : SuspendUseCase<UpdateDeviceTimerUseCase.Param, Boolean>(dispatcher) {
     override suspend fun execute(parameter: Param): Boolean {
         with(parameter) {
-            val weekCycle = TimerRepeat(enabled = timer.enabled, days = timer.days.toSet()).toByte().toInt() and 0xFF
+            val timerRepeat = TimerRepeat(enabled = timer.enabled, days = timer.days.toSet())
+            val weekCycle = timerRepeat.toGiantByte().toUnsignedInt()
             timerRepo.upsertTimer(
                 TimerEntity(
                     deviceId = deviceId,
@@ -44,7 +46,7 @@ class UpdateDeviceTimerUseCase @Inject constructor(
                 timerType = timer.timerType,
                 hour = timer.hour,
                 min = timer.minute,
-                weekCycle = weekCycle,
+                timerRepeat = timerRepeat,
             )
         }
     }

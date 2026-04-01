@@ -4,8 +4,7 @@ import com.ledvance.database.dao.TimerDao
 import com.ledvance.database.model.TimerEntity
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceTimer
-import com.ledvance.domain.bean.TimerType
-import com.ledvance.domain.bean.command.timer.toTimerRepeat
+import com.ledvance.domain.bean.command.common.TimerType
 import com.ledvance.utils.extensions.tryCatch
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -24,25 +23,6 @@ import javax.inject.Inject
 class TimerRepo @Inject constructor(
     private val timerDao: TimerDao
 ) {
-
-    /**
-     * 将 GetTimingInfo BLE 回包同步写库（两条记录原子更新）。
-     * 由 ConnectionManager.parseGetTimingInfo() 触发。
-     */
-    suspend fun syncFromBle(
-        deviceId: DeviceId,
-        onEnabled: Boolean, onHour: Int, onMinute: Int, onCycle: Int,
-        offEnabled: Boolean, offHour: Int, offMinute: Int, offCycle: Int,
-    ) = withContext(Dispatchers.IO) {
-        tryCatch {
-            timerDao.upsertTimers(
-                listOf(
-                    TimerEntity(deviceId, TimerType.ON,  onEnabled,  onHour,  onMinute,  onCycle),
-                    TimerEntity(deviceId, TimerType.OFF, offEnabled, offHour, offMinute, offCycle),
-                )
-            )
-        }
-    }
 
     suspend fun upsertTimer(timer: TimerEntity) = withContext(Dispatchers.IO) {
         tryCatch { timerDao.upsertTimer(timer) }

@@ -73,13 +73,7 @@ internal object NfcTagUtils {
         return@withContext tryCatchReturn {
             when (nfcTag) {
                 is Type5Tag -> {
-                    //type5
-                    val areaId = nfcTag.getAreaIdFromAddressInBytesForType5Tag(startAddress)
-                    Timber.tag(TAG).i("parseNfcByteArray: areaId=$areaId")
-                    if (areaId == -1) throw CannotGetAreaIdException()
-                    val result: ByteArray = nfcTag.readBytes(startAddress, numberOfBytes)
-                    Timber.tag(TAG).i("parseNfcByteArray reading nfcTag -> ${result.toHexLn()}")
-                    result
+                    throw TypeNotSupportException("Type5Tag")
                 }
 
                 is Type4Tag -> {
@@ -87,7 +81,12 @@ internal object NfcTagUtils {
                 }
 
                 is Type2Tag -> {
-                    throw TypeNotSupportException("Type2Tag")
+                    val areaId = nfcTag.getAreaIdFromAddressInBytesForType2Tag(startAddress)
+                    Timber.tag(TAG).i("parseNfcByteArray: areaId=$areaId")
+                    if (areaId == -1) throw CannotGetAreaIdException()
+                    val result: ByteArray = nfcTag.readBytes(startAddress, numberOfBytes)
+                    Timber.tag(TAG).i("parseNfcByteArray reading nfcTag -> ${result.toHexLn()}")
+                    result
                 }
 
                 else -> {

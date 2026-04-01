@@ -5,13 +5,14 @@ import com.ledvance.ble.core.DeviceRegistry
 import com.ledvance.ble.protocol.BleProtocol
 import com.ledvance.database.repo.DeviceRepo
 import com.ledvance.domain.bean.DeviceId
-import com.ledvance.domain.bean.TimerType
-import com.ledvance.domain.bean.command.BrightnessType
-import com.ledvance.domain.bean.command.DeviceMicRhythm
-import com.ledvance.domain.bean.command.LineSequence
-import com.ledvance.domain.bean.command.ModeId
-import com.ledvance.domain.bean.command.ModeType
-import com.ledvance.domain.bean.command.scenes.Scene
+import com.ledvance.domain.bean.command.common.TimerRepeat
+import com.ledvance.domain.bean.command.common.TimerType
+import com.ledvance.domain.bean.command.giant.BrightnessType
+import com.ledvance.domain.bean.command.giant.DeviceMicRhythm
+import com.ledvance.domain.bean.command.giant.LineSequence
+import com.ledvance.domain.bean.command.giant.ModeId
+import com.ledvance.domain.bean.command.giant.ModeType
+import com.ledvance.domain.bean.command.giant.scenes.Scene
 import com.ledvance.utils.extensions.toUnsignedInt
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -48,9 +49,11 @@ class DeviceControlUseCase @Inject constructor(
         return executionResult("setColourModeHS(deviceId=$deviceId, h=$h, s=$s)") {
             ensureConnected(deviceId)
             val protocol = getProtocol(deviceId)
-            protocol.setHs(h, s)
+            val newH = h.coerceIn(0, 360)
+            val newS = s.coerceIn(0, 100)
+            protocol.setHs(newH, newS)
             registry.updateActive(deviceId)
-            deviceRepo.updateDeviceHs(deviceId, h, s)
+            deviceRepo.updateDeviceHs(deviceId, newH, newS)
         }
     }
 
@@ -58,9 +61,10 @@ class DeviceControlUseCase @Inject constructor(
         return executionResult("setColourModeBrightness(deviceId=$deviceId, brightness=$brightness)") {
             ensureConnected(deviceId)
             val protocol = getProtocol(deviceId)
-            protocol.setBrightness(BrightnessType.RGB, brightness)
+            val newBrightness = brightness.coerceIn(1, 100)
+            protocol.setBrightness(BrightnessType.RGB.command.toInt(), newBrightness)
             registry.updateActive(deviceId)
-            deviceRepo.updateDeviceV(deviceId, brightness)
+            deviceRepo.updateDeviceV(deviceId, newBrightness)
         }
     }
 
@@ -81,7 +85,8 @@ class DeviceControlUseCase @Inject constructor(
         return try {
             ensureConnected(deviceId)
             val protocol = getProtocol(deviceId)
-            protocol.setBrightness(brightnessType, brightness)
+            val newBrightness = brightness.coerceIn(1, 100)
+            protocol.setBrightness(brightnessType.command.toInt(), newBrightness)
             registry.updateActive(deviceId)
             true
         } catch (e: Exception) {
@@ -92,10 +97,11 @@ class DeviceControlUseCase @Inject constructor(
 
     suspend fun setWhiteModeCCT(deviceId: DeviceId, cct: Int): Boolean {
         return executionResult("setWhiteModeCCT(deviceId=$deviceId, cct=$cct)") {
+            val newCct = cct.coerceIn(0, 100)
             ensureConnected(deviceId)
-            getProtocol(deviceId).setCct(cct)
+            getProtocol(deviceId).setCct(newCct)
             registry.updateActive(deviceId)
-            deviceRepo.updateDeviceCct(deviceId, cct)
+            deviceRepo.updateDeviceCct(deviceId, newCct)
         }
     }
 
@@ -103,28 +109,38 @@ class DeviceControlUseCase @Inject constructor(
         return executionResult("setWhiteModeBrightness(deviceId=$deviceId, brightness=$brightness)") {
             ensureConnected(deviceId)
             val protocol = getProtocol(deviceId)
-            protocol.setBrightness(BrightnessType.WCT, brightness)
+            val newBrightness = brightness.coerceIn(1, 100)
+            protocol.setBrightness(BrightnessType.WCT.command.toInt(), newBrightness)
             registry.updateActive(deviceId)
-            deviceRepo.updateDeviceBrightness(deviceId, brightness)
+            deviceRepo.updateDeviceBrightness(deviceId, newBrightness)
         }
     }
 
     suspend fun setScene(deviceId: DeviceId, sceneId: Scene): Boolean {
         return executionResult("setScene(deviceId=$deviceId, sceneId=$sceneId)") {
             ensureConnected(deviceId)
-            getProtocol(deviceId).setScene(sceneId)
+            getProtocol(deviceId).setScene(sceneId.command.toInt())
             registry.updateActive(deviceId)
             val modeId = ModeId.fromInt(sceneId.command.toUnsignedInt())
-            deviceRepo.updateDeviceMode(deviceId, ModeType.Scene, modeId)
+            deviceRepo.updateDeviceMode(deviceId, ModeType.GiantScene, modeId)
         }
     }
 
     suspend fun setMode(deviceId: DeviceId, modeId: ModeId): Boolean {
         return executionResult("setMode(deviceId=$deviceId, modeId=$modeId)") {
             ensureConnected(deviceId)
-            getProtocol(deviceId).setMode(modeId)
+            getProtocol(deviceId).setModeId(modeId.command.toInt())
             registry.updateActive(deviceId)
-            deviceRepo.updateDeviceMode(deviceId, ModeType.Classic, modeId)
+            deviceRepo.updateDeviceMode(deviceId, ModeType.GiantClassic, modeId)
+        }
+    }
+
+    suspend fun setModeType(deviceId: DeviceId, modeType: ModeType): Boolean {
+        return executionResult("setModeType(deviceId=$deviceId, modeType=$modeType)") {
+            ensureConnected(deviceId)
+            getProtocol(deviceId).setModeType(modeType.command.toInt())
+            registry.updateActive(deviceId)
+            deviceRepo.updateDeviceMode(deviceId, modeType, null)
         }
     }
 
@@ -148,7 +164,7 @@ class DeviceControlUseCase @Inject constructor(
     suspend fun setLineSequence(deviceId: DeviceId, lineSequence: LineSequence): Boolean {
         return executionResult("setLineSequence(deviceId=$deviceId, lineSequence=$lineSequence)") {
             ensureConnected(deviceId)
-            getProtocol(deviceId).setLineSequence(lineSequence)
+            getProtocol(deviceId).setLineSequence(lineSequence.command.toInt())
             registry.updateActive(deviceId)
             deviceRepo.updateDeviceLineSequence(deviceId, lineSequence)
         }
@@ -194,10 +210,17 @@ class DeviceControlUseCase @Inject constructor(
         }
     }
 
-    suspend fun setTimer(deviceId: DeviceId, timerType: TimerType, hour: Int, min: Int, weekCycle: Int): Boolean {
-        return executionResult("setTimer(deviceId=$deviceId, timerType=$timerType, hour=$hour, min=$min, weekCycle=$weekCycle)") {
+    suspend fun setTimer(
+        deviceId: DeviceId,
+        timerType: TimerType,
+        hour: Int,
+        min: Int,
+        timerRepeat: TimerRepeat,
+        duration: Int = 0
+    ): Boolean {
+        return executionResult("setTimer(deviceId=$deviceId, timerType=$timerType, hour=$hour, min=$min, timerRepeat=$timerRepeat, duration=$duration)") {
             ensureConnected(deviceId)
-            getProtocol(deviceId).setTimer(timerType, hour, min, weekCycle)
+            getProtocol(deviceId).setTimer(timerType, hour, min, timerRepeat, duration)
             registry.updateActive(deviceId)
         }
     }
@@ -212,6 +235,10 @@ class DeviceControlUseCase @Inject constructor(
         return@withContext executionResult("connectDevice(deviceId=$deviceId)") {
             ensureConnected(deviceId)
         }
+    }
+
+    fun asyncConnectDevice(deviceId: DeviceId) {
+        connectionManager.requestConnect(deviceId)
     }
 
     suspend fun disconnectDevice(deviceId: DeviceId): Boolean {

@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import com.ledvance.domain.bean.DeviceId
-import com.ledvance.domain.bean.TimerType
+import com.ledvance.domain.bean.command.common.TimerType
 
 /**
  * @author : jason yin

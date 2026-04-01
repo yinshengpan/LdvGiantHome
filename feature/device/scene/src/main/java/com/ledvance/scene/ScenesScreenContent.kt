@@ -27,7 +27,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.ledvance.domain.bean.command.scenes.Scene
+import com.ledvance.domain.bean.command.giant.scenes.Scene
 import com.ledvance.ui.component.BrightnessSlider
 import com.ledvance.ui.component.LedvanceRadioGroup
 import com.ledvance.ui.component.SpeedSlider

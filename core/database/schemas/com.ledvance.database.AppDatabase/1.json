@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "1169480e6dceae0510f16e9143971405",
+    "identityHash": "c155d2802f32c0144bd285ddc23be4b6",
     "entities": [
       {
         "tableName": "devices",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` TEXT NOT NULL, `name` TEXT NOT NULL, `device_type` INTEGER NOT NULL, `firmware_version` INTEGER NOT NULL, `power` INTEGER NOT NULL, `mode_type` INTEGER, `mode_id` INTEGER, `speed` INTEGER NOT NULL, `h` INTEGER NOT NULL, `s` INTEGER NOT NULL, `v` INTEGER NOT NULL, `cct` INTEGER NOT NULL, `brightness` INTEGER NOT NULL, PRIMARY KEY(`device_id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` TEXT NOT NULL, `name` TEXT NOT NULL, `device_type` INTEGER NOT NULL, `firmware_version` INTEGER NOT NULL, `power` INTEGER NOT NULL, `mode_type` INTEGER, `mode_id` INTEGER, `speed` INTEGER NOT NULL, `h` INTEGER NOT NULL, `s` INTEGER NOT NULL, `v` INTEGER NOT NULL, `cct` INTEGER NOT NULL, `brightness` INTEGER NOT NULL, `create_time` INTEGER NOT NULL, PRIMARY KEY(`device_id`))",
         "fields": [
           {
             "fieldPath": "deviceId",
@@ -81,6 +81,12 @@
           {
             "fieldPath": "brightness",
             "columnName": "brightness",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "createTime",
+            "columnName": "create_time",
             "affinity": "INTEGER",
             "notNull": true
           }
@@ -254,7 +260,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '1169480e6dceae0510f16e9143971405')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c155d2802f32c0144bd285ddc23be4b6')"
     ]
   }
 }

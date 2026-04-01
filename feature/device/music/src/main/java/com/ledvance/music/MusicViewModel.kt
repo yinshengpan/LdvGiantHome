@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.LightCommand
-import com.ledvance.domain.bean.command.DeviceMicRhythm
+import com.ledvance.domain.bean.command.giant.DeviceMicRhythm
 import com.ledvance.music.analyzer.AudioLightDispatcher
 import com.ledvance.ui.component.SnackbarManager
 import com.ledvance.ui.segment.MusicSegment

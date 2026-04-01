@@ -3,7 +3,7 @@ package com.ledvance.timer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ledvance.domain.bean.DeviceId
-import com.ledvance.domain.bean.TimerType
+import com.ledvance.domain.bean.command.common.TimerType
 import com.ledvance.domain.bean.TimerUiItem
 import com.ledvance.ui.component.SnackbarManager
 import com.ledvance.usecase.device.DeviceControlUseCase
@@ -51,8 +51,8 @@ internal class TimerViewModel @AssistedInject constructor(
         flow2 = getDeviceStateUseCase(deviceId),
         flow3 = screenState
     ) { timers, deviceState, state ->
-        val onTimer = timers.find { it.timerType == TimerType.ON } ?: TimerUiItem(TimerType.ON)
-        val offTimer = timers.find { it.timerType == TimerType.OFF } ?: TimerUiItem(TimerType.OFF)
+        val onTimer = timers.find { it.timerType == TimerType.GiantOn } ?: TimerUiItem(TimerType.GiantOn)
+        val offTimer = timers.find { it.timerType == TimerType.GiantOff } ?: TimerUiItem(TimerType.GiantOff)
         TimerContract.UiState.Success(
             onTimer = onTimer,
             offTimer = offTimer,
@@ -91,7 +91,7 @@ internal class TimerViewModel @AssistedInject constructor(
 
     private fun updateTimer(timerType: TimerType, transform: (TimerUiItem) -> TimerUiItem) {
         val currentState = uiState.value as? TimerContract.UiState.Success ?: return
-        val timer = if (timerType == TimerType.ON) currentState.onTimer else currentState.offTimer
+        val timer = if (timerType == TimerType.GiantOn) currentState.onTimer else currentState.offTimer
         viewModelScope.launch {
             screenState.update { it.copy(loading = true) }
             val success = updateDeviceTimerUseCase(

@@ -14,8 +14,33 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
-#-renamesourcefileattribute SourceFile
+-renamesourcefileattribute SourceFile
+
+#xlog
+-keep class com.tencent.mars.**{
+    public protected private *;
+}
+
+#assume no side effects:删除android.util.Log输出的日志
+-assumenosideeffects class android.util.Log {
+    public static *** v(...);
+    public static *** d(...);
+    public static *** i(...);
+    public static *** wtf(...);
+    public static *** println(...);
+}
+
+# 移除所有 System.out.println 打印日志
+-assumenosideeffects class java.io.PrintStream {
+    public void println(java.lang.String);
+    public void print(java.lang.String);
+    public void println(java.lang.Object);
+    public void print(java.lang.Object);
+}
+
+-keep class com.st.st25sdk.**{*;}
+-keep class com.st.st25android.**{*;}

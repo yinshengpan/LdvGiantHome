@@ -12,6 +12,5 @@ dependencies {
     implementation(projects.sdk.giantOta)
     implementation(projects.core.utils)
     implementation(projects.core.domain)
-    implementation(libs.timber)
     implementation(libs.core.ktx)
 }

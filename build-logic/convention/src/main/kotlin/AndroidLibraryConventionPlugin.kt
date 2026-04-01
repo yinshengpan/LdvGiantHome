@@ -16,10 +16,12 @@
 
 import com.android.build.api.dsl.LibraryExtension
 import com.ledvance.build.logic.configureKotlinAndroid
+import com.ledvance.build.logic.libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.apply
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.dependencies
 
 class AndroidLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -31,6 +33,10 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 buildTypes {
                     create("internalRelease")
                 }
+            }
+
+            dependencies {
+                "implementation"(libs.findLibrary("timber").get())
             }
         }
     }

@@ -1,6 +1,6 @@
 package com.ledvance.ui.segment
 
-import com.ledvance.domain.bean.command.scenes.TableSceneType
+import com.ledvance.domain.bean.command.giant.scenes.TableSceneType
 import com.ledvance.ui.R
 import com.ledvance.ui.component.IRadioGroupItem
 import com.ledvance.utils.extensions.getString

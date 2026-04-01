@@ -140,6 +140,7 @@ internal object LDVNfcManager {
                 Timber.tag(TAG).e(e, "readNfcTag: ")
                 readingProgressFlow.update { NfcProgressState.Fail }
                 Timber.tag(TAG).d("readNfcTag: readingProgress->Error")
+                enableNfcReader()
             }
         }
     }

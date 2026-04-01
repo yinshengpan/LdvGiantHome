@@ -11,7 +11,6 @@ android {
 dependencies {
     implementation(projects.core.utils)
     implementation(projects.core.domain)
-    implementation(libs.timber)
     implementation(libs.okhttp)
     implementation(libs.okhttp.interceptor)
     implementation(libs.retrofit)

@@ -1,11 +1,13 @@
 package com.ledvance.energy.manager
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,6 +23,7 @@ import androidx.tracing.trace
 import com.ledvance.energy.manager.model.DarkThemeMode
 import com.ledvance.energy.manager.state.LedvanceApp
 import com.ledvance.energy.manager.utils.DataStoreKeys
+import com.ledvance.energy.manager.viewmodel.MainViewModel
 import com.ledvance.ui.theme.LedvanceTheme
 import com.ledvance.utils.extensions.getInt
 import com.ledvance.utils.extensions.isSystemInDarkTheme
@@ -35,6 +38,8 @@ import timber.log.Timber
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+
+    private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -55,7 +60,7 @@ class MainActivity : AppCompatActivity() {
     private fun observeAppLifecycle() {
         ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onStart(owner: LifecycleOwner) {
-                Timber.tag(TAG).i("App joined foregroun")
+                Timber.tag(TAG).i("App joined foreground")
             }
 
             override fun onStop(owner: LifecycleOwner) {
@@ -64,9 +69,30 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mainViewModel.dispatchActivityOnResume(this, intent)
+        intent = null
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mainViewModel.dispatchActivityOnPause(this)
+    }
+
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
         Timber.tag(TAG).i("onConfigurationChanged: $newConfig")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mainViewModel.release()
     }
 
     private fun initDarkTheme(onDarkThemeChanged: (Boolean) -> Unit) {

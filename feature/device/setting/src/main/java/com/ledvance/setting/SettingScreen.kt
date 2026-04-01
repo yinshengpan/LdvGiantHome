@@ -41,7 +41,6 @@ internal fun SettingScreen(
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var showLineSequencePicker by remember { mutableStateOf(false) }
     var showResetDialog by remember { mutableStateOf(false) }
-    var showUpgradeDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
     viewModel.OneTimeActionEffect {

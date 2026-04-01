@@ -22,10 +22,12 @@ enum class DeviceType(val type: Int, val company: Company) {
                 upName.startsWith(Company.Giant.title) -> when {
                     upName.contains("TABLE") -> GiantTable
                     upName.contains("FLOOR") -> GiantFloor
-                    upName.contains("BEDSIDE") -> GiantFloor
                     else -> GiantTable
                 }
-
+                upName.startsWith(Company.Ledvance.title) -> when {
+                    upName.contains("BEDSIDE") -> LdvBedside
+                    else -> LdvBedside
+                }
                 else -> GiantTable
             }
         }

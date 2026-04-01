@@ -4,15 +4,16 @@ import com.ledvance.database.dao.DeviceDao
 import com.ledvance.database.dao.DeviceRuntimeConfigDao
 import com.ledvance.database.model.DeviceBaseUpdateEntity
 import com.ledvance.database.model.DeviceEntity
+import com.ledvance.database.model.DeviceNameUpdateEntity
 import com.ledvance.database.model.DevicePowerUpdateEntity
 import com.ledvance.database.model.DeviceRuntimeConfigEntity
 import com.ledvance.database.model.DeviceWithRuntimeConfig
 import com.ledvance.domain.FirmwareVersion
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.WorkMode
-import com.ledvance.domain.bean.command.LineSequence
-import com.ledvance.domain.bean.command.ModeId
-import com.ledvance.domain.bean.command.ModeType
+import com.ledvance.domain.bean.command.giant.LineSequence
+import com.ledvance.domain.bean.command.giant.ModeId
+import com.ledvance.domain.bean.command.giant.ModeType
 import com.ledvance.utils.extensions.tryCatch
 import com.ledvance.utils.extensions.tryCatchReturn
 import kotlinx.coroutines.Dispatchers
@@ -101,6 +102,15 @@ class DeviceRepo @Inject constructor(
         withContext(Dispatchers.IO) {
             tryCatch { deviceDao.updateDeviceFirmwareVersion(deviceId, deviceName, firmwareVersion) }
         }
+
+    suspend fun updateDeviceName(list: List<Pair<DeviceId, String>>) = withContext(Dispatchers.IO) {
+        tryCatch {
+            val stateList = list.map { (deviceId, name) ->
+                DeviceNameUpdateEntity(deviceId, name)
+            }
+            deviceDao.updateDeviceNameList(stateList)
+        }
+    }
 
     suspend fun updateDevicePower(list: List<Pair<DeviceId, Boolean>>) = withContext(Dispatchers.IO) {
         tryCatch {

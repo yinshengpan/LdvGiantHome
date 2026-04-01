@@ -2,14 +2,8 @@ package com.ledvance.ble.core
 
 import com.ledvance.ble.bean.BleDeviceState
 import com.ledvance.ble.bean.ConnectionState
-import com.ledvance.ble.protocol.GiantProtocol
 import com.ledvance.ble.repo.BleRepository
 import com.ledvance.domain.bean.DeviceId
-import com.ledvance.domain.bean.DeviceTimer
-import com.ledvance.domain.bean.TimerType
-import com.ledvance.domain.bean.command.CommandType
-import com.ledvance.domain.bean.command.NotifyType
-import com.ledvance.domain.bean.command.OnOff
 import com.ledvance.utils.extensions.toHex
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -50,7 +44,11 @@ class ConnectionManager @Inject constructor(
 
     private val connectionMap = mutableMapOf<DeviceId, BleClient>()
 
-    private val MAX_CONNECTION = 3
+    /**
+     * Android 平台 BLE GATT 连接上限通常为 7。
+     * 超过此数会触发 LRU+RSSI 淘汰策略，释放最久未活跃 / 信号最弱的连接槽。
+     */
+    private val MAX_CONNECTION = 7
 
     fun requestConnect(deviceId: DeviceId) {
         Timber.tag(TAG).d("requestConnect: $deviceId")
@@ -112,107 +110,8 @@ class ConnectionManager @Inject constructor(
      */
     private fun handleNotification(deviceId: DeviceId, bytes: ByteArray) {
         Timber.tag(TAG).v("handleNotification: Received from $deviceId: ${bytes.toHex()}")
-
-        if (bytes.size < 4) return
-        if (bytes.first() != GiantProtocol.HEADER_BYTE) return
-        if (bytes.last() != GiantProtocol.END_BYTE) return
-        if (bytes[2] != NotifyType.Response.command) return
-
-        val cmd = bytes[1]
-        Timber.tag(TAG).d("handleNotification: Identified command: 0x%02X for $deviceId", cmd)
-        when (cmd) {
-            CommandType.QueryDeviceInfo.command -> parseQueryDeviceInfo(deviceId, bytes)
-            CommandType.QueryDeviceState.command -> parseQueryDeviceState(deviceId, bytes)
-            CommandType.GetTimingInfo.command -> parseGetTimingInfo(deviceId, bytes)
-            CommandType.QueryCurrentTime.command -> parseQueryCurrentTime(deviceId, bytes)
-        }
-    }
-
-    /**
-     * QueryDeviceInfo 响应 — 14 bytes
-     * [0x1D][0x00][0x02][开关][R][G][B][W][亮度][经典/场景模式号][modeId][速度][0xFF][0xD1]
-     */
-    private fun parseQueryDeviceInfo(deviceId: DeviceId, bytes: ByteArray) {
-        if (bytes.size != 14) return
-        val power = bytes[3] == OnOff.On.command
-        val r = bytes[4].toInt() and 0xFF
-        val g = bytes[5].toInt() and 0xFF
-        val b = bytes[6].toInt() and 0xFF
-        val w = bytes[7].toInt() and 0xFF
-        val brightness = bytes[8].toInt() and 0xFF
-        val modeType = bytes[9].toInt() and 0xFF
-        val modeId = bytes[10].toInt() and 0xFF
-        val speed = bytes[11].toInt() and 0xFF
-        Timber.tag(TAG).i("parseQueryDeviceInfo: $deviceId -> Power=$power, RGBW=($r,$g,$b,$w), Brightness=$brightness, ModeType=$modeType, ModeId=$modeId, Speed=$speed")
-        registry.updateDeviceInfo(
-            deviceId = deviceId,
-            power = power,
-            r = r,
-            g = g,
-            b = b,
-            w = w,
-            brightness = brightness,
-            modeType = modeType,
-            mode = modeId,
-            speed = speed
-        )
-    }
-
-    /**
-     * QueryDeviceState 响应 — 9 bytes
-     * [0x1D][0x15][0x02][开关][0xFF][0xFF][0xFF][0xFF][0xD1]
-     */
-    private fun parseQueryDeviceState(deviceId: DeviceId, bytes: ByteArray) {
-        if (bytes.size != 9) return
-        val power = bytes[3] == OnOff.On.command
-        Timber.tag(TAG).i("parseQueryDeviceState: $deviceId -> Power=$power")
-        registry.updateDeviceState(deviceId, power)
-    }
-
-    /**
-     * GetTimingInfo 响应 — 13 bytes
-     * [0x1D][0x16][0x02][开灯开关][开灯时][开灯分][开灯周期][关灯开关][关灯时][关灯分][关灯周期][0xFF][0xD1]
-     */
-    private fun parseGetTimingInfo(deviceId: DeviceId, bytes: ByteArray) {
-        if (bytes.size != 13) return
-        val onSwitch = bytes[3] == 0x01.toByte()
-        val onHour = bytes[4].toInt() and 0xFF
-        val onMinute = bytes[5].toInt() and 0xFF
-        val onCycle = bytes[6].toInt() and 0xFF
-        val onTimer = DeviceTimer(
-            deviceId = deviceId,
-            timerType = TimerType.ON,
-            enabled = onSwitch,
-            hour = onHour,
-            minute = onMinute,
-            weekCycle = onCycle,
-        )
-        val offSwitch = bytes[7] == 0x01.toByte()
-        val offHour = bytes[8].toInt() and 0xFF
-        val offMinute = bytes[9].toInt() and 0xFF
-        val offCycle = bytes[10].toInt() and 0xFF
-        val offTimer = DeviceTimer(
-            deviceId = deviceId,
-            timerType = TimerType.OFF,
-            enabled = offSwitch,
-            hour = offHour,
-            minute = offMinute,
-            weekCycle = offCycle,
-        )
-        Timber.tag(TAG).i("parseGetTimingInfo: $deviceId -> ON(%s):%02d:%02d Cycle:%X, OFF(%s):%02d:%02d Cycle:%X", 
-            onSwitch, onHour, onMinute, onCycle, offSwitch, offHour, offMinute, offCycle)
-        registry.updateTimerInfo(deviceId, onTimer, offTimer)
-    }
-
-    /**
-     * QueryCurrentTime / SetCurrentTime 应答 — 9 bytes
-     * [0x1D][0x0B][0x02][时][分][秒][星期][0xFF][0xD1]
-     */
-    private fun parseQueryCurrentTime(deviceId: DeviceId, bytes: ByteArray) {
-        if (bytes.size != 9) return
-        Timber.tag(TAG).d("parseQueryCurrentTime: $deviceId -> Refreshed active time")
-        // 更新活跃时间（当前未持久化时间，可按需扩展 DeviceRegistry）
-        registry.updateActive(deviceId)
+        val parser = ProtocolFactory.createParser(deviceId, registry)
+        parser.parse(deviceId, bytes)
     }
 
     fun disconnect(deviceId: DeviceId) {
@@ -231,6 +130,15 @@ class ConnectionManager @Inject constructor(
     }
 
     fun getClient(deviceId: DeviceId): BleClient? = connectionMap[deviceId]
+
+    /** 判断设备是否已连接或正在连接中（用于自动连接策略的上限检查） */
+    fun isConnectedOrConnecting(deviceId: DeviceId): Boolean {
+        val state = connectionMap[deviceId]?.state?.value
+        return state == ConnectionState.CONNECTED || state == ConnectionState.CONNECTING
+    }
+
+    /** 当前已占用的连接槽数量 */
+    fun connectedCount(): Int = connectionMap.size
 
     private fun selectEvictDevice(): DeviceId {
         val now = System.currentTimeMillis()

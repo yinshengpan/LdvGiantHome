@@ -1,9 +1,9 @@
 package com.ledvance.domain.bean
 
 import com.ledvance.domain.FirmwareVersion
-import com.ledvance.domain.bean.command.LineSequence
-import com.ledvance.domain.bean.command.ModeId
-import com.ledvance.domain.bean.command.ModeType
+import com.ledvance.domain.bean.command.giant.LineSequence
+import com.ledvance.domain.bean.command.giant.ModeId
+import com.ledvance.domain.bean.command.giant.ModeType
 
 /**
  * @author : jason yin

@@ -1,6 +1,6 @@
 package com.ledvance.ui.segment
 
-import com.ledvance.domain.bean.command.ModeId
+import com.ledvance.domain.bean.command.giant.ModeId
 import com.ledvance.ui.R
 import com.ledvance.ui.component.IRadioGroupItem
 import com.ledvance.utils.extensions.getString

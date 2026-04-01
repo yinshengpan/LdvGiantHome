@@ -1,7 +1,7 @@
 package com.ledvance.mode
 
 import androidx.compose.runtime.Immutable
-import com.ledvance.domain.bean.command.ModeId
+import com.ledvance.domain.bean.command.giant.ModeId
 import kotlinx.coroutines.flow.StateFlow
 
 /**

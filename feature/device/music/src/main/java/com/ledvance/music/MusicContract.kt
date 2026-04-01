@@ -1,7 +1,7 @@
 package com.ledvance.music
 
 import androidx.compose.runtime.Immutable
-import com.ledvance.domain.bean.command.DeviceMicRhythm
+import com.ledvance.domain.bean.command.giant.DeviceMicRhythm
 import com.ledvance.ui.segment.MusicSegment
 import kotlinx.coroutines.flow.StateFlow
 

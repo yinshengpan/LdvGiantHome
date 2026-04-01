@@ -1,8 +1,5 @@
 package com.ledvance.energy.manager.state
 
-import com.ledvance.ui.component.SnackbarManager
-import com.ledvance.ui.component.SnackbarMessage
-
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
@@ -15,17 +12,26 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ledvance.domain.bean.DeviceId
 import com.ledvance.energy.manager.navigation.MainNavigation
 import com.ledvance.energy.manager.navigation.MainNavigationScaffold
 import com.ledvance.energy.manager.navigation.TopLevelDestination
+import com.ledvance.energy.manager.viewmodel.MainViewModel
 import com.ledvance.home.navigation.HomeRoute
+import com.ledvance.light.navigation.isTopLightDetails
+import com.ledvance.light.navigation.navigateToLightDetails
 import com.ledvance.profile.navigation.ProfileRoute
+import com.ledvance.ui.component.SnackbarManager
+import com.ledvance.ui.component.SnackbarMessage
 import com.ledvance.ui.component.showToast
 import com.ledvance.ui.navigation.NavigationRoute
 import com.ledvance.ui.theme.AppTheme
@@ -41,8 +47,27 @@ import kotlinx.coroutines.flow.collectLatest
 @SuppressLint("LocalContextGetResourceValueCall")
 @Composable
 fun LedvanceApp(
+    mainViewModel: MainViewModel = hiltViewModel(),
     appState: LedvanceAppState = rememberLedvanceAppState(),
 ) {
+    val nfcModel by mainViewModel.nfcModel.collectAsStateWithLifecycle()
+
+    LaunchedEffect(nfcModel) {
+        val nfcInfo = nfcModel?.nfcInfo
+        if (nfcInfo != null) {
+            val deviceId = DeviceId(macAddress = nfcInfo.macAddress, deviceType = nfcInfo.deviceType)
+            mainViewModel.connectDevice(deviceId)
+            mainViewModel.resetNfc()
+            if (!appState.backStack.isTopLightDetails(deviceId)) {
+                if (appState.backStack.lastOrNull() != HomeRoute) {
+                    appState.backStack.clear()
+                    appState.backStack.add(HomeRoute)
+                }
+                appState.backStack.navigateToLightDetails(deviceId)
+            }
+        }
+    }
+
     val snackbarHostState = LocalSnackBarHostState.current
     val context = LocalContext.current
     LaunchedEffect(Unit) {

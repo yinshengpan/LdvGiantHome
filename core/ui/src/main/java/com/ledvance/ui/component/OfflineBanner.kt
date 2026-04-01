@@ -1,6 +1,8 @@
 package com.ledvance.ui.component
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
@@ -50,8 +52,8 @@ fun OfflineBanner(
 ) {
     AnimatedVisibility(
         visible = visible,
-        enter = slideInVertically { it },
-        exit = slideOutVertically { it },
+        enter = EnterTransition.None,
+        exit = ExitTransition.None,
         modifier = modifier,
     ) {
         Text(

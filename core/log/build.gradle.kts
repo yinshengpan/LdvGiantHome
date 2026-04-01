@@ -8,7 +8,6 @@ android {
 
 dependencies {
     implementation(projects.core.utils)
-    implementation(libs.timber)
     implementation(libs.core.ktx)
     implementation(libs.startup.runtime)
 }

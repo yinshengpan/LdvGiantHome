@@ -3,6 +3,7 @@ package com.ledvance.nfc.utils
 import com.st.st25sdk.MultiAreaInterface
 import com.st.st25sdk.NFCTag
 import com.st.st25sdk.STException
+import com.st.st25sdk.type2.STType2Tag
 import com.st.st25sdk.type5.STType5Tag
 
 /**
@@ -14,6 +15,19 @@ import com.st.st25sdk.type5.STType5Tag
 internal fun NFCTag.getAreaIdFromAddressInBytesForType5Tag(address: Int): Int {
     var ret = MultiAreaInterface.AREA1
     if (this is MultiAreaInterface && this is STType5Tag) {
+        val tag = this as MultiAreaInterface
+        ret = try {
+            tag.getAreaFromByteAddress(address)
+        } catch (e: STException) {
+            -1
+        }
+    }
+    return ret
+}
+
+internal fun NFCTag.getAreaIdFromAddressInBytesForType2Tag(address: Int): Int {
+    var ret = MultiAreaInterface.AREA1
+    if (this is MultiAreaInterface && this is STType2Tag) {
         val tag = this as MultiAreaInterface
         ret = try {
             tag.getAreaFromByteAddress(address)

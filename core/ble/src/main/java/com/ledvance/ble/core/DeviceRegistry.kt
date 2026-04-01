@@ -5,8 +5,8 @@ import com.ledvance.ble.bean.ConnectionState
 import com.ledvance.ble.bean.ProtocolType
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceTimer
-import com.ledvance.domain.bean.command.ModeId
-import com.ledvance.domain.bean.command.ModeType
+import com.ledvance.domain.bean.command.giant.ModeId
+import com.ledvance.domain.bean.command.giant.ModeType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import timber.log.Timber
@@ -52,18 +52,18 @@ class DeviceRegistry @Inject constructor() {
         r: Int, g: Int, b: Int, w: Int,
         brightness: Int,
         modeType: Int,
-        mode: Int,
+        modeId: Int,
         speed: Int
     ) {
         Timber.tag(TAG)
-            .d("updateDeviceInfo(): $deviceId, power=$power, RGBW($r,$g,$b,$w), br=$brightness, modeType=$modeType, mode=$mode, speed=$speed")
+            .d("updateDeviceInfo(): $deviceId, power=$power, RGBW($r,$g,$b,$w), br=$brightness, modeType=$modeType, mode=$modeId, speed=$speed")
         val old = deviceMap[deviceId] ?: return
         deviceMap[deviceId] = old.copy(
             power = power,
             r = r, g = g, b = b, w = w,
             brightness = brightness,
             modeType = ModeType.fromInt(modeType),
-            modeId = ModeId.fromInt(mode),
+            modeId = ModeId.fromInt(modeId),
             speed = speed,
             lastActiveTime = now()
         )
@@ -96,6 +96,17 @@ class DeviceRegistry @Inject constructor() {
         val old = deviceMap[deviceId] ?: return
         deviceMap[deviceId] = old.copy(lastActiveTime = now())
         emit()
+    }
+
+    /**
+     * 扫描发现设备时更新 RSSI 与 lastSeenTime。
+     * 仅对已存在条目的设备有效（曾经尝试连接过），
+     * 供 AutoConnectUseCase 调用以改善 eviction 策略准确性。
+     */
+    fun updateRssi(deviceId: DeviceId, rssi: Int) {
+        val old = deviceMap[deviceId] ?: return
+        deviceMap[deviceId] = old.copy(rssi = rssi, lastSeenTime = now())
+        // No emit() — RSSI changes alone don't need to notify UI observers
     }
 
     private fun emit() {

@@ -28,19 +28,17 @@ android {
 }
 
 dependencies {
-    implementation(projects.core.ui)
     implementation(projects.core.utils)
-    implementation(projects.core.ble)
-    implementation(projects.core.database)
-    implementation(projects.core.network)
+    implementation(projects.core.ui)
     implementation(projects.core.log)
-    implementation(projects.core.domain)
+    implementation(projects.core.nfc)
     implementation(projects.core.usecase)
+    implementation(projects.core.domain)
 
     implementation(projects.feature.home)
     implementation(projects.feature.profile)
     implementation(projects.feature.search)
-    implementation(projects.feature.device.light)
+    implementation(projects.feature.device.lightDetail)
 
     implementation(libs.appcompat)
     implementation(libs.core.ktx)
@@ -48,8 +46,6 @@ dependencies {
     implementation(libs.splashscreen)
     implementation(libs.datastore)
     implementation(libs.startup.runtime)
-    implementation(libs.media3.exoplayer)
-    implementation(libs.accompanist.permissions)
     implementation(libs.work)
 
     implementation(libs.lifecycle.runtime.ktx)
@@ -60,11 +56,8 @@ dependencies {
     implementation(libs.navigation3.runtime)
     implementation(libs.navigation3.ui)
     implementation(libs.lifecycle.viewmodel.navigation3)
-//    implementation(libs.material3.adaptive.navigation3)
-
     implementation(libs.hilt.navigation.compose)
 
-    implementation(libs.timber)
     implementation(libs.tracing.ktx)
 }
 

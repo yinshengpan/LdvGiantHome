@@ -17,7 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ledvance.domain.bean.command.ModeId
+import com.ledvance.domain.bean.command.giant.ModeId
 import com.ledvance.ui.component.BrightnessSlider
 import com.ledvance.ui.component.LedvanceRadioGroup
 import com.ledvance.ui.component.SpeedSlider

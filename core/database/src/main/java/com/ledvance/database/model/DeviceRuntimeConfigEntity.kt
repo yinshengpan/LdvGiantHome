@@ -3,7 +3,7 @@ package com.ledvance.database.model
 import androidx.room.*
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.WorkMode
-import com.ledvance.domain.bean.command.LineSequence
+import com.ledvance.domain.bean.command.giant.LineSequence
 
 @Entity(
     tableName = "device_runtime_config",

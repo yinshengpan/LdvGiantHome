@@ -29,9 +29,11 @@ internal interface HomeContract {
     val uiState: StateFlow<UiState>
 
     fun onSwitchChange(deviceId: DeviceId, switch: Boolean)
+    fun asyncConnectDevice(deviceId: DeviceId)
     fun connectDevice(deviceId: DeviceId)
     fun disconnectDevice(deviceId: DeviceId)
     fun connectDevices(devices: List<DeviceUiItem>)
     fun disconnectAllDevices()
     fun onDeleteDevice(deviceId: DeviceId)
+    fun setPageVisibility(visible: Boolean)
 }

@@ -1,7 +1,7 @@
 package com.ledvance.timer
 
 import androidx.compose.runtime.Immutable
-import com.ledvance.domain.bean.TimerType
+import com.ledvance.domain.bean.command.common.TimerType
 import com.ledvance.domain.bean.TimerUiItem
 import kotlinx.coroutines.flow.StateFlow
 import java.time.DayOfWeek

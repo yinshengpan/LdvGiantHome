@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.LightCommand
-import com.ledvance.domain.bean.command.ModeId
+import com.ledvance.domain.bean.command.giant.ModeId
 import com.ledvance.ui.component.SnackbarManager
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceStateUseCase

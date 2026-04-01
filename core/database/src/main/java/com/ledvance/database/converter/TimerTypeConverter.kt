@@ -1,7 +1,7 @@
 package com.ledvance.database.converter
 
 import androidx.room.TypeConverter
-import com.ledvance.domain.bean.TimerType
+import com.ledvance.domain.bean.command.common.TimerType
 
 /**
  * @author : jason yin

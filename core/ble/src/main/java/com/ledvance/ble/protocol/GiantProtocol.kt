@@ -2,17 +2,14 @@ package com.ledvance.ble.protocol
 
 import com.ledvance.ble.core.BleClient
 import com.ledvance.ble.core.CommandQueue
-import com.ledvance.domain.bean.TimerType
-import com.ledvance.domain.bean.command.BrightnessType
-import com.ledvance.domain.bean.command.ColourType
-import com.ledvance.domain.bean.command.CommandType
-import com.ledvance.domain.bean.command.LineSequence
-import com.ledvance.domain.bean.command.ModeId
-import com.ledvance.domain.bean.command.ModeType
-import com.ledvance.domain.bean.command.OnOff
-import com.ledvance.domain.bean.command.OnOffType
-import com.ledvance.domain.bean.command.scenes.Scene
-import com.ledvance.domain.bean.command.timer.TimerDayOfWeek
+import com.ledvance.domain.bean.command.common.TimerDayOfWeek
+import com.ledvance.domain.bean.command.common.TimerRepeat
+import com.ledvance.domain.bean.command.common.TimerType
+import com.ledvance.domain.bean.command.common.toGiantByte
+import com.ledvance.domain.bean.command.giant.ColourType
+import com.ledvance.domain.bean.command.giant.GiantCommandType
+import com.ledvance.domain.bean.command.giant.GiantOnOff
+import com.ledvance.domain.bean.command.giant.ModeType
 import com.ledvance.utils.ColorUtils
 import com.ledvance.utils.extensions.toBinary8
 import com.ledvance.utils.extensions.toTimeInfo
@@ -53,37 +50,42 @@ class GiantProtocol(
 
     override suspend fun queryDeviceInfo() = queue.execute {
         Timber.tag(TAG).d("queryDeviceInfo")
-        client.write(buildCommand(CommandType.QueryDeviceInfo.command, 0x01))
+        client.write(buildCommand(GiantCommandType.QueryDeviceInfo.command, 0x01))
     }
 
-    override suspend fun setBrightness(target: BrightnessType, brightness: Int) = queue.execute {
+    override suspend fun setBrightness(target: Int, brightness: Int) = queue.execute {
         Timber.tag(TAG).d("setBrightness: target=$target, brightness=$brightness")
-        client.write(buildCommand(CommandType.SetBrightness.command, target.command, brightness.toByte()))
+        client.write(buildCommand(GiantCommandType.SetBrightness.command, target.toByte(), brightness.toByte()))
     }
 
     override suspend fun setSpeed(speed: Int) = queue.execute {
         Timber.tag(TAG).d("setSpeed: speed=$speed")
-        client.write(buildCommand(CommandType.SetSpeed.command, speed.toByte()))
+        client.write(buildCommand(GiantCommandType.SetSpeed.command, speed.toByte()))
     }
 
-    override suspend fun setMode(modeId: ModeId) = queue.execute {
-        Timber.tag(TAG).d("setMode: modeId=$modeId")
-        client.write(buildCommand(CommandType.SetModeOrScene.command, ModeType.Classic.command, modeId.command))
+    override suspend fun setModeId(modeId: Int) = queue.execute {
+        Timber.tag(TAG).d("setModeId: modeId=$modeId")
+        client.write(buildCommand(GiantCommandType.SetModeOrScene.command, ModeType.GiantClassic.command, modeId.toByte()))
     }
 
-    override suspend fun setPower(power: Boolean, onOffType: OnOffType) = queue.execute {
+    override suspend fun setModeType(modeType: Int) = queue.execute {
+        Timber.tag(TAG).d("setModeType not supported by Bedside Lamp")
+        false
+    }
+
+    override suspend fun setPower(power: Boolean, onOffType: Int) = queue.execute {
         Timber.tag(TAG).d("setPower: power=$power, onOffType=$onOffType")
-        val stateByte = if (power) OnOff.On.command else OnOff.Off.command
-        client.write(buildCommand(CommandType.SetSwitch.command, onOffType.command, stateByte))
+        val stateByte = if (power) GiantOnOff.On.command else GiantOnOff.Off.command
+        client.write(buildCommand(GiantCommandType.SetSwitch.command, onOffType.toByte(), stateByte))
     }
 
     override suspend fun setHs(h: Int, s: Int) = queue.execute {
-        Timber.tag(TAG).d("setHSV: h=$h, s=$s")
         val rgb = ColorUtils.hsvToRgb(h, s, 100)
+        Timber.tag(TAG).d("setHSV: h=$h, s=$s -> r:${rgb[0]},g:${rgb[1]},b:${rgb[2]}")
         client.write(
             buildCommand(
-                CommandType.SetColour.command,
-                ColourType.RGB.command,
+                GiantCommandType.SetColour.command,
+                ColourType.RGB.command, // ColourType.RGB
                 rgb[0].toByte(), rgb[1].toByte(), rgb[2].toByte()
             )
         )
@@ -93,8 +95,8 @@ class GiantProtocol(
         Timber.tag(TAG).d("setRgb: r=$r, g=$g, b=$b")
         client.write(
             data = buildCommand(
-                cmd = CommandType.SetColour.command,
-                ColourType.RGB.command,
+                cmd = GiantCommandType.SetColour.command,
+                ColourType.RGB.command, // ColourType.RGB
                 r.toByte(), g.toByte(), b.toByte()
             ),
             isDelay = false
@@ -106,60 +108,62 @@ class GiantProtocol(
         val (warm, cool) = ColorUtils.cctToWwCw(cct)
         client.write(
             buildCommand(
-                CommandType.SetColour.command,
-                ColourType.WCT.command,
+                GiantCommandType.SetColour.command,
+                ColourType.WCT.command, // ColourType.WCT
                 cool.toByte(), warm.toByte(), 0x00
             )
         )
     }
 
-    override suspend fun setScene(sceneId: Scene) = queue.execute {
+    override suspend fun setScene(sceneId: Int) = queue.execute {
         Timber.tag(TAG).d("setScene: sceneId=$sceneId")
-        client.write(buildCommand(CommandType.SetModeOrScene.command, ModeType.Scene.command, sceneId.command))
+        client.write(buildCommand(GiantCommandType.SetModeOrScene.command, ModeType.GiantScene.command, sceneId.toByte()))
     }
 
-    override suspend fun setColor(type: ColourType, param1: Int, param2: Int, param3: Int) = queue.execute {
+    override suspend fun setColor(type: Int, param1: Int, param2: Int, param3: Int) = queue.execute {
         Timber.tag(TAG).d("setColor: type=$type, params=[$param1, $param2, $param3]")
-        client.write(buildCommand(CommandType.SetColour.command, type.command, param1.toByte(), param2.toByte(), param3.toByte()))
+        client.write(buildCommand(GiantCommandType.SetColour.command, type.toByte(), param1.toByte(), param2.toByte(), param3.toByte()))
     }
 
     override suspend fun setMicRhythmEffect(effect: Int) = queue.execute {
         Timber.tag(TAG).d("setMicRhythmEffect: effect=$effect")
-        client.write(buildCommand(CommandType.SetMicRhythm.command, effect.toByte()))
+        client.write(buildCommand(GiantCommandType.SetMicRhythm.command, effect.toByte()))
     }
 
     override suspend fun setMicSensitivity(sensitivity: Int) = queue.execute {
         Timber.tag(TAG).d("setMicSensitivity: sensitivity=$sensitivity")
-        client.write(buildCommand(CommandType.SetMicSensitivity.command, sensitivity.toByte()))
+        client.write(buildCommand(GiantCommandType.SetMicSensitivity.command, sensitivity.toByte()))
     }
 
     override suspend fun setLedCount(count: Int) = queue.execute {
         Timber.tag(TAG).d("setLedCount: count=$count")
         val lowByte = (count and 0xFF).toByte()
         val highByte = ((count shr 8) and 0xFF).toByte()
-        client.write(buildCommand(CommandType.SetLedCount.command, lowByte, highByte))
+        client.write(buildCommand(GiantCommandType.SetLedCount.command, lowByte, highByte))
     }
 
-    override suspend fun setLineSequence(lineSequence: LineSequence) = queue.execute {
+    override suspend fun setLineSequence(lineSequence: Int) = queue.execute {
         Timber.tag(TAG).d("setLineSequence: lineSequence=$lineSequence")
-        client.write(buildCommand(CommandType.SetWireOrder.command, lineSequence.command))
+        client.write(buildCommand(GiantCommandType.SetWireOrder.command, lineSequence.toByte()))
     }
 
-    override suspend fun setTimer(timerType: TimerType, hour: Int, min: Int, weekCycle: Int) = queue.execute {
-        Timber.tag(TAG).d("setTimer: timerType=$timerType, $hour:$min, cycle=${weekCycle.toBinary8()}")
-        val state = if (timerType == TimerType.ON) OnOff.On.command else OnOff.Off.command
-        client.write(buildCommand(CommandType.SetTimer.command, 0x01, state, hour.toByte(), min.toByte(), weekCycle.toByte()))
+    override suspend fun setTimer(timerType: TimerType, hour: Int, min: Int, timerRepeat: TimerRepeat, duration: Int) = queue.execute {
+        val weekCycleByte = timerRepeat.toGiantByte()
+        val mode = timerType.mode
+        val state = timerType.command
+        Timber.tag(TAG).d("setTimer: timerType=$timerType, $hour:$min, cycle=${weekCycleByte.toInt().toBinary8()}")
+        client.write(buildCommand(GiantCommandType.SetTimer.command, mode, state, hour.toByte(), min.toByte(), weekCycleByte))
     }
 
     override suspend fun queryTimer() = queue.execute {
         Timber.tag(TAG).d("queryTimer")
-        client.write(buildCommand(CommandType.GetTimingInfo.command, 0x01))
+        client.write(buildCommand(GiantCommandType.GetTimingInfo.command, 0x01))
     }
 
     /** 设置设备当前时间 (Byte2=0x01, Byte3=时, Byte4=分, Byte5=秒, Byte6=星期) */
     override suspend fun setCurrentTime(hour: Int, min: Int, sec: Int, weekDay: Int) = queue.execute {
         Timber.tag(TAG).d("setCurrentTime: $hour:$min:$sec, weekDay=$weekDay")
-        client.write(buildCommand(CommandType.SetCurrentTime.command, 0x01, hour.toByte(), min.toByte(), sec.toByte(), weekDay.toByte()))
+        client.write(buildCommand(GiantCommandType.SetCurrentTime.command, 0x01, hour.toByte(), min.toByte(), sec.toByte(), weekDay.toByte()))
     }
 
     override suspend fun syncCurrentTime(): Boolean {
@@ -176,11 +180,11 @@ class GiantProtocol(
     /** 查询设备当前时间 (Byte2=0x02) */
     override suspend fun queryCurrentTime() = queue.execute {
         Timber.tag(TAG).d("queryCurrentTime")
-        client.write(buildCommand(CommandType.QueryCurrentTime.command, 0x02))
+        client.write(buildCommand(GiantCommandType.QueryCurrentTime.command, 0x02))
     }
 
     override suspend fun resetDevice() = queue.execute {
         Timber.tag(TAG).d("resetDevice")
-        client.write(buildCommand(CommandType.DeviceReset.command, 0x2E))
+        client.write(buildCommand(GiantCommandType.DeviceReset.command, 0x2E))
     }
 }

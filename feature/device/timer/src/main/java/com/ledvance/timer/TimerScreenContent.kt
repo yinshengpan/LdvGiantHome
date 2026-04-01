@@ -37,7 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ledvance.domain.bean.TimerType
+import com.ledvance.domain.bean.command.common.TimerType
 import com.ledvance.domain.bean.TimerUiItem
 import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceSwitch
@@ -81,21 +81,21 @@ internal fun TimerScreenContent(
             TimerItem(
                 title = stringResource(R.string.timer_regularly_on),
                 switch = onTimer.enabled,
-                onSwitchChange = { onTimerSwitchChange(TimerType.ON, it) },
+                onSwitchChange = { onTimerSwitchChange(TimerType.GiantOn, it) },
                 time = onTimer.displayTime,
-                onTimeClick = { showTimePicker = TimerType.ON },
+                onTimeClick = { showTimePicker = TimerType.GiantOn },
                 repeat = onTimer.displayRepeat,
-                onRepeatClick = { showRepeatPicker = TimerType.ON },
+                onRepeatClick = { showRepeatPicker = TimerType.GiantOn },
             )
             TimerItem(
                 modifier = Modifier.padding(top = 10.dp),
                 title = stringResource(R.string.timer_regularly_off),
                 switch = offTimer.enabled,
-                onSwitchChange = { onTimerSwitchChange(TimerType.OFF, it) },
+                onSwitchChange = { onTimerSwitchChange(TimerType.GiantOff, it) },
                 time = offTimer.displayTime,
-                onTimeClick = { showTimePicker = TimerType.OFF },
+                onTimeClick = { showTimePicker = TimerType.GiantOff },
                 repeat = offTimer.displayRepeat,
-                onRepeatClick = { showRepeatPicker = TimerType.OFF },
+                onRepeatClick = { showRepeatPicker = TimerType.GiantOff },
             )
         }
     }
@@ -105,7 +105,7 @@ internal fun TimerScreenContent(
     )
     if (showTimePicker != null) {
         val type = showTimePicker!!
-        val timer = if (type == TimerType.ON) onTimer else offTimer
+        val timer = if (type == TimerType.GiantOn) onTimer else offTimer
         ModalBottomSheet(
             onDismissRequest = { showTimePicker = null },
             sheetState = timePickerSheetState,
@@ -129,7 +129,7 @@ internal fun TimerScreenContent(
     )
     if (showRepeatPicker != null) {
         val type = showRepeatPicker!!
-        val timer = if (type == TimerType.ON) onTimer else offTimer
+        val timer = if (type == TimerType.GiantOn) onTimer else offTimer
         ModalBottomSheet(
             onDismissRequest = { showRepeatPicker = null },
             sheetState = repeatPickerSheetState,

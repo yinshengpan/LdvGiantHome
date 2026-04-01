@@ -21,7 +21,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.ledvance.domain.bean.command.DeviceMicRhythm
+import com.ledvance.domain.bean.command.giant.DeviceMicRhythm
 import com.ledvance.ui.R
 import com.ledvance.ui.component.MicSensitivitySlider
 import com.ledvance.ui.extensions.debouncedClickable

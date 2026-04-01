@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import com.ledvance.database.repo.TimerRepo
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.TimerUiItem
-import com.ledvance.domain.bean.command.timer.toTimerRepeat
+import com.ledvance.domain.bean.getTimerRepeat
 import com.ledvance.domain.di.Dispatcher
 import com.ledvance.domain.di.Dispatchers
 import com.ledvance.ui.extensions.toDisplayText
@@ -31,7 +31,7 @@ class GetDeviceTimersUseCase @Inject constructor(
         return timerRepo.getTimersFlow(parameter)
             .map { list ->
                 list.map { timer ->
-                    val days = timer.weekCycle.toByte().toTimerRepeat().days
+                    val days = timer.getTimerRepeat().days
                     TimerUiItem(
                         timerType = timer.timerType,
                         enabled = timer.enabled,

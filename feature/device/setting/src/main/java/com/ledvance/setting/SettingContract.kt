@@ -2,7 +2,8 @@ package com.ledvance.setting
 
 import androidx.compose.runtime.Immutable
 import com.ledvance.domain.FirmwareVersion
-import com.ledvance.domain.bean.command.LineSequence
+import com.ledvance.domain.bean.DeviceId
+import com.ledvance.domain.bean.command.giant.LineSequence
 import com.ledvance.ui.utils.OneTimeAction
 import com.ledvance.ui.utils.OneTimeActionConsumerContract
 import kotlinx.coroutines.flow.StateFlow
@@ -29,6 +30,7 @@ internal interface SettingContract :
         @Immutable
         data class Success(
             val isOnline: Boolean,
+            val deviceId: DeviceId,
             val loading: Boolean,
             val deviceName: String,
             val deviceMacAddress: String,

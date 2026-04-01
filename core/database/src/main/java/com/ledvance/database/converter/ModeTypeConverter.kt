@@ -1,7 +1,7 @@
 package com.ledvance.database.converter
 
 import androidx.room.TypeConverter
-import com.ledvance.domain.bean.command.ModeType
+import com.ledvance.domain.bean.command.giant.ModeType
 import com.ledvance.utils.extensions.toUnsignedInt
 
 /**

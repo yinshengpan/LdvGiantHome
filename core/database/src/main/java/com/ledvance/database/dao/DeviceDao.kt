@@ -9,12 +9,13 @@ import androidx.room.Transaction
 import androidx.room.Update
 import com.ledvance.database.model.DeviceBaseUpdateEntity
 import com.ledvance.database.model.DeviceEntity
+import com.ledvance.database.model.DeviceNameUpdateEntity
 import com.ledvance.database.model.DevicePowerUpdateEntity
 import com.ledvance.database.model.DeviceWithRuntimeConfig
 import com.ledvance.domain.FirmwareVersion
 import com.ledvance.domain.bean.DeviceId
-import com.ledvance.domain.bean.command.ModeId
-import com.ledvance.domain.bean.command.ModeType
+import com.ledvance.domain.bean.command.giant.ModeId
+import com.ledvance.domain.bean.command.giant.ModeType
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -72,6 +73,9 @@ interface DeviceDao {
 
     @Update(entity = DeviceEntity::class)
     suspend fun updateDevicePowerList(list: List<DevicePowerUpdateEntity>)
+
+    @Update(entity = DeviceEntity::class)
+    suspend fun updateDeviceNameList(list: List<DeviceNameUpdateEntity>)
 
     /** 持久化蓝牙回响的基础状态数据 */
     @Update(entity = DeviceEntity::class)

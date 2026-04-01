@@ -7,5 +7,6 @@ package com.ledvance.domain.bean.command
  * Describe : NotifyType
  */
 enum class NotifyType(override val command: Byte) : Command {
-    Response(0x02) // 设备应答帧标识 (协议帧 Byte2)
+    GiantResponse(0x02), // 设备应答帧标识 (协议帧 Byte2)
+    LdvResponse(0x5B), // 设备应答帧标识 (协议帧 Byte2)
 }

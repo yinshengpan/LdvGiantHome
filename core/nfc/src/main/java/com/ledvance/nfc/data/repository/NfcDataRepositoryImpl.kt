@@ -14,7 +14,7 @@ import javax.inject.Inject
  * Created date 2025/6/23 13:45
  * Describe : NfcDataRepositoryImpl
  */
-class NfcDataRepositoryImpl @Inject constructor() : NfcDataRepository {
+internal class NfcDataRepositoryImpl @Inject constructor() : NfcDataRepository {
     override fun dispatchActivityOnResume(
         activity: Activity,
         intent: Intent?
@@ -35,7 +35,7 @@ class NfcDataRepositoryImpl @Inject constructor() : NfcDataRepository {
     override val nfcModel: StateFlow<NfcModel?>
         get() = LDVNfcManager.nfcModel
 
-    override fun updateDriverModel(nfcModel: NfcModel?) {
+    override fun updateNfcModel(nfcModel: NfcModel?) {
         LDVNfcManager.updateDriverModel(nfcModel)
     }
 

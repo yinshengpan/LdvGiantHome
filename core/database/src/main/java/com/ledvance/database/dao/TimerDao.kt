@@ -6,7 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.ledvance.database.model.TimerEntity
 import com.ledvance.domain.bean.DeviceId
-import com.ledvance.domain.bean.TimerType
+import com.ledvance.domain.bean.command.common.TimerType
 import kotlinx.coroutines.flow.Flow
 
 /**

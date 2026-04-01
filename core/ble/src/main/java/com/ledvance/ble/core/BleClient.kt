@@ -6,6 +6,7 @@ import com.ledvance.ble.constant.Constants
 import com.ledvance.ble.protocol.BleProtocol
 import com.ledvance.ble.protocol.GiantProtocol
 import com.ledvance.ble.repo.BleRepository
+import com.ledvance.ble.uuid.getUuidData
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.utils.extensions.tryCatch
 import kotlinx.coroutines.CoroutineScope
@@ -47,10 +48,12 @@ class BleClient(
     private var writeChar: ClientBleGattCharacteristic? = null
     private var notifyChar: ClientBleGattCharacteristic? = null
     val commandQueue = CommandQueue()
-    val protocol: BleProtocol by lazy { GiantProtocol(this, commandQueue) }
+    val protocol: BleProtocol by lazy { ProtocolFactory.createProtocol(deviceId, this, commandQueue) }
 
     private val _state = MutableStateFlow(ConnectionState.DISCONNECTED)
     val state: StateFlow<ConnectionState> = _state
+
+    private val uuidData = deviceId.deviceType.getUuidData()
 
     val isConnected: Boolean
         get() = _state.value == ConnectionState.CONNECTED
@@ -71,21 +74,21 @@ class BleClient(
 
             Timber.tag(TAG).d("connect: connection established, discovering services...")
             val service = gatt.discoverServices()
-                .findService(Constants.SERVICE_UUID_GIANT)
+                .findService(uuidData.getServiceUuid())
                 ?: run {
-                    Timber.tag(TAG).e("connect: main service not found (${Constants.SERVICE_UUID_GIANT})")
+                    Timber.tag(TAG).e("connect: main service not found (${uuidData.getServiceUuid()})")
                     return fail("service not found")
                 }
 
-            writeChar = service.findCharacteristic(Constants.WRITE_CHAR_UUID_GIANT)
+            writeChar = service.findCharacteristic(uuidData.getWriteCharUuid())
                 ?: run {
-                    Timber.tag(TAG).e("connect: write characteristic not found")
+                    Timber.tag(TAG).e("connect: write characteristic not found (${uuidData.getWriteCharUuid()})")
                     return fail("rx not found")
                 }
 
-            notifyChar = service.findCharacteristic(Constants.NOTIFY_CHAR_UUID_GIANT)
+            notifyChar = service.findCharacteristic(uuidData.getNotifyCharUuid())
                 ?: run {
-                    Timber.tag(TAG).e("connect: notify characteristic not found")
+                    Timber.tag(TAG).e("connect: notify characteristic not found (${uuidData.getNotifyCharUuid()})")
                     return fail("tx not found")
                 }
 

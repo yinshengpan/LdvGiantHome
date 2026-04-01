@@ -11,7 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.ledvance.domain.bean.command.DeviceMicRhythm
+import com.ledvance.domain.bean.command.giant.DeviceMicRhythm
 import com.ledvance.music.component.DeviceMicView
 import com.ledvance.music.component.MusicPlayView
 import com.ledvance.music.component.PhoneMicView

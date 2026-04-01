@@ -10,7 +10,6 @@ android {
 dependencies {
     implementation(libs.appcompat)
     implementation(libs.datastore)
-    implementation(libs.timber)
     implementation(libs.core.ktx)
     implementation(libs.startup.runtime)
     implementation(libs.mmkv)

@@ -10,6 +10,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import no.nordicsemi.android.kotlin.ble.client.main.callback.ClientBleGatt
@@ -49,8 +50,8 @@ class BleRepository @Inject constructor(
         filters: List<BleScanFilter> = emptyList(),
         settings: BleScannerSettings = BleScannerSettings(scanMode = BleScanMode.SCAN_MODE_BALANCED),
     ) = bleScanner.scan(filters, settings)
+        .filter { !it.device.name.isNullOrEmpty() }
         .map {
-            Timber.tag(TAG).d("scanDevices() >>>>>> ${it.device.name}")
             aggregator.aggregateDevices(it)
                 .distinctBy { it.deviceId }
         }

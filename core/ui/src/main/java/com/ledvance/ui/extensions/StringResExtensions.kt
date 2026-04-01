@@ -1,10 +1,10 @@
 package com.ledvance.ui.extensions
 
-import com.ledvance.domain.bean.command.DeviceMicRhythm
-import com.ledvance.domain.bean.command.ModeId
-import com.ledvance.domain.bean.command.scenes.FloorScenes
-import com.ledvance.domain.bean.command.scenes.Scene
-import com.ledvance.domain.bean.command.scenes.TableScenes
+import com.ledvance.domain.bean.command.giant.DeviceMicRhythm
+import com.ledvance.domain.bean.command.giant.ModeId
+import com.ledvance.domain.bean.command.giant.scenes.FloorScenes
+import com.ledvance.domain.bean.command.giant.scenes.Scene
+import com.ledvance.domain.bean.command.giant.scenes.TableScenes
 import com.ledvance.ui.R
 import com.ledvance.utils.extensions.getString
 import java.time.DayOfWeek

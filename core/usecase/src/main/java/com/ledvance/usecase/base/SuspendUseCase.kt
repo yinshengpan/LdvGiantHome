@@ -12,6 +12,8 @@ import kotlin.coroutines.CoroutineContext
 abstract class SuspendUseCase<in P, R>(
     private val coroutineContext: CoroutineContext,
 ) {
+    val TAG
+        get() = this::class.java.simpleName
 
     suspend operator fun invoke(parameter: P): Result<R> =
         try {

@@ -7,9 +7,9 @@ package com.ledvance.domain.bean
  * Describe : LightCommand
  */
 sealed interface LightCommand {
-    data class ColourModeHs(val hue: Int, val sat: Int) : LightCommand
+    data class ColourModeHs(val hue: Int, val sat: Int, val brightness: Int? = null) : LightCommand
     data class ColourModeBrightness(val brightness: Int) : LightCommand
-    data class WhiteModeCct(val cct: Int) : LightCommand
+    data class WhiteModeCct(val cct: Int, val brightness: Int? = null) : LightCommand
     data class WhiteModeBrightness(val brightness: Int) : LightCommand
     data class Speed(val speed: Int) : LightCommand
     data class DeviceMicSensitivity(val sensitivity: Int) : LightCommand

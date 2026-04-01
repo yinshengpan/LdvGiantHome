@@ -3,8 +3,8 @@ package com.ledvance.database.model
 import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
 import com.ledvance.domain.bean.DeviceId
-import com.ledvance.domain.bean.command.ModeId
-import com.ledvance.domain.bean.command.ModeType
+import com.ledvance.domain.bean.command.giant.ModeId
+import com.ledvance.domain.bean.command.giant.ModeType
 
 /**
  * @author : jason yin

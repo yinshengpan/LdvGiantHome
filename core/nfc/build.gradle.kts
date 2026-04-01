@@ -12,7 +12,6 @@ dependencies {
     implementation(projects.core.utils)
     implementation(projects.core.domain)
     implementation(projects.sdk.nfc)
-    implementation(libs.timber)
     implementation(libs.core.ktx)
     implementation(libs.commons.lang3)
     implementation(libs.startup.runtime)

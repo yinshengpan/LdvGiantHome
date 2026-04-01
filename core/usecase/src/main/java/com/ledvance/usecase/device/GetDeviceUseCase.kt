@@ -5,7 +5,7 @@ import com.ledvance.database.repo.DeviceRepo
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceInfo
 import com.ledvance.domain.bean.WorkMode
-import com.ledvance.domain.bean.command.LineSequence
+import com.ledvance.domain.bean.command.giant.LineSequence
 import com.ledvance.domain.di.Dispatcher
 import com.ledvance.domain.di.Dispatchers
 import com.ledvance.usecase.base.FlowUseCase
@@ -53,9 +53,9 @@ internal fun DeviceWithRuntimeConfig.toDeviceInfo(): DeviceInfo {
         phoneMicSensitivity = config?.phoneMicSensitivity ?: 60,
         h = device.h,
         s = device.s,
-        v = device.v,
-        cct = device.cct,
-        brightness = device.brightness,
+        v = device.v.takeIf { it != -1 } ?: device.brightness.coerceIn(1, 100),
+        cct = device.cct.coerceIn(0, 100),
+        brightness = device.brightness.takeIf { it != -1 } ?: device.v.coerceIn(1, 100),
         firmwareVersion = device.firmwareVersion,
     )
 }

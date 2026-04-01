@@ -71,6 +71,7 @@ internal class SearchViewModel @Inject constructor(
     override fun addDevice(scannedDevice: ScannedDevice) {
         viewModelScope.launch {
             screenState.update { it.copy(loading = true) }
+            stopBleScan()
             deviceControlUseCase.connectDevice(scannedDevice.deviceId)
             addDeviceUseCase(
                 parameter = AddDeviceUseCase.Param(

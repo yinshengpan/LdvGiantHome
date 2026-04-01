@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 enum class Company(val title: String, val type: Int) {
     Unknown("Unknown", 0x00),
-    Ledvance("LDV", 0x01),
+    Ledvance("LEDVANCE", 0x01),
     Giant("HYD", 0x02),
     ;
 

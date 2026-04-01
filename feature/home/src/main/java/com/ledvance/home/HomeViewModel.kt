@@ -13,13 +13,15 @@ import com.ledvance.ble.core.ConnectionManager
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceUiItem
 import com.ledvance.ui.component.SnackbarManager
+import com.ledvance.usecase.device.AutoConnectUseCase
 import com.ledvance.usecase.device.DeleteDeviceUseCase
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceListStateUseCase
 import com.ledvance.usecase.device.GetDevicesUseCase
 import com.ledvance.usecase.device.SyncDeviceInfoUseCase
+import com.ledvance.utils.extensions.tryCatchReturn
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -41,6 +43,7 @@ internal class HomeViewModel @Inject constructor(
     private val getDeviceListStateUseCase: GetDeviceListStateUseCase,
     private val syncDeviceInfoUseCase: SyncDeviceInfoUseCase,
     private val deleteDeviceUseCase: DeleteDeviceUseCase,
+    private val autoConnectUseCase: AutoConnectUseCase,
 ) : ViewModel(), HomeContract {
 
     private val TAG = "HomeViewModel"
@@ -71,30 +74,26 @@ internal class HomeViewModel @Inject constructor(
         initialValue = HomeContract.UiState.Loading
     )
 
+    /** 追踪 AutoConnectUseCase 运行的 Job，用于在页面不可见时取消扫描 */
+    private var autoConnectJob: Job? = null
+
     init {
         syncDeviceInfoUseCase(viewModelScope)
-        startAutoReconnect()
     }
 
-    private fun startAutoReconnect() {
-        viewModelScope.launch {
-            while (true) {
-                delay(15_000)
-                val currentState = uiState.value
-                if (currentState is HomeContract.UiState.Success) {
-                    val connectedCount = currentState.devices.count { it.isOnline }
-                    if (connectedCount < 3) {
-                        val devicesToConnect = currentState.devices
-                            .filter { !it.isOnline }
-                            .take(3 - connectedCount)
-
-                        if (devicesToConnect.isNotEmpty()) {
-                            Timber.tag(TAG).d("Auto-reconnecting ${devicesToConnect.size} devices")
-                            connectDevices(devicesToConnect)
-                        }
-                    }
-                }
+    override fun setPageVisibility(visible: Boolean) {
+        Timber.tag(TAG).d("setPageVisibility: visible=$visible")
+        if (visible) {
+            // 页面进入前台：若扫描任务未运行则启动
+            if (autoConnectJob?.isActive != true) {
+                autoConnectJob = tryCatchReturn { autoConnectUseCase(viewModelScope) }
+                Timber.tag(TAG).d("AutoConnect started")
             }
+        } else {
+            // 页面退到后台：取消扫描任务，停止 BLE 扫描
+            autoConnectJob?.cancel()
+            autoConnectJob = null
+            Timber.tag(TAG).d("AutoConnect stopped")
         }
     }
 
@@ -108,6 +107,11 @@ internal class HomeViewModel @Inject constructor(
             }
             screenState.update { it.copy(loading = false) }
         }
+    }
+
+    override fun asyncConnectDevice(deviceId: DeviceId) {
+        Timber.tag(TAG).d("asyncConnectDevice: deviceId=%s", deviceId)
+        connectionManager.requestConnect(deviceId)
     }
 
     override fun connectDevice(deviceId: DeviceId) {

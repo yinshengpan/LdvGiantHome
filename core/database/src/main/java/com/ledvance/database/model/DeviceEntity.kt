@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 import com.ledvance.domain.FirmwareVersion
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
-import com.ledvance.domain.bean.command.ModeId
-import com.ledvance.domain.bean.command.ModeType
+import com.ledvance.domain.bean.command.giant.ModeId
+import com.ledvance.domain.bean.command.giant.ModeType
 
 /**
  * @author : jason yin
@@ -43,4 +43,6 @@ data class DeviceEntity(
     val cct: Int = 100,
     @ColumnInfo(name = "brightness")
     val brightness: Int = 100,
+    @ColumnInfo(name = "create_time")
+    val createTime: Long = System.currentTimeMillis(),
 )

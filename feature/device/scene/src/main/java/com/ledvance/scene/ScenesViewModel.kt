@@ -5,10 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
 import com.ledvance.domain.bean.LightCommand
-import com.ledvance.domain.bean.command.ModeType
-import com.ledvance.domain.bean.command.scenes.FloorScenes
-import com.ledvance.domain.bean.command.scenes.Scene
-import com.ledvance.domain.bean.command.scenes.TableScenes
+import com.ledvance.domain.bean.command.giant.ModeType
+import com.ledvance.domain.bean.command.giant.scenes.FloorScenes
+import com.ledvance.domain.bean.command.giant.scenes.Scene
+import com.ledvance.domain.bean.command.giant.scenes.TableScenes
 import com.ledvance.ui.component.SnackbarManager
 import com.ledvance.ui.segment.SceneSegment
 import com.ledvance.usecase.device.DeviceControlUseCase
@@ -57,7 +57,7 @@ internal class ScenesViewModel @AssistedInject constructor(
         flow3 = screenState
     ) { device, deviceState, state ->
         val scenes = device.deviceType.getScenes(state.selectedSceneSegment)
-        val selectedScene = if (device.modeType == ModeType.Scene) {
+        val selectedGiantScene = if (device.modeType == ModeType.GiantScene) {
             scenes.firstOrNull { it.command == device.modeId?.command }
         } else null
         ScenesContract.UiState.Success(
@@ -65,7 +65,7 @@ internal class ScenesViewModel @AssistedInject constructor(
             brightness = state.brightness.takeIf { it != -1 } ?: device.v,
             speed = state.speed.takeIf { it != -1 } ?: device.speed,
             selectedSceneSegment = state.selectedSceneSegment,
-            selectedScene = selectedScene,
+            selectedScene = selectedGiantScene,
             scenes = device.deviceType.getScenes(state.selectedSceneSegment),
             sceneSegments = device.deviceType.getSceneSceneSegmentList(),
             loading = state.loading

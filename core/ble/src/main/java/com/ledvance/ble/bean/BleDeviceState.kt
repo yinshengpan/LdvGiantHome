@@ -2,8 +2,8 @@ package com.ledvance.ble.bean
 
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceTimer
-import com.ledvance.domain.bean.command.ModeId
-import com.ledvance.domain.bean.command.ModeType
+import com.ledvance.domain.bean.command.giant.ModeId
+import com.ledvance.domain.bean.command.giant.ModeType
 
 /**
  * @author : jason yin

@@ -10,6 +10,7 @@ import com.ledvance.domain.di.Dispatchers
 import com.ledvance.usecase.base.SuspendUseCase
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.CoroutineDispatcher
+import timber.log.Timber
 import javax.inject.Inject
 
 /**
@@ -25,6 +26,11 @@ class AddDeviceUseCase @Inject constructor(
 ) : SuspendUseCase<AddDeviceUseCase.Param, Unit>(dispatcher) {
     override suspend fun execute(parameter: Param) {
         with(parameter) {
+            val device = deviceRepo.getDevice(deviceId)
+            if (device != null) {
+                Timber.tag(TAG).d("${device.device.name}($deviceId) is already exists")
+                return
+            }
             deviceRepo.addDevice(
                 deviceEntity = DeviceEntity(
                     deviceId = deviceId,

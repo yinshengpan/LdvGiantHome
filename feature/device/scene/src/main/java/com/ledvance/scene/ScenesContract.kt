@@ -1,7 +1,7 @@
 package com.ledvance.scene
 
 import androidx.compose.runtime.Immutable
-import com.ledvance.domain.bean.command.scenes.Scene
+import com.ledvance.domain.bean.command.giant.scenes.Scene
 import com.ledvance.ui.segment.SceneSegment
 import kotlinx.coroutines.flow.StateFlow
 

@@ -13,7 +13,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class FirmwareVersion(val value: Int, val displayName: String, val advertisedVersion: String) {
     companion object {
-        val default = FirmwareVersion(-1, "unknow", "XX")
+        val default = FirmwareVersion(-1, "unknown", "XX")
 
         fun create(version: Int?): FirmwareVersion {
             if (version == null || version == -1) {
@@ -28,4 +28,8 @@ data class FirmwareVersion(val value: Int, val displayName: String, val advertis
             return FirmwareVersion(newVersion, displayName, advertisedVersion)
         }
     }
+}
+
+fun FirmwareVersion.isUnknown(): Boolean {
+    return value == -1 || displayName == "unknown"
 }
