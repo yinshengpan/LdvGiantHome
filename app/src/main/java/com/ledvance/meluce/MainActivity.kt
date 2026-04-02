@@ -1,4 +1,4 @@
-package com.ledvance.energy.manager
+package com.ledvance.meluce
 
 import android.content.Intent
 import android.content.res.Configuration
@@ -20,10 +20,10 @@ import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.tracing.trace
-import com.ledvance.energy.manager.model.DarkThemeMode
-import com.ledvance.energy.manager.state.LedvanceApp
-import com.ledvance.energy.manager.utils.DataStoreKeys
-import com.ledvance.energy.manager.viewmodel.MainViewModel
+import com.ledvance.meluce.model.DarkThemeMode
+import com.ledvance.meluce.state.LedvanceApp
+import com.ledvance.meluce.utils.DataStoreKeys
+import com.ledvance.meluce.viewmodel.MainViewModel
 import com.ledvance.ui.theme.LedvanceTheme
 import com.ledvance.utils.extensions.getInt
 import com.ledvance.utils.extensions.isSystemInDarkTheme
@@ -103,7 +103,7 @@ class MainActivity : AppCompatActivity() {
                     DataStoreKeys.darkThemeMode.getInt()
                 ) { isSystemInDarkTheme, darkThemeMode ->
                     Timber.i("isSystemInDarkTheme:$isSystemInDarkTheme,darkThemeMode:$darkThemeMode")
-                    return@combine when (DarkThemeMode.valueOf(darkThemeMode)) {
+                    return@combine when (DarkThemeMode.Companion.valueOf(darkThemeMode)) {
                         DarkThemeMode.Dark -> true
                         DarkThemeMode.FollowSystem -> isSystemInDarkTheme
                         DarkThemeMode.Light -> false

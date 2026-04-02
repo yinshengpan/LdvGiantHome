@@ -1,4 +1,4 @@
-package com.ledvance.energy.manager.navigation
+package com.ledvance.meluce.navigation
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.PaddingValues

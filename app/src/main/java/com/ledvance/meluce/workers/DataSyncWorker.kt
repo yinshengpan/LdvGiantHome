@@ -1,4 +1,4 @@
-package com.ledvance.energy.manager.workers
+package com.ledvance.meluce.workers
 
 import android.content.Context
 import androidx.hilt.work.HiltWorker

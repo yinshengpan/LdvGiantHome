@@ -1,10 +1,10 @@
-package com.ledvance.energy.manager.initializer
+package com.ledvance.meluce.initializer
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.startup.Initializer
-import com.ledvance.energy.manager.model.DarkThemeMode
-import com.ledvance.energy.manager.utils.DataStoreKeys
+import com.ledvance.meluce.model.DarkThemeMode
+import com.ledvance.meluce.utils.DataStoreKeys
 import com.ledvance.utils.CoroutineScopeUtils
 import com.ledvance.utils.extensions.getInt
 import com.ledvance.utils.extensions.setInt
@@ -27,7 +27,7 @@ class DarkThemeInitializer : Initializer<Boolean> {
             // 把App的样式强制设为DarkMode
             DataStoreKeys.darkThemeMode.setInt(DarkThemeMode.Light.mode)
             DataStoreKeys.darkThemeMode.getInt().distinctUntilChanged().map {
-                DarkThemeMode.valueOf(it)
+                DarkThemeMode.Companion.valueOf(it)
             }.collectLatest { darkThemeMode ->
                 val nightMode = when (darkThemeMode) {
                     DarkThemeMode.Dark -> AppCompatDelegate.MODE_NIGHT_YES

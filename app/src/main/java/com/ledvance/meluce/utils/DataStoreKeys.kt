@@ -1,4 +1,4 @@
-package com.ledvance.energy.manager.utils
+package com.ledvance.meluce.utils
 
 import androidx.datastore.preferences.core.intPreferencesKey
 

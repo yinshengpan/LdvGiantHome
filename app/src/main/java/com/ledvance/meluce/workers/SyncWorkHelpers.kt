@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ledvance.energy.manager.workers
+package com.ledvance.meluce.workers
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -25,7 +25,7 @@ import androidx.core.app.NotificationCompat
 import androidx.work.Constraints
 import androidx.work.ForegroundInfo
 import androidx.work.NetworkType
-import com.ledvance.smart.home.R
+import com.ledvance.meluce.R
 
 private const val SYNC_NOTIFICATION_ID = 0
 private const val SYNC_NOTIFICATION_CHANNEL_ID = "SyncNotificationChannel"

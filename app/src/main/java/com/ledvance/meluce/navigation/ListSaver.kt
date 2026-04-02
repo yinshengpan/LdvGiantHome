@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ledvance.energy.manager.navigation
+package com.ledvance.meluce.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.Saver

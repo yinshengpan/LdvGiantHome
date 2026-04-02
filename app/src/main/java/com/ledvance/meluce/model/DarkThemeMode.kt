@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ledvance.energy.manager.model
+package com.ledvance.meluce.model
 
 sealed class DarkThemeMode(val mode: Int) {
     data object FollowSystem : DarkThemeMode(1)

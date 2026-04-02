@@ -1,4 +1,4 @@
-package com.ledvance.energy.manager.navigation
+package com.ledvance.meluce.navigation
 
 import com.ledvance.home.navigation.HomeRoute
 import com.ledvance.profile.navigation.ProfileRoute

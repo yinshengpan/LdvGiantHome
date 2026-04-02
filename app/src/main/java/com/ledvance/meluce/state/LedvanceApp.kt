@@ -1,4 +1,4 @@
-package com.ledvance.energy.manager.state
+package com.ledvance.meluce.state
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
@@ -22,10 +22,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ledvance.domain.bean.DeviceId
-import com.ledvance.energy.manager.navigation.MainNavigation
-import com.ledvance.energy.manager.navigation.MainNavigationScaffold
-import com.ledvance.energy.manager.navigation.TopLevelDestination
-import com.ledvance.energy.manager.viewmodel.MainViewModel
+import com.ledvance.meluce.navigation.MainNavigation
+import com.ledvance.meluce.navigation.MainNavigationScaffold
+import com.ledvance.meluce.navigation.TopLevelDestination
+import com.ledvance.meluce.viewmodel.MainViewModel
 import com.ledvance.home.navigation.HomeRoute
 import com.ledvance.light.navigation.isTopLightDetails
 import com.ledvance.light.navigation.navigateToLightDetails

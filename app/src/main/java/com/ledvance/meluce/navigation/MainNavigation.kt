@@ -1,4 +1,4 @@
-package com.ledvance.energy.manager.navigation
+package com.ledvance.meluce.navigation
 
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
@@ -11,7 +11,7 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import com.ledvance.energy.manager.state.LedvanceAppState
+import com.ledvance.meluce.state.LedvanceAppState
 import com.ledvance.home.navigation.HomeRoute
 import com.ledvance.home.navigation.homeScreen
 import com.ledvance.light.navigation.lightNavGraph

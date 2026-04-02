@@ -1,11 +1,11 @@
-package com.ledvance.energy.manager.initializer
+package com.ledvance.meluce.initializer
 
 import android.content.Context
 import androidx.startup.Initializer
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import androidx.work.WorkManagerInitializer
-import com.ledvance.energy.manager.workers.DataSyncWorker
+import com.ledvance.meluce.workers.DataSyncWorker
 
 /**
  * @author : jason yin
@@ -18,7 +18,7 @@ class SyncInitializer : Initializer<Boolean> {
         WorkManager.getInstance(context).enqueueUniqueWork(
             uniqueWorkName = "SyncData",
             existingWorkPolicy = ExistingWorkPolicy.KEEP,
-            request = DataSyncWorker.startUpSyncWork()
+            request = DataSyncWorker.Companion.startUpSyncWork()
         )
         return true
     }

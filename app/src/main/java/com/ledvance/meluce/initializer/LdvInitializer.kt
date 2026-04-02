@@ -1,4 +1,4 @@
-package com.ledvance.energy.manager.initializer
+package com.ledvance.meluce.initializer
 
 import android.content.Context
 import androidx.startup.Initializer

@@ -146,9 +146,9 @@ internal class SettingViewModel @AssistedInject constructor(
 
     fun DeviceType.getIconResId(): Int {
         return when (this) {
-            DeviceType.GiantTable -> com.ledvance.ui.R.mipmap.pic_tablelamp
-            DeviceType.GiantFloor -> com.ledvance.ui.R.mipmap.pic_floorlamp
-            DeviceType.LdvBedside -> com.ledvance.ui.R.mipmap.pic_bedsidelamp
+            DeviceType.GiantTable -> com.ledvance.ui.R.mipmap.pic_giant_table
+            DeviceType.GiantFloor -> com.ledvance.ui.R.mipmap.pic_giant_floor
+            DeviceType.LdvBedside -> com.ledvance.ui.R.mipmap.pic_ldv_bedside
         }
     }
 

@@ -1,4 +1,4 @@
-package com.ledvance.energy.manager
+package com.ledvance.meluce
 
 import android.app.Application
 import android.content.Context

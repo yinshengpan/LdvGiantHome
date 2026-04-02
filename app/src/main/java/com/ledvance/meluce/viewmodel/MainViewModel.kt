@@ -1,4 +1,4 @@
-package com.ledvance.energy.manager.viewmodel
+package com.ledvance.meluce.viewmodel
 
 import android.app.Activity
 import android.content.Intent
