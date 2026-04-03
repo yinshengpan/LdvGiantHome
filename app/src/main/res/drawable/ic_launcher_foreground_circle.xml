@@ -4,12 +4,13 @@
     android:height="108dp"
     android:viewportWidth="1024"
     android:viewportHeight="1024">
-  <group android:scaleX="0.57"
-      android:scaleY="0.57"
-      android:translateX="220.16"
-      android:translateY="220.16">
+  <group android:scaleX="0.63"
+      android:scaleY="0.63"
+      android:translateX="189.44"
+      android:translateY="189.44">
   <!--  <path-->
-  <!--      android:pathData="M0,0L1024,0L1024,1024L0,1024L0,0Z">-->
+  <!--      android:pathData="M512,0C794.8,0 1024,229.2 1024,512C1024,794.8 794.8,1024 512,1024C229.2,1024 0,794.8 0,512C0,229.2 229.2,0 512,0Z"-->
+  <!--      android:fillType="evenOdd">-->
   <!--    <aapt:attr name="android:fillColor">-->
   <!--      <gradient-->
   <!--          android:startX="0"-->
@@ -23,15 +24,15 @@
   <!--    </aapt:attr>-->
   <!--  </path>-->
     <path
-        android:pathData="M551.5,512C551.5,766.1 579.3,972 613.5,972C647.7,972 675.4,766.1 675.4,512C675.4,257.9 647.7,52 613.5,52C579.3,52 551.5,257.9 551.5,512"
+        android:pathData="M607,512C607,694.3 626.9,842 651.4,842C676,842 695.9,694.3 695.9,512C695.9,329.7 676,182 651.4,182C626.9,182 607,329.7 607,512"
         android:fillColor="#ffffff"
         android:fillType="evenOdd"/>
     <path
-        android:pathData="M737.3,512C737.3,761.9 757.1,964.5 781.6,964.5C806,964.5 825.8,761.9 825.8,512C825.8,262.1 806,59.5 781.6,59.5C757.1,59.5 737.3,262.1 737.3,512"
+        android:pathData="M740.3,512C740.3,691.3 754.5,836.6 772.1,836.6C789.6,836.6 803.8,691.3 803.8,512C803.8,332.7 789.6,187.4 772.1,187.4C754.5,187.4 740.3,332.7 740.3,512"
         android:fillColor="#ffffff"
         android:fillType="evenOdd"/>
     <path
-        android:pathData="M883.4,512C883.4,757.7 896.4,956.8 912.5,956.8C928.7,956.8 941.7,757.7 941.7,512C941.7,266.3 928.7,67.2 912.5,67.2C896.4,67.2 883.4,266.3 883.4,512"
+        android:pathData="M845.1,512C845.1,688.2 854.5,831.1 866.1,831.1C877.6,831.1 887,688.2 887,512C887,335.8 877.6,192.9 866.1,192.9C854.5,192.9 845.1,335.8 845.1,512"
         android:fillColor="#ffffff"
         android:fillType="evenOdd"/>
   </group>
