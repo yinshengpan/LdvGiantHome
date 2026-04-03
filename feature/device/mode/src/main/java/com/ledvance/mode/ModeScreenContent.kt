@@ -56,7 +56,7 @@ internal fun ModeScreenContent(
 
     Card(
         elevation = CardDefaults.cardElevation(8.dp),
-        colors = CardDefaults.cardColors(containerColor = AppTheme.colors.screenBackground),
+        colors = CardDefaults.cardColors(containerColor = AppTheme.colors.cardBackground),
         shape = RoundedCornerShape(10.dp),
         modifier = modifier.padding(20.dp)
     ) {

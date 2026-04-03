@@ -1,11 +1,18 @@
 package com.ledvance.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,18 +22,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceButton
-import com.ledvance.ui.component.LedvancePrimaryScreen
+import com.ledvance.ui.component.LedvanceScreen
 import com.ledvance.ui.dialog.LedvanceDialog
+import com.ledvance.ui.extensions.clipWithBorder
+import com.ledvance.ui.extensions.debouncedClickable
 import com.ledvance.ui.state.rememberBluetoothBusinessState
 import com.ledvance.ui.theme.AppTheme
 import com.ledvance.utils.BluetoothManager
@@ -68,41 +81,38 @@ internal fun HomeScreen(
 
     val appName = remember { context.getAppName() ?: "" }
 
-    LedvancePrimaryScreen(
-        title = appName,
-        actionIconPainter = painterResource(R.drawable.ic_add),
-        onActionPressed = onToAddNewDevice,
-        isLoading = (uiState as? HomeContract.UiState.Success)?.loading ?: false
+    LedvanceScreen(
+        backgroundColorBrush = AppTheme.colors.screenBackgroundBrush,
+        modifier = Modifier.statusBarsPadding(),
+        isLoading = (uiState as? HomeContract.UiState.Success)?.loading
     ) {
-        when (uiState) {
-            HomeContract.UiState.Loading -> {}
-            is HomeContract.UiState.Success -> {
-                val successUiState = uiState as HomeContract.UiState.Success
-                if (successUiState.devices.isNotEmpty()) {
-                    HomeScreenContent(
-                        uiState = successUiState,
-                        onSwitchChange = { deviceId, switch ->
-                            viewModel.onSwitchChange(deviceId, switch)
-                        },
-                        onConnectClick = {
-                            if (bluetoothBusinessState.hasAllow()) {
-                                viewModel.connectDevice(it)
-                            }
-                        },
-                        onDisconnectClick = {
-                            viewModel.disconnectDevice(it)
-                        },
-                        onDeviceClick = {
-                            viewModel.asyncConnectDevice(it)
-                            onNavigateToControlPanel(it)
-                        },
-                        onDeleteClick = {
-                            deviceToDelete = it
+        val successUiState = (uiState as? HomeContract.UiState.Success) ?: return@LedvanceScreen
+        Column(modifier = Modifier.fillMaxSize()) {
+            HomeHeader(appName = appName, onToAddNewDevice = onToAddNewDevice)
+            if (successUiState.devices.isNotEmpty()) {
+                HomeScreenContent(
+                    uiState = successUiState,
+                    onSwitchChange = { deviceId, switch ->
+                        viewModel.onSwitchChange(deviceId, switch)
+                    },
+                    onConnectClick = {
+                        if (bluetoothBusinessState.hasAllow()) {
+                            viewModel.connectDevice(it)
                         }
-                    )
-                } else {
-                    EmptyData(onToAddNewDevice = onToAddNewDevice)
-                }
+                    },
+                    onDisconnectClick = {
+                        viewModel.disconnectDevice(it)
+                    },
+                    onDeviceClick = {
+                        viewModel.asyncConnectDevice(it)
+                        onNavigateToControlPanel(it)
+                    },
+                    onDeleteClick = {
+                        deviceToDelete = it
+                    }
+                )
+            } else {
+                EmptyData(onToAddNewDevice = onToAddNewDevice)
             }
         }
     }
@@ -116,6 +126,48 @@ internal fun HomeScreen(
                 viewModel.onDeleteDevice(deviceToDelete!!)
                 deviceToDelete = null
             }
+        )
+    }
+}
+
+@Composable
+private fun HomeHeader(appName: String, onToAddNewDevice: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .padding(top = 15.dp)
+            .fillMaxWidth()
+            .height(48.dp)
+            .padding(horizontal = 25.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Image(
+            painter = painterResource(R.mipmap.christmas_eve_icon),
+            contentDescription = null,
+            modifier = Modifier
+                .size(40.dp)
+                .clipWithBorder(
+                    shape = CircleShape,
+                    borderWidth = 2.dp,
+                    borderColor = Color(0xFFFF976E)
+                )
+        )
+        Text(
+            text = appName,
+            style = AppTheme.typography.titleMedium.copy(
+                fontSize = 24.sp,
+                fontWeight = FontWeight.W700,
+            ),
+            color = Color(0xFFFF976E),
+            modifier = Modifier.padding(start = 12.dp)
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        Image(
+            painter = painterResource(R.mipmap.icon_add),
+            contentDescription = "Add",
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier
+                .size(26.dp)
+                .debouncedClickable(onClick = onToAddNewDevice)
         )
     }
 }

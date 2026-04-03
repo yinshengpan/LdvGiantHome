@@ -54,7 +54,7 @@ internal fun DeviceWithRuntimeConfig.toDeviceInfo(): DeviceInfo {
         h = device.h,
         s = device.s,
         v = device.v.takeIf { it != -1 } ?: device.brightness.coerceIn(1, 100),
-        cct = device.cct.coerceIn(0, 100),
+        cct = device.cct,
         brightness = device.brightness.takeIf { it != -1 } ?: device.v.coerceIn(1, 100),
         firmwareVersion = device.firmwareVersion,
     )

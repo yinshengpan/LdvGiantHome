@@ -3,7 +3,6 @@ package com.ledvance.light.component
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -38,18 +37,16 @@ internal sealed class CardFeature(
     data object Timer : CardFeature(titleResId = R.string.title_timer)
     data object Music : CardFeature(titleResId = R.string.title_music,)
     data object Mode : CardFeature(titleResId = R.string.title_mode)
-    data object ModeType : CardFeature(titleResId = R.string.title_mode)
 }
 
 @Composable
-internal fun CardFeatureItem(cardFeature: CardFeature, onItemClick: (CardFeature) -> Unit) {
+internal fun CardFeatureItem(cardFeature: CardFeature, modifier: Modifier = Modifier, onItemClick: (CardFeature) -> Unit) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 5.dp, bottom = 15.dp)
+            .then(modifier)
             .height(84.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = AppTheme.colors.screenBackground),
+        colors = CardDefaults.cardColors(containerColor = AppTheme.colors.cardBackground),
         elevation = CardDefaults.elevatedCardElevation(7.dp),
     ) {
         Box(

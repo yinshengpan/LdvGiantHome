@@ -38,6 +38,7 @@ dependencies {
     implementation(projects.feature.home)
     implementation(projects.feature.profile)
     implementation(projects.feature.search)
+    implementation(projects.feature.room)
     implementation(projects.feature.device.lightDetail)
 
     implementation(libs.appcompat)

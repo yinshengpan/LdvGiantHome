@@ -44,6 +44,6 @@ fun Context.enableTimerDebugTree() {
 
 fun Activity.setStatusBarsIcons(darkIcons: Boolean) {
     WindowCompat.getInsetsController(window, window.decorView).apply {
-        isAppearanceLightStatusBars = !darkIcons
+        isAppearanceLightStatusBars = darkIcons
     }
 }

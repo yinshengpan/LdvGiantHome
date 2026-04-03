@@ -36,7 +36,7 @@ internal fun MusicScreenContent(
 
     Card(
         elevation = CardDefaults.cardElevation(8.dp),
-        colors = CardDefaults.cardColors(containerColor = AppTheme.colors.screenBackground),
+        colors = CardDefaults.cardColors(containerColor = AppTheme.colors.cardBackground),
         shape = RoundedCornerShape(10.dp),
         modifier = Modifier.padding(paddingValues = PaddingValues(20.dp)),
     ) {

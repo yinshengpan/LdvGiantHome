@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "c155d2802f32c0144bd285ddc23be4b6",
+    "identityHash": "dbfb2aa4c4d954df649767052cc501b1",
     "entities": [
       {
         "tableName": "devices",
@@ -100,7 +100,7 @@
       },
       {
         "tableName": "device_timers",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` TEXT NOT NULL, `timer_type` TEXT NOT NULL, `enabled` INTEGER NOT NULL, `hour` INTEGER NOT NULL, `minute` INTEGER NOT NULL, `week_cycle` INTEGER NOT NULL, PRIMARY KEY(`device_id`, `timer_type`), FOREIGN KEY(`device_id`) REFERENCES `devices`(`device_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`device_id` TEXT NOT NULL, `timer_type` TEXT NOT NULL, `enabled` INTEGER NOT NULL, `hour` INTEGER NOT NULL, `minute` INTEGER NOT NULL, `delay` INTEGER NOT NULL, `week_cycle` INTEGER NOT NULL, PRIMARY KEY(`device_id`, `timer_type`), FOREIGN KEY(`device_id`) REFERENCES `devices`(`device_id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "deviceId",
@@ -129,6 +129,12 @@
           {
             "fieldPath": "minute",
             "columnName": "minute",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "delay",
+            "columnName": "delay",
             "affinity": "INTEGER",
             "notNull": true
           },
@@ -260,7 +266,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c155d2802f32c0144bd285ddc23be4b6')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'dbfb2aa4c4d954df649767052cc501b1')"
     ]
   }
 }

@@ -24,7 +24,7 @@ class LdvBedsideNotificationParser(
 
         val cmd = bytes[1]
         val dataLen = bytes[2].toUnsignedInt()
-        if (bytes.size < 3 + dataLen) return // Incomplete frame
+        if (bytes.size != 3 + dataLen) return // Incomplete frame
 
         when (cmd) {
             LdvReportType.DeviceStatus.command -> parseLdvBedsideDeviceState(deviceId, bytes)
@@ -38,6 +38,7 @@ class LdvBedsideNotificationParser(
 
         val power = bytes[3] == LdvOnOff.On.command
         if (!power) {
+            Timber.tag(TAG).i("parseLdvBedsideDeviceState: $deviceId -> Power=$power")
             registry.updateDeviceState(deviceId, power)
             return
         }
@@ -61,11 +62,11 @@ class LdvBedsideNotificationParser(
             r = old?.r ?: 0,
             g = old?.g ?: 0,
             b = old?.b ?: 0,
-            w = cct,
+            w = cct.coerceIn(1000, 6500),
             brightness = brightness,
             modeType = modeTypeValue,
             modeId = 0,
-            speed = old?.speed ?: 50
+            speed = old?.speed ?: 0
         )
     }
 
@@ -79,6 +80,7 @@ class LdvBedsideNotificationParser(
 
         val hour1 = bytes[4].toUnsignedInt()
         val minute1 = bytes[5].toUnsignedInt()
+        val delay1 = bytes[6].toUnsignedInt()
         val ldvWeekByte1 = bytes[8]
         val isEnabled1 = bytes[9] == 0x01.toByte()
         val repeatInfo1 = ldvWeekByte1.toUnsignedInt()
@@ -89,17 +91,19 @@ class LdvBedsideNotificationParser(
             enabled = isEnabled1,
             hour = hour1,
             minute = minute1,
+            delay = delay1,
             weekCycle = repeatInfo1
         )
 
-        val idxByte2 = bytes[3]
+        val idxByte2 = bytes[10]
         val ldvTimerIndex2 = TimerIndex.fromByte(idxByte2) ?: return
         val timerType2 = ldvTimerIndex2.toTimerType()
 
-        val hour2 = bytes[4].toUnsignedInt()
-        val minute2 = bytes[5].toUnsignedInt()
-        val ldvWeekByte2 = bytes[8]
-        val isEnabled2 = bytes[9] == 0x01.toByte()
+        val hour2 = bytes[11].toUnsignedInt()
+        val minute2 = bytes[12].toUnsignedInt()
+        val delay2 = bytes[13].toUnsignedInt()
+        val ldvWeekByte2 = bytes[15]
+        val isEnabled2 = bytes[16] == 0x01.toByte()
         val repeatInfo2 = ldvWeekByte2.toUnsignedInt()
 
         val receivedTimer2 = DeviceTimer(
@@ -108,6 +112,7 @@ class LdvBedsideNotificationParser(
             enabled = isEnabled2,
             hour = hour2,
             minute = minute2,
+            delay = delay2,
             weekCycle = repeatInfo2
         )
 

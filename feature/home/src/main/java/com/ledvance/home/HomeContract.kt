@@ -15,7 +15,6 @@ internal interface HomeContract {
 
     @Immutable
     sealed interface UiState {
-        @Immutable
         data object Loading : UiState
 
         @Immutable

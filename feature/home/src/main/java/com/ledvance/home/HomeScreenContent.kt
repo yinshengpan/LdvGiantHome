@@ -31,6 +31,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceUiItem
+import com.ledvance.domain.bean.isLdvBedside
 import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceSwitch
 import com.ledvance.ui.extensions.debouncedClickable
@@ -86,7 +87,7 @@ fun DeviceItem(
     }
     Card(
         elevation = CardDefaults.cardElevation(8.dp),
-        colors = CardDefaults.cardColors(containerColor = AppTheme.colors.screenBackground),
+        colors = CardDefaults.cardColors(containerColor = AppTheme.colors.cardBackground),
         shape = RoundedCornerShape(10.dp),
     ) {
         Column(
@@ -102,6 +103,7 @@ fun DeviceItem(
                     contentDescription = "",
                     modifier = Modifier
                         .size(60.dp)
+                        .padding(if (device.isLdvBedside()) 10.dp else 0.dp)
                         .clip(shape = RoundedCornerShape(6.dp)),
                     colorFilter = if (!isOnline) colorFilter else null
                 )

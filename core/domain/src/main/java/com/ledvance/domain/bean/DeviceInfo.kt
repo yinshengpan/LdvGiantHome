@@ -3,7 +3,7 @@ package com.ledvance.domain.bean
 import com.ledvance.domain.FirmwareVersion
 import com.ledvance.domain.bean.command.giant.LineSequence
 import com.ledvance.domain.bean.command.giant.ModeId
-import com.ledvance.domain.bean.command.giant.ModeType
+import com.ledvance.domain.bean.command.common.ModeType
 
 /**
  * @author : jason yin
@@ -29,3 +29,5 @@ data class DeviceInfo(
     val cct: Int = 0,
     val brightness: Int = 100,
 )
+
+fun DeviceInfo.isLdvBedside(): Boolean = deviceType == DeviceType.LdvBedside

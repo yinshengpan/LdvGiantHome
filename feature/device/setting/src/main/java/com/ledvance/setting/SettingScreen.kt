@@ -52,12 +52,8 @@ internal fun SettingScreen(
     }
 
     LedvanceScreen(
-        topBarContainerColor = AppTheme.colors.primaryBackground,
-        topBarContentColor = AppTheme.colors.primaryContent,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        onBackPressed = onBackClick,
-        verticalArrangement = Arrangement.Center,
         title = stringResource(R.string.title_setting),
+        onBackPressed = onBackClick,
         isLoading = (uiState as? SettingContract.UiState.Success)?.loading ?: false
     ) {
         when (uiState) {

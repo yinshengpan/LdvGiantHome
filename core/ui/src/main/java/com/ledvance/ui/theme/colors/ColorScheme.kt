@@ -1,6 +1,7 @@
 package com.ledvance.ui.theme.colors
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
@@ -21,6 +22,13 @@ class ColorScheme(
     val divider: Color,
     val secondaryDivider: Color,
     val screenBackground: Color,
+    val screenBackgroundBrush: Brush,
+
+    val cardBackground: Color,
+    val cardBackgroundBrush: Brush,
+
+    val mainTabSelected: Color,
+    val mainTabUnselected: Color,
 
     val buttonBackground: Color,
     val buttonContent: Color,
@@ -57,7 +65,22 @@ fun lightColorScheme(
     body: Color = Grey666666,
     divider: Color = Gray4A3C3C43,
     secondaryDivider: Color = GrayBEBEBE,
-    screenBackground: Color = Color.White,
+    cardBackground: Color = Color.White,
+    cardBackgroundBrush: Brush = Brush.horizontalGradient(
+        colors = listOf(
+            Color(0xFFFF5E6D),
+            Color(0xFFFFC370),
+        ),
+    ),
+    screenBackground: Color = GreyF3F3F3,
+    mainTabSelected: Color = Color.Black,
+    mainTabUnselected: Color = Grey999999,
+    screenBackgroundBrush: Brush = Brush.horizontalGradient(
+        colors = listOf(
+            Color(0xFFEA6971).copy(alpha = 0.15f),
+            Color(0xFFF4C57D).copy(alpha = 0.15f),
+        ),
+    ),
     screenSecondaryBackground: Color = GreyF3F3F3,
     buttonContent: Color = Color.White,
     buttonBackground: Color = Orange,
@@ -90,8 +113,13 @@ fun lightColorScheme(
         body = body,
         divider = divider,
         secondaryDivider = secondaryDivider,
+        mainTabSelected = mainTabSelected,
+        mainTabUnselected = mainTabUnselected,
+        cardBackground = cardBackground,
+        cardBackgroundBrush = cardBackgroundBrush,
         screenBackground = screenBackground,
         buttonBackground = buttonBackground,
+        screenBackgroundBrush = screenBackgroundBrush,
         buttonBorderBrush = buttonBorderBrush,
         buttonContent = buttonContent,
         dialogTitle = dialogTitle,
@@ -123,7 +151,26 @@ fun darkColorScheme(
     body: Color = Grey666666,
     divider: Color = GrayBEBEBE,
     secondaryDivider: Color = Black262B36,
+    mainTabSelected: Color = BLACK1E1F23,
+    mainTabUnselected: Color = Color.White,
+    cardBackground: Color = BLACK1E1F23,
+    cardBackgroundBrush: Brush = Brush.linearGradient(
+        colors = listOf(
+            Color(0xFFF4C57D), // 0%（起点：底部）
+            Color(0xFFEA6971)  // 100%（终点：顶部）
+        ),
+        start = Offset(0f, Float.POSITIVE_INFINITY), // bottom
+        end = Offset(0f, 0f) // top
+    ),
     screenBackground: Color = BLACK1E1F23,
+    screenBackgroundBrush: Brush = Brush.linearGradient(
+        colors = listOf(
+            Color(0xFFF4C57D), // 0%（起点：底部）
+            Color(0xFFEA6971)  // 100%（终点：顶部）
+        ),
+        start = Offset(0f, Float.POSITIVE_INFINITY), // bottom
+        end = Offset(0f, 0f) // top
+    ),
     screenSecondaryBackground: Color = Black30343C,
     buttonBackground: Color = Black30343C,
     buttonContent: Color = OrangeFF8857,
@@ -156,7 +203,12 @@ fun darkColorScheme(
         body = body,
         divider = divider,
         secondaryDivider = secondaryDivider,
+        cardBackground = cardBackground,
+        cardBackgroundBrush = cardBackgroundBrush,
+        mainTabSelected = mainTabSelected,
+        mainTabUnselected = mainTabUnselected,
         screenBackground = screenBackground,
+        screenBackgroundBrush = screenBackgroundBrush,
         buttonBackground = buttonBackground,
         buttonContent = buttonContent,
         buttonBorderBrush = buttonBorderBrush,

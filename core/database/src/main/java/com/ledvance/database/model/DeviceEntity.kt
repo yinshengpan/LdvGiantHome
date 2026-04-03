@@ -7,7 +7,7 @@ import com.ledvance.domain.FirmwareVersion
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
 import com.ledvance.domain.bean.command.giant.ModeId
-import com.ledvance.domain.bean.command.giant.ModeType
+import com.ledvance.domain.bean.command.common.ModeType
 
 /**
  * @author : jason yin

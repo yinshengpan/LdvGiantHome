@@ -2,7 +2,9 @@ package com.ledvance.light
 
 import androidx.compose.runtime.Immutable
 import com.ledvance.domain.bean.DeviceType
+import com.ledvance.domain.bean.TimerUiItem
 import com.ledvance.domain.bean.WorkMode
+import com.ledvance.domain.bean.command.common.ModeType
 import com.ledvance.light.component.CardFeature
 import kotlinx.coroutines.flow.StateFlow
 
@@ -22,9 +24,20 @@ internal interface LightDetailsContract {
 
         @Immutable
         data class Success(
+            val loading: Boolean = false,
+            val isOnline: Boolean,
             val deviceName: String,
             val deviceType: DeviceType,
-            val isOnline: Boolean,
+            val detailState: DetailState,
+        ) : UiState
+
+        @Immutable
+        data object Error : UiState
+    }
+
+    @Immutable
+    sealed interface DetailState {
+        data class GiantDetailState(
             val power: Boolean,
             val workMode: WorkMode,
             val colourModeHue: Int,
@@ -33,11 +46,16 @@ internal interface LightDetailsContract {
             val whiteModeCct: Int,
             val whiteModeBrightness: Int,
             val cardFeatureList: List<CardFeature> = listOf(),
-            val loading: Boolean = false,
-        ) : UiState
+        ) : DetailState
 
-        @Immutable
-        data object Error : UiState
+        data class LdvBedsideState(
+            val power: Boolean,
+            val brightness: Int,
+            val cct: Int,
+            val modeType: ModeType,
+            val modeList: List<ModeType>,
+            val timerList: List<TimerUiItem> = listOf(),
+        ) : DetailState
     }
 
     val uiState: StateFlow<UiState>
@@ -51,6 +69,9 @@ internal interface LightDetailsContract {
 
     fun onWhiteModeCctChange(cct: Int)
     fun onWhiteModeBrightnessChange(brightness: Int)
+
+    fun onModeChange(modeType: ModeType)
+    fun onTimerChange(timer: TimerUiItem)
 
     fun onReconnect()
 }

@@ -6,7 +6,7 @@ import com.ledvance.ble.bean.ProtocolType
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceTimer
 import com.ledvance.domain.bean.command.giant.ModeId
-import com.ledvance.domain.bean.command.giant.ModeType
+import com.ledvance.domain.bean.command.common.ModeType
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import timber.log.Timber

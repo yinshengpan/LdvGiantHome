@@ -39,8 +39,8 @@ class GiantNotificationParser(
         val r = bytes[4].toUnsignedInt()
         val g = bytes[5].toUnsignedInt()
         val b = bytes[6].toUnsignedInt()
-        val w = bytes[7].toUnsignedInt()
-        val brightness = bytes[8].toUnsignedInt()
+        val w = bytes[7].toUnsignedInt().coerceIn(0, 100)
+        val brightness = bytes[8].toUnsignedInt().coerceIn(1, 100)
         val modeType = bytes[9].toUnsignedInt()
         val modeId = bytes[10].toUnsignedInt()
         val speed = bytes[11].toUnsignedInt()
@@ -78,6 +78,7 @@ class GiantNotificationParser(
             enabled = onSwitch,
             hour = onHour,
             minute = onMinute,
+            delay = 0,
             weekCycle = onCycle,
         )
         val offSwitch = bytes[7] == 0x01.toByte()
@@ -90,6 +91,7 @@ class GiantNotificationParser(
             enabled = offSwitch,
             hour = offHour,
             minute = offMinute,
+            delay = 0,
             weekCycle = offCycle,
         )
         Timber.tag(TAG).i("parseGetTimingInfo: $deviceId -> ON(%s):%02d:%02d Cycle:%X, OFF(%s):%02d:%02d Cycle:%X",

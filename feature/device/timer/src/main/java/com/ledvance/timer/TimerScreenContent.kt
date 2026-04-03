@@ -20,9 +20,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,11 +35,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ledvance.domain.bean.command.common.TimerType
 import com.ledvance.domain.bean.TimerUiItem
+import com.ledvance.domain.bean.command.common.TimerType
 import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceSwitch
-import com.ledvance.ui.component.TimePicker
+import com.ledvance.ui.component.ScheduleSettingCard
 import com.ledvance.ui.extensions.debouncedClickable
 import com.ledvance.ui.extensions.getFullNameResId
 import com.ledvance.ui.theme.AppTheme
@@ -64,12 +62,9 @@ internal fun TimerScreenContent(
     modifier: Modifier = Modifier
 ) {
 
-    var showTimePicker by remember { mutableStateOf<TimerType?>(null) }
-    var showRepeatPicker by remember { mutableStateOf<TimerType?>(null) }
-
     Card(
         elevation = CardDefaults.cardElevation(8.dp),
-        colors = CardDefaults.cardColors(containerColor = AppTheme.colors.screenBackground),
+        colors = CardDefaults.cardColors(containerColor = AppTheme.colors.cardBackground),
         shape = RoundedCornerShape(10.dp),
         modifier = modifier.padding(paddingValues = PaddingValues(20.dp)),
     ) {
@@ -78,71 +73,36 @@ internal fun TimerScreenContent(
                 .fillMaxWidth()
                 .padding(15.dp)
         ) {
-            TimerItem(
+
+            ScheduleSettingCard(
                 title = stringResource(R.string.timer_regularly_on),
                 switch = onTimer.enabled,
                 onSwitchChange = { onTimerSwitchChange(TimerType.GiantOn, it) },
-                time = onTimer.displayTime,
-                onTimeClick = { showTimePicker = TimerType.GiantOn },
-                repeat = onTimer.displayRepeat,
-                onRepeatClick = { showRepeatPicker = TimerType.GiantOn },
+                hour = onTimer.hour,
+                minute = onTimer.minute,
+                displayTime = onTimer.displayTime,
+                onTimeChange = { h, m ->
+                    onTimerTimeChange(TimerType.GiantOn, h, m)
+                },
+                repeatDays = onTimer.days,
+                displayRepeat = onTimer.displayRepeat,
+                onRepeatChange = { days -> onTimerRepeatChange(TimerType.GiantOn, days) },
             )
-            TimerItem(
+
+            ScheduleSettingCard(
                 modifier = Modifier.padding(top = 10.dp),
                 title = stringResource(R.string.timer_regularly_off),
                 switch = offTimer.enabled,
                 onSwitchChange = { onTimerSwitchChange(TimerType.GiantOff, it) },
-                time = offTimer.displayTime,
-                onTimeClick = { showTimePicker = TimerType.GiantOff },
-                repeat = offTimer.displayRepeat,
-                onRepeatClick = { showRepeatPicker = TimerType.GiantOff },
-            )
-        }
-    }
-
-    val timePickerSheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-    )
-    if (showTimePicker != null) {
-        val type = showTimePicker!!
-        val timer = if (type == TimerType.GiantOn) onTimer else offTimer
-        ModalBottomSheet(
-            onDismissRequest = { showTimePicker = null },
-            sheetState = timePickerSheetState,
-            sheetGesturesEnabled = false,
-            dragHandle = null
-        ) {
-            TimePicker(
-                initialHour = timer.hour,
-                initialMinute = timer.minute,
-                onCancel = { showTimePicker = null },
-                onConfirm = { h, m ->
-                    onTimerTimeChange(type, h, m)
-                    showTimePicker = null
-                }
-            )
-        }
-    }
-
-    val repeatPickerSheetState = rememberModalBottomSheetState(
-        skipPartiallyExpanded = true,
-    )
-    if (showRepeatPicker != null) {
-        val type = showRepeatPicker!!
-        val timer = if (type == TimerType.GiantOn) onTimer else offTimer
-        ModalBottomSheet(
-            onDismissRequest = { showRepeatPicker = null },
-            sheetState = repeatPickerSheetState,
-            sheetGesturesEnabled = false,
-            dragHandle = null
-        ) {
-            RepeatPicker(
-                initialDays = timer.days.toSet(),
-                onCancel = { showRepeatPicker = null },
-                onConfirm = { days ->
-                    onTimerRepeatChange(type, days)
-                    showRepeatPicker = null
-                }
+                hour = offTimer.hour,
+                minute = offTimer.minute,
+                displayTime = offTimer.displayTime,
+                onTimeChange = { h, m ->
+                    onTimerTimeChange(TimerType.GiantOff, h, m)
+                },
+                repeatDays = offTimer.days,
+                displayRepeat = offTimer.displayRepeat,
+                onRepeatChange = { days -> onTimerRepeatChange(TimerType.GiantOff, days) },
             )
         }
     }

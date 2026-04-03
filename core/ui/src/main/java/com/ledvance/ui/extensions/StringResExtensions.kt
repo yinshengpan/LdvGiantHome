@@ -1,5 +1,7 @@
 package com.ledvance.ui.extensions
 
+import com.ledvance.domain.bean.command.common.ModeType
+import com.ledvance.domain.bean.command.common.TimerType
 import com.ledvance.domain.bean.command.giant.DeviceMicRhythm
 import com.ledvance.domain.bean.command.giant.ModeId
 import com.ledvance.domain.bean.command.giant.scenes.FloorScenes
@@ -47,6 +49,27 @@ fun Set<DayOfWeek>.toDisplayText(): String {
         .joinToString(",") {
             getString(it.getShortNameResId())
         }
+}
+
+fun ModeType.getNameResId(): Int {
+    return when (this) {
+        ModeType.LdvEyeProtection -> R.string.preset_eye_protection
+        ModeType.LdvSleep -> R.string.preset_sleep
+        ModeType.LdvWakeup -> R.string.preset_wake_up
+        ModeType.LdvFullBright -> R.string.preset_full_bright
+        else -> R.string.preset_wake_up
+    }
+}
+
+fun TimerType.getNameResId(): Int {
+    return when (this) {
+        TimerType.GiantOn -> R.string.timer_regularly_on
+        TimerType.GiantOff -> R.string.timer_regularly_off
+        TimerType.LdvWakeup1 -> R.string.timer_regularly_on
+        TimerType.LdvWakeup2 -> R.string.timer_regularly_on
+        TimerType.LdvSleep1 -> R.string.timer_regularly_off
+        TimerType.LdvSleep2 -> R.string.timer_regularly_off
+    }
 }
 
 fun Scene.getNameResId(): Int {

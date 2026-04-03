@@ -16,5 +16,10 @@ data class TimerUiItem(
     val minute: Int = 0,
     val displayTime: String = "00:00",
     val displayRepeat: String = "",
+    val delay: Int = 0,
     val days: Set<DayOfWeek> = emptySet()
 )
+
+fun TimerUiItem.isGiantTimer(): Boolean {
+    return this.timerType == TimerType.GiantOn || this.timerType == TimerType.GiantOff
+}

@@ -13,6 +13,9 @@
     <string name="title_firmware_update">"Firmware Update"</string>
 
     <string name="tab_home">"Home"</string>
+    <string name="tab_scenes">"Scenes"</string>
+    <string name="tab_devices">"Devices"</string>
+    <string name="tab_settings">"Settings"</string>
     <string name="tab_profile">"My"</string>
 
     <string name="share_logs">"Share Logs"</string>
@@ -74,6 +77,7 @@
     <string name="timer_regularly_on">"Regularly turn on the lights"</string>
     <string name="timer_regularly_off">"Regularly turn off the lights"</string>
     <string name="timer_time">"Time"</string>
+    <string name="timer_delay">"Delay"</string>
     <string name="timer_repeat">"Repeat"</string>
 
     <string name="music_device_mic">"Device Mic"</string>
@@ -416,5 +420,13 @@
 
     <string name="firmware_updating_tips">"Firmware is updating. Please wait until it’s finished before leaving this page."</string>
     <string name="firmware_update_found">"Update Found"</string>
-    <string name="firmware_no_updates_available">"No updates available"</string>
+     <string name="firmware_no_updates_available">"No updates available"</string>
+
+    <string name="preset_wake_up">Wake-up</string>
+    <string name="preset_full_bright">Full Bright</string>
+    <string name="preset_eye_protection">Eye protection</string>
+    <string name="preset_sleep">Sleep</string>
+
+    <string name="brightness">Brightness</string>
+    <string name="cct">CCT</string>
 </resources>

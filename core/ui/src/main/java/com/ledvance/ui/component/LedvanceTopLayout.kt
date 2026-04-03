@@ -37,8 +37,8 @@ import com.ledvance.ui.theme.AppTheme
 fun LedvanceTopLayout(
     backTitle: String? = null,
     title: String? = null,
-    topBarContentColor: Color? = null,
-    topBarContainerColor: Color? = null,
+    topBarContentColor: Color = Color.Black,
+    topBarContainerColor: Color = Color.White,
     onBackClick: (() -> Unit)? = null,
     rightIconPainter: Painter? = null,
     onRightIconClick: (() -> Unit)? = null,
@@ -46,9 +46,9 @@ fun LedvanceTopLayout(
     leftIconPainter: Painter? = null,
     onLeftIconClick: (() -> Unit)? = null
 ) {
-    val background = topBarContainerColor?.takeIf { it != Color.Unspecified }
+    val background = topBarContainerColor.takeIf { it != Color.Unspecified }
         ?: Color.Transparent
-    val contentColor = topBarContentColor?.takeIf { it != Color.Unspecified }
+    val contentColor = topBarContentColor.takeIf { it != Color.Unspecified }
         ?: AppTheme.colors.title
     Box(
         modifier = Modifier
@@ -69,15 +69,15 @@ fun LedvanceTopLayout(
                 Icon(
                     painter = painterResource(R.drawable.ic_back),
                     contentDescription = "back",
-                    modifier = Modifier.size(24.dp).padding(2.dp),
+                    modifier = Modifier.size(20.dp).padding(2.dp),
                     tint = contentColor
                 )
                 Text(
                     text = backTitle ?: "",
-                    style = AppTheme.typography.bodyLarge,
+                    style = AppTheme.typography.bodyLarge.copy(fontSize = 14.sp, fontWeight = FontWeight.W400),
                     maxLines = 1,
                     color = contentColor,
-                    modifier = Modifier.padding(start = 5.dp),
+                    modifier = Modifier.padding(start = 10.dp),
                     overflow = TextOverflow.Ellipsis,
                 )
 

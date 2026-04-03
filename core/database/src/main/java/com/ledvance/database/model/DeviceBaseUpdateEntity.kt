@@ -4,7 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.command.giant.ModeId
-import com.ledvance.domain.bean.command.giant.ModeType
+import com.ledvance.domain.bean.command.common.ModeType
 
 /**
  * @author : jason yin

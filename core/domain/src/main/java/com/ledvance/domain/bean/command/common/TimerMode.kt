@@ -12,3 +12,11 @@ enum class TimerMode(override val command: Byte) : Command {
     WakeUp(0x01),
     Sleep(0x02)
 }
+
+fun ModeType?.getTimerMode(): TimerMode? {
+    return when (this) {
+        ModeType.LdvSleep -> TimerMode.Sleep
+        ModeType.LdvWakeup -> TimerMode.WakeUp
+        else -> null
+    }
+}

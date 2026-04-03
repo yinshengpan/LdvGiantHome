@@ -17,6 +17,7 @@ data class DeviceTimer(
     val enabled: Boolean,
     val hour: Int,       // 0-23
     val minute: Int,     // 0-59
+    val delay: Int,
     val weekCycle: Int,
 )
 

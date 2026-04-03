@@ -59,5 +59,6 @@ class TimerRepo @Inject constructor(
         hour      = hour,
         minute    = minute,
         weekCycle = weekCycle,
+        delay = delay
     )
 }

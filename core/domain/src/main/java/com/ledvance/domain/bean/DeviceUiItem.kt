@@ -13,3 +13,5 @@ data class DeviceUiItem(
     val deviceType: DeviceType,
     val isOnline: Boolean = false,
 )
+
+fun DeviceUiItem.isLdvBedside(): Boolean = deviceType == DeviceType.LdvBedside

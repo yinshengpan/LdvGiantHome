@@ -11,7 +11,7 @@ import com.ledvance.domain.bean.command.giant.BrightnessType
 import com.ledvance.domain.bean.command.giant.DeviceMicRhythm
 import com.ledvance.domain.bean.command.giant.LineSequence
 import com.ledvance.domain.bean.command.giant.ModeId
-import com.ledvance.domain.bean.command.giant.ModeType
+import com.ledvance.domain.bean.command.common.ModeType
 import com.ledvance.domain.bean.command.giant.scenes.Scene
 import com.ledvance.utils.extensions.toUnsignedInt
 import kotlinx.coroutines.Dispatchers
@@ -216,11 +216,11 @@ class DeviceControlUseCase @Inject constructor(
         hour: Int,
         min: Int,
         timerRepeat: TimerRepeat,
-        duration: Int = 0
+        delay: Int = 0
     ): Boolean {
-        return executionResult("setTimer(deviceId=$deviceId, timerType=$timerType, hour=$hour, min=$min, timerRepeat=$timerRepeat, duration=$duration)") {
+        return executionResult("setTimer(deviceId=$deviceId, timerType=$timerType, hour=$hour, min=$min, timerRepeat=$timerRepeat, delay=$delay)") {
             ensureConnected(deviceId)
-            getProtocol(deviceId).setTimer(timerType, hour, min, timerRepeat, duration)
+            getProtocol(deviceId).setTimer(timerType, hour, min, timerRepeat, delay)
             registry.updateActive(deviceId)
         }
     }

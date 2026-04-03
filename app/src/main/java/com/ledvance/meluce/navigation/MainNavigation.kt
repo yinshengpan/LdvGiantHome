@@ -17,6 +17,7 @@ import com.ledvance.home.navigation.homeScreen
 import com.ledvance.light.navigation.lightNavGraph
 import com.ledvance.light.navigation.navigateToLightDetails
 import com.ledvance.profile.navigation.profileNavGraph
+import com.ledvance.room.navigation.roomScreen
 import com.ledvance.search.navigation.navigateToSearch
 import com.ledvance.search.navigation.searchScreen
 import com.ledvance.ui.theme.AppTheme
@@ -31,7 +32,7 @@ import com.ledvance.utils.extensions.launchCustomChromeTab
 @Composable
 fun MainNavigation(appState: LedvanceAppState) {
     val context = LocalContext.current
-    val chromeTabColor = AppTheme.colors.screenBackground
+    val chromeTabColor = AppTheme.colors.cardBackground
     val backStack = appState.backStack
     NavDisplay(
         backStack = backStack,
@@ -64,6 +65,8 @@ fun MainNavigation(appState: LedvanceAppState) {
                     backStack.navigateToLightDetails(it)
                 }
             )
+
+            roomScreen()
 
             profileNavGraph(
                 backStack = backStack,

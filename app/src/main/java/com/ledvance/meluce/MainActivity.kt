@@ -29,6 +29,7 @@ import com.ledvance.utils.extensions.getInt
 import com.ledvance.utils.extensions.isSystemInDarkTheme
 import com.ledvance.utils.extensions.setStatusBarsIcons
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -42,8 +43,16 @@ class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        installSplashScreen()
+        val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+        
+        var keepSplashScreen = true
+        lifecycleScope.launch {
+            delay(2000L)
+            keepSplashScreen = false
+        }
+        splashScreen.setKeepOnScreenCondition { keepSplashScreen }
+        
         var darkTheme by mutableStateOf(false)
         // var darkTheme by mutableStateOf(resources.configuration.isSystemInDarkTheme)
         initDarkTheme(onDarkThemeChanged = { isDarkTheme ->
@@ -122,7 +131,7 @@ class MainActivity : AppCompatActivity() {
                                     lightScrim = lightScrim,
                                     darkScrim = darkScrim
                                 ) { darkTheme })
-                            setStatusBarsIcons(darkIcons = !darkTheme)
+                            setStatusBarsIcons(darkIcons = true)
                         }
                     }
             }

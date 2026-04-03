@@ -55,7 +55,7 @@ internal fun ScenesScreenContent(
     Column(modifier = Modifier.padding(horizontal = 20.dp)) {
         Card(
             elevation = CardDefaults.cardElevation(8.dp),
-            colors = CardDefaults.cardColors(containerColor = AppTheme.colors.screenBackground),
+            colors = CardDefaults.cardColors(containerColor = AppTheme.colors.cardBackground),
             shape = RoundedCornerShape(10.dp),
             modifier = modifier.padding(paddingValues = PaddingValues(vertical = 20.dp)),
         ) {

@@ -6,6 +6,8 @@ import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.TimerUiItem
 import com.ledvance.domain.bean.command.common.TimerRepeat
 import com.ledvance.domain.bean.command.common.toGiantByte
+import com.ledvance.domain.bean.command.common.toLdvByte
+import com.ledvance.domain.bean.isGiantTimer
 import com.ledvance.domain.di.Dispatcher
 import com.ledvance.domain.di.Dispatchers
 import com.ledvance.usecase.base.SuspendUseCase
@@ -29,7 +31,11 @@ class UpdateDeviceTimerUseCase @Inject constructor(
     override suspend fun execute(parameter: Param): Boolean {
         with(parameter) {
             val timerRepeat = TimerRepeat(enabled = timer.enabled, days = timer.days.toSet())
-            val weekCycle = timerRepeat.toGiantByte().toUnsignedInt()
+            val weekCycle = if (timer.isGiantTimer()) {
+                timerRepeat.toGiantByte().toUnsignedInt()
+            } else {
+                timerRepeat.toLdvByte().toUnsignedInt()
+            }
             timerRepo.upsertTimer(
                 TimerEntity(
                     deviceId = deviceId,
@@ -46,6 +52,7 @@ class UpdateDeviceTimerUseCase @Inject constructor(
                 timerType = timer.timerType,
                 hour = timer.hour,
                 min = timer.minute,
+                delay = timer.delay,
                 timerRepeat = timerRepeat,
             )
         }

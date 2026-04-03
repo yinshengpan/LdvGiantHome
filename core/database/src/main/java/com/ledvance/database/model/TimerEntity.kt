@@ -45,6 +45,9 @@ data class TimerEntity(
     @ColumnInfo(name = "minute")
     val minute: Int = 0,
 
+    @ColumnInfo(name = "delay")
+    val delay: Int = 0,
+
     /** 协议原始 weekCycle 值，0xFF = Never */
     @ColumnInfo(name = "week_cycle")
     val weekCycle: Int = 0xFF,

@@ -5,12 +5,19 @@ import androidx.lifecycle.viewModelScope
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
 import com.ledvance.domain.bean.LightCommand
+import com.ledvance.domain.bean.TimerUiItem
 import com.ledvance.domain.bean.WorkMode
+import com.ledvance.domain.bean.command.common.ModeType
+import com.ledvance.domain.bean.command.common.getTimerMode
+import com.ledvance.domain.bean.isLdvBedside
 import com.ledvance.light.component.CardFeature
 import com.ledvance.ui.component.SnackbarManager
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceStateUseCase
+import com.ledvance.usecase.device.GetDeviceTimersUseCase
 import com.ledvance.usecase.device.GetDeviceUseCase
+import com.ledvance.usecase.device.SyncDeviceTimerUseCase
+import com.ledvance.usecase.device.UpdateDeviceTimerUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -43,6 +50,9 @@ internal class LightDetailsViewModel @AssistedInject constructor(
     private val getDeviceStateUseCase: GetDeviceStateUseCase,
     private val getDeviceUseCase: GetDeviceUseCase,
     private val deviceControlUseCase: DeviceControlUseCase,
+    private val getDeviceTimersUseCase: GetDeviceTimersUseCase,
+    private val updateDeviceTimerUseCase: UpdateDeviceTimerUseCase,
+    private val syncDeviceTimerUseCase: SyncDeviceTimerUseCase,
 ) : ViewModel(), LightDetailsContract {
     private val TAG = "LightDetailsViewModel"
 
@@ -66,29 +76,46 @@ internal class LightDetailsViewModel @AssistedInject constructor(
                 CardFeature.Music,
                 CardFeature.Mode,
             ),
-            DeviceType.LdvBedside to listOf(
-                CardFeature.ModeType,
-            ),
         )
     }
     override val uiState: StateFlow<LightDetailsContract.UiState> = combine(
-        getDeviceUseCase(deviceId),
-        getDeviceStateUseCase(deviceId),
-        screenState
-    ) { device, deviceState, screenState ->
+        flow = getDeviceUseCase(deviceId),
+        flow2 = getDeviceStateUseCase(deviceId),
+        flow3 = screenState,
+        flow4 = getDeviceTimersUseCase(deviceId)
+    ) { device, deviceState, screenState, timers ->
+        val detailState = when {
+            device.isLdvBedside() -> {
+                val modeType = device.modeType ?: ModeType.LdvWakeup
+                LightDetailsContract.DetailState.LdvBedsideState(
+                    power = device.power,
+                    brightness = screenState.whiteModeBrightness.takeIf { it != -1 } ?: device.brightness,
+                    cct = screenState.whiteModeCct.takeIf { it != -1 } ?: device.cct,
+                    modeType = modeType,
+                    modeList = ModeType.ldvBedsideModeList,
+                    timerList = timers.filter { it.timerType.mode == modeType.getTimerMode()?.command }
+                        // command 就是 index
+                        .sortedBy { it.timerType.command }
+                )
+            }
+
+            else -> LightDetailsContract.DetailState.GiantDetailState(
+                power = device.power,
+                workMode = screenState.workMode ?: device.workMode,
+                colourModeHue = screenState.colourModeHue.takeIf { it != -1 } ?: device.h,
+                colourModeSat = screenState.colourModeSat.takeIf { it != -1 } ?: device.s,
+                colourModeBrightness = screenState.colourModeBrightness.takeIf { it != -1 } ?: device.v,
+                whiteModeCct = screenState.whiteModeCct.takeIf { it != -1 } ?: device.cct,
+                whiteModeBrightness = screenState.whiteModeBrightness.takeIf { it != -1 } ?: device.brightness,
+                cardFeatureList = cardFeatureMap[device.deviceType] ?: listOf(),
+            )
+        }
         LightDetailsContract.UiState.Success(
+            loading = screenState.loading,
+            isOnline = deviceState.isOnline,
             deviceName = device.name,
             deviceType = device.deviceType,
-            isOnline = deviceState.isOnline,
-            power = device.power,
-            workMode = screenState.workMode ?: device.workMode,
-            colourModeHue = screenState.colourModeHue.takeIf { it != -1 } ?: device.h,
-            colourModeSat = screenState.colourModeSat.takeIf { it != -1 } ?: device.s,
-            colourModeBrightness = screenState.colourModeBrightness.takeIf { it != -1 } ?: device.v,
-            whiteModeCct = screenState.whiteModeCct.takeIf { it != -1 } ?: device.cct,
-            whiteModeBrightness = screenState.whiteModeBrightness.takeIf { it != -1 } ?: device.brightness,
-            cardFeatureList = cardFeatureMap[device.deviceType] ?: listOf() ,
-            loading = screenState.loading,
+            detailState = detailState,
         )
     }.onStart {
         Timber.tag(TAG).d("Detail -> start loading (deviceId=$deviceId)")
@@ -103,9 +130,18 @@ internal class LightDetailsViewModel @AssistedInject constructor(
     )
 
     init {
+        syncDeviceTimerUseCase(
+            parameter = SyncDeviceTimerUseCase.Param(
+                deviceId = deviceId,
+                scope = viewModelScope
+            )
+        )
+
         viewModelScope.launch {
             deviceControlUseCase.queryDeviceInfo(deviceId)
+            deviceControlUseCase.queryTimer(deviceId)
         }
+
         viewModelScope.launch {
             lightCommandFlow.sample(300).collectLatest {
                 it ?: return@collectLatest
@@ -150,7 +186,10 @@ internal class LightDetailsViewModel @AssistedInject constructor(
     }
 
     override fun onWorkModeChange(workMode: WorkMode) {
-        val state = (uiState.value as? LightDetailsContract.UiState.Success) ?: return
+        val state = (uiState.value as? LightDetailsContract.UiState.Success)?.detailState ?: return
+        if (state !is LightDetailsContract.DetailState.GiantDetailState) {
+            return
+        }
         when (workMode) {
             WorkMode.White -> {
                 lightCommandFlow.tryEmit(LightCommand.WhiteModeCct(state.whiteModeCct, state.whiteModeBrightness))
@@ -184,6 +223,33 @@ internal class LightDetailsViewModel @AssistedInject constructor(
     override fun onWhiteModeBrightnessChange(brightness: Int) {
         screenState.update { it.copy(whiteModeBrightness = brightness) }
         lightCommandFlow.tryEmit(LightCommand.WhiteModeBrightness(brightness))
+    }
+
+    override fun onModeChange(modeType: ModeType) {
+        viewModelScope.launch {
+            screenState.update { it.copy(loading = true) }
+            val success = deviceControlUseCase.setModeType(deviceId, modeType)
+            if (!success) {
+                SnackbarManager.showGenericError()
+            }
+            screenState.update { it.copy(loading = false) }
+        }
+    }
+
+    override fun onTimerChange(timer: TimerUiItem) {
+        viewModelScope.launch {
+            screenState.update { it.copy(loading = true) }
+            val success = updateDeviceTimerUseCase(
+                parameter = UpdateDeviceTimerUseCase.Param(
+                    deviceId = deviceId,
+                    timer = timer
+                )
+            )
+            if (success.isFailure || !success.getOrDefault(false)) {
+                SnackbarManager.showGenericError()
+            }
+            screenState.update { it.copy(loading = false) }
+        }
     }
 
     override fun onReconnect() {

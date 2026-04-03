@@ -13,7 +13,7 @@ import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.WorkMode
 import com.ledvance.domain.bean.command.giant.LineSequence
 import com.ledvance.domain.bean.command.giant.ModeId
-import com.ledvance.domain.bean.command.giant.ModeType
+import com.ledvance.domain.bean.command.common.ModeType
 import com.ledvance.utils.extensions.tryCatch
 import com.ledvance.utils.extensions.tryCatchReturn
 import kotlinx.coroutines.Dispatchers

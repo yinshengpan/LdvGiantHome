@@ -3,11 +3,11 @@ package com.ledvance.ble.protocol
 // import removed
 import com.ledvance.ble.core.BleClient
 import com.ledvance.ble.core.CommandQueue
+import com.ledvance.domain.bean.command.common.TimerMode
 import com.ledvance.domain.bean.command.common.TimerRepeat
 import com.ledvance.domain.bean.command.common.TimerType
 import com.ledvance.domain.bean.command.common.toLdvByte
 import com.ledvance.domain.bean.command.ldv.LdvCommandType
-import com.ledvance.domain.bean.command.ldv.LdvModeType
 import com.ledvance.domain.bean.command.ldv.LdvOnOff
 import timber.log.Timber
 import java.time.LocalDateTime
@@ -125,8 +125,8 @@ class LdvBedsideProtocol(
         false
     }
 
-    override suspend fun setTimer(timerType: TimerType, hour: Int, min: Int, timerRepeat: TimerRepeat, duration: Int) = queue.execute {
-        Timber.tag(TAG).d("setTimer: timerType=$timerType, $hour:$min, repeat=$timerRepeat, duration=$duration")
+    override suspend fun setTimer(timerType: TimerType, hour: Int, min: Int, timerRepeat: TimerRepeat, delay: Int) = queue.execute {
+        Timber.tag(TAG).d("setTimer: timerType=$timerType, $hour:$min, repeat=$timerRepeat, delay=$delay")
         val idxByte = timerType.command
         val modeByte = timerType.mode
         val ldvWeekByte = timerRepeat.toLdvByte()
@@ -134,15 +134,15 @@ class LdvBedsideProtocol(
         client.write(
             data = buildCommand(
                 cmd = LdvCommandType.SetTimer.command,
-                idxByte, hour.toByte(), min.toByte(), duration.toByte(), modeByte, ldvWeekByte, enableByte
+                idxByte, hour.toByte(), min.toByte(), delay.toByte(), modeByte, ldvWeekByte, enableByte
             )
         )
     }
 
     override suspend fun queryTimer() = queue.execute {
         Timber.tag(TAG).d("queryTimer")
-        client.write(buildCommand(LdvCommandType.QueryTimer.command, LdvModeType.Wakeup.command))
-        client.write(buildCommand(LdvCommandType.QueryTimer.command, LdvModeType.AlwaysOn.command))
+        client.write(buildCommand(LdvCommandType.QueryTimer.command, TimerMode.WakeUp.command))
+        client.write(buildCommand(LdvCommandType.QueryTimer.command, TimerMode.Sleep.command))
     }
 
     override suspend fun setCurrentTime(hour: Int, min: Int, sec: Int, weekDay: Int) = queue.execute {

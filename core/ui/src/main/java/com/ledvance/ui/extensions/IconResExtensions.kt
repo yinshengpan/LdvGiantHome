@@ -1,5 +1,6 @@
 package com.ledvance.ui.extensions
 
+import com.ledvance.domain.bean.command.common.ModeType
 import com.ledvance.domain.bean.command.giant.DeviceMicRhythm
 import com.ledvance.domain.bean.command.giant.scenes.FloorScenes
 import com.ledvance.domain.bean.command.giant.scenes.Scene
@@ -118,5 +119,15 @@ fun DeviceMicRhythm.getIconResId(): Int {
         DeviceMicRhythm.Spectrum2 -> R.mipmap.spectrum_icon// 频谱模式2
         DeviceMicRhythm.Roll1 -> R.mipmap.roll_icon        // 滚动模式1
         DeviceMicRhythm.Roll2 -> R.mipmap.roll_icon        // 滚动模式2
+    }
+}
+
+fun ModeType.getIconResId(): Int {
+    return when (this) {
+        ModeType.LdvEyeProtection -> R.drawable.ic_mode_eye_protection
+        ModeType.LdvSleep -> R.drawable.ic_mode_sleep
+        ModeType.LdvWakeup -> R.drawable.ic_mode_wake_up
+        ModeType.LdvFullBright -> R.drawable.ic_mode_full_bright
+        else -> R.drawable.ic_mode_wake_up
     }
 }

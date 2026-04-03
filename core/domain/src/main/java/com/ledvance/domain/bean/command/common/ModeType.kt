@@ -1,4 +1,4 @@
-package com.ledvance.domain.bean.command.giant
+package com.ledvance.domain.bean.command.common
 
 import com.ledvance.domain.bean.command.Command
 
@@ -15,7 +15,7 @@ enum class ModeType(override val command: Byte) : Command {
     LdvEyeProtection(0x07),   // 护眼模式
     LdvSleep(0x09),           // 睡眠模式
     LdvWakeup(0x0A),          // 唤醒模式
-    LdvAlwaysOn(0x0B),        // 常亮模式
+    LdvFullBright(0x0B),        // 常亮模式
     ;
 
     companion object {
@@ -25,6 +25,13 @@ enum class ModeType(override val command: Byte) : Command {
             // 遍历所有枚举项，匹配 command 字节值
             return entries.find { it.command == targetByte }
         }
+
+        val ldvBedsideModeList = listOf(
+            LdvWakeup,
+            LdvSleep,
+            LdvEyeProtection,
+            LdvFullBright,
+        )
 
     }
 }

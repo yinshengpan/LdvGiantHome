@@ -2,7 +2,6 @@ package com.ledvance.ble.protocol
 
 import com.ledvance.domain.bean.command.common.TimerRepeat
 import com.ledvance.domain.bean.command.common.TimerType
-import com.ledvance.domain.bean.command.giant.ModeType
 
 /**
  * @author : jason yin
@@ -26,7 +25,7 @@ interface BleProtocol {
     suspend fun setMicSensitivity(sensitivity: Int): Boolean
     suspend fun setLedCount(count: Int): Boolean
     suspend fun setLineSequence(lineSequence: Int): Boolean
-    suspend fun setTimer(timerType: TimerType, hour: Int, min: Int, timerRepeat: TimerRepeat, duration: Int = 0): Boolean
+    suspend fun setTimer(timerType: TimerType, hour: Int, min: Int, timerRepeat: TimerRepeat, delay: Int = 0): Boolean
     suspend fun queryTimer(): Boolean
     suspend fun setCurrentTime(hour: Int, min: Int, sec: Int, weekDay: Int): Boolean
     suspend fun syncCurrentTime(): Boolean

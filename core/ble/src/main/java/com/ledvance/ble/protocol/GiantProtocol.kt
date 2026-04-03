@@ -9,7 +9,7 @@ import com.ledvance.domain.bean.command.common.toGiantByte
 import com.ledvance.domain.bean.command.giant.ColourType
 import com.ledvance.domain.bean.command.giant.GiantCommandType
 import com.ledvance.domain.bean.command.giant.GiantOnOff
-import com.ledvance.domain.bean.command.giant.ModeType
+import com.ledvance.domain.bean.command.common.ModeType
 import com.ledvance.utils.ColorUtils
 import com.ledvance.utils.extensions.toBinary8
 import com.ledvance.utils.extensions.toTimeInfo
@@ -147,7 +147,7 @@ class GiantProtocol(
         client.write(buildCommand(GiantCommandType.SetWireOrder.command, lineSequence.toByte()))
     }
 
-    override suspend fun setTimer(timerType: TimerType, hour: Int, min: Int, timerRepeat: TimerRepeat, duration: Int) = queue.execute {
+    override suspend fun setTimer(timerType: TimerType, hour: Int, min: Int, timerRepeat: TimerRepeat, delay: Int) = queue.execute {
         val weekCycleByte = timerRepeat.toGiantByte()
         val mode = timerType.mode
         val state = timerType.command

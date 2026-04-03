@@ -58,7 +58,7 @@ private fun DeviceItem(device: ScannedDevice, onItemClick: (ScannedDevice) -> Un
             .fillMaxWidth(),
         elevation = CardDefaults.elevatedCardElevation(8.dp),
         shape = RoundedCornerShape(4.dp),
-        colors = CardDefaults.cardColors(containerColor = AppTheme.colors.screenBackground),
+        colors = CardDefaults.cardColors(containerColor = AppTheme.colors.cardBackground),
     ) {
         Row(
             modifier = Modifier

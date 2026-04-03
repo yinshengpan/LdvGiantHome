@@ -2,6 +2,8 @@ package com.ledvance.meluce.navigation
 
 import com.ledvance.home.navigation.HomeRoute
 import com.ledvance.profile.navigation.ProfileRoute
+import com.ledvance.room.navigation.DevicesRoute
+import com.ledvance.room.navigation.RoomRoute
 import com.ledvance.ui.R
 import com.ledvance.ui.navigation.NavigationRoute
 
@@ -15,19 +17,33 @@ enum class TopLevelDestination(
     val selectedIconId: Int,
     val unselectedIconId: Int,
     val iconTextId: Int,
-    val route: NavigationRoute
+    val route: NavigationRoute,
 ) {
     HOME(
-        selectedIconId = R.drawable.ic_home_fill,
-        unselectedIconId = R.drawable.ic_home,
+        selectedIconId = R.mipmap.main_tab_s_home,
+        unselectedIconId = R.mipmap.main_tab_n_home,
         iconTextId = R.string.tab_home,
         route = HomeRoute
     ),
 
+    DEVICES(
+        selectedIconId = R.mipmap.main_tab_s_devices,
+        unselectedIconId = R.mipmap.main_tab_n_devices,
+        iconTextId = R.string.tab_devices,
+        route = DevicesRoute
+    ),
+
+    SCENES(
+        selectedIconId = R.mipmap.main_tab_s_scenes,
+        unselectedIconId = R.mipmap.main_tab_n_scenes,
+        iconTextId = R.string.tab_scenes,
+        route = RoomRoute
+    ),
+
     PROFILE(
-        selectedIconId = R.drawable.ic_my_fill,
-        unselectedIconId = R.drawable.ic_my,
-        iconTextId = R.string.tab_profile,
+        selectedIconId = R.mipmap.main_tab_s_settings,
+        unselectedIconId = R.mipmap.main_tab_n_settings,
+        iconTextId = R.string.tab_settings,
         route = ProfileRoute
     )
 }

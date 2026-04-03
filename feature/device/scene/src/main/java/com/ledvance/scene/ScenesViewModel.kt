@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceType
 import com.ledvance.domain.bean.LightCommand
-import com.ledvance.domain.bean.command.giant.ModeType
+import com.ledvance.domain.bean.command.common.ModeType
 import com.ledvance.domain.bean.command.giant.scenes.FloorScenes
 import com.ledvance.domain.bean.command.giant.scenes.Scene
 import com.ledvance.domain.bean.command.giant.scenes.TableScenes

@@ -23,7 +23,8 @@ import com.ledvance.ui.theme.AppTheme
 @Composable
 fun CardView(
     modifier: Modifier = Modifier,
-    containerColor: Color = AppTheme.colors.screenBackground,
+    containerColor: Color = AppTheme.colors.cardBackground,
+    contentColor: Color = Color.Unspecified,
     elevation: Dp = 8.dp,
     shape: Shape = RoundedCornerShape(10.dp),
     paddingValues: PaddingValues = PaddingValues(0.dp),
@@ -31,7 +32,7 @@ fun CardView(
 ) {
     Card(
         elevation = CardDefaults.cardElevation(elevation),
-        colors = CardDefaults.cardColors(containerColor = containerColor),
+        colors = CardDefaults.cardColors(containerColor = containerColor, contentColor = contentColor),
         shape = shape,
         modifier = Modifier
             .then(modifier)

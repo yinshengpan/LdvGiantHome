@@ -3,7 +3,7 @@ package com.ledvance.ble.bean
 import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceTimer
 import com.ledvance.domain.bean.command.giant.ModeId
-import com.ledvance.domain.bean.command.giant.ModeType
+import com.ledvance.domain.bean.command.common.ModeType
 
 /**
  * @author : jason yin
