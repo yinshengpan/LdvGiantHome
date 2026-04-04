@@ -1,5 +1,6 @@
 package com.ledvance.ui.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -9,9 +10,11 @@ import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.ledvance.ui.theme.AppTheme
 
 /**
@@ -28,11 +31,16 @@ fun LedvanceButton(text: String, modifier: Modifier = Modifier, onClick: () -> U
             .height(46.dp)
     ) {
         FilledTonalButton(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    brush = AppTheme.colors.cardBackgroundBrush,
+                    shape = RoundedCornerShape(12.dp)
+                ),
             onClick = onClick,
-            shape = RoundedCornerShape(7.dp),
+            shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.filledTonalButtonColors(
-                containerColor = AppTheme.colors.buttonBackground,
+                containerColor = Color.Transparent,
                 contentColor = AppTheme.colors.buttonContent,
             )
         ) {
@@ -40,7 +48,8 @@ fun LedvanceButton(text: String, modifier: Modifier = Modifier, onClick: () -> U
                 text = text,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.W400,
+                fontSize = 15.sp
             )
         }
     }

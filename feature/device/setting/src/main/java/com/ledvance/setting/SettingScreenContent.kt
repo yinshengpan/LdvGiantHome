@@ -38,11 +38,11 @@ internal fun SettingScreenContent(
     onUpgradeClick: () -> Unit,
     onDeleteClick: () -> Unit,
 ) {
+    val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
-            .verticalScroll(rememberScrollState())
+            .verticalScroll(scrollState)
             .padding(horizontal = 20.dp)
     ) {
         TitleItem(stringResource(R.string.setting_basic_info))

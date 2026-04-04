@@ -5,24 +5,22 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetState
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import com.ledvance.ui.component.WeekPicker
-import java.time.DayOfWeek
+import com.ledvance.ui.component.DelayPicker
 
 /**
  * @author : jason yin
  * Email : j.yin@ledvance.com
- * Created date 4/3/26 13:37
- * Describe : WeekPickerDialog
+ * Created date 2026/4/4 13:56
+ * Describe : DelayPickerDialog wrapping DelayPicker in a ModalBottomSheet
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WeekPickerDialog(
+fun DelayPickerDialog(
+    minutes: Int,
     visible: Boolean,
-    days: Set<DayOfWeek>,
-    disabledDays: Set<DayOfWeek> = emptySet(),
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
     onDismiss: () -> Unit,
-    onConfirm: (Set<DayOfWeek>) -> Unit,
+    onConfirm: (Int) -> Unit,
 ) {
     if (visible) {
         ModalBottomSheet(
@@ -31,13 +29,10 @@ fun WeekPickerDialog(
             sheetGesturesEnabled = false,
             dragHandle = null
         ) {
-            WeekPicker(
-                initialDays = days,
-                disabledDays = disabledDays,
+            DelayPicker(
+                initialMinutes = minutes,
                 onCancel = onDismiss,
-                onConfirm = { days ->
-                    onConfirm(days)
-                }
+                onConfirm = onConfirm
             )
         }
     }

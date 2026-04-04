@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.ledvance.domain.bean.WorkMode
 import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceRadioGroup
-import com.ledvance.ui.component.LedvanceSwitch
+import com.ledvance.ui.component.MeluceSwitch
 import com.ledvance.ui.component.workmode.ColourModePicker
 import com.ledvance.ui.component.workmode.WhiteModePicker
 import com.ledvance.ui.segment.WorkModeSegment
@@ -81,7 +81,7 @@ internal fun LightControlView(
                     color = AppTheme.colors.title,
                     modifier = Modifier.weight(1f)
                 )
-                LedvanceSwitch(
+                MeluceSwitch(
                     checked = switch,
                     onCheckedChange = onSwitchChange
                 )

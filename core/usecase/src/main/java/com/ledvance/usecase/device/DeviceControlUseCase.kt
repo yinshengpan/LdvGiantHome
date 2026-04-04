@@ -97,11 +97,10 @@ class DeviceControlUseCase @Inject constructor(
 
     suspend fun setWhiteModeCCT(deviceId: DeviceId, cct: Int): Boolean {
         return executionResult("setWhiteModeCCT(deviceId=$deviceId, cct=$cct)") {
-            val newCct = cct.coerceIn(0, 100)
             ensureConnected(deviceId)
-            getProtocol(deviceId).setCct(newCct)
+            getProtocol(deviceId).setCct(cct)
             registry.updateActive(deviceId)
-            deviceRepo.updateDeviceCct(deviceId, newCct)
+            deviceRepo.updateDeviceCct(deviceId, cct)
         }
     }
 

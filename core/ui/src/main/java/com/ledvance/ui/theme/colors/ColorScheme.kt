@@ -77,8 +77,8 @@ fun lightColorScheme(
     mainTabUnselected: Color = Grey999999,
     screenBackgroundBrush: Brush = Brush.horizontalGradient(
         colors = listOf(
-            Color(0xFFEA6971).copy(alpha = 0.15f),
-            Color(0xFFF4C57D).copy(alpha = 0.15f),
+            Color(0xFFEA6971).copy(alpha = 0.1f),
+            Color(0xFFF4C57D).copy(alpha = 0.1f),
         ),
     ),
     screenSecondaryBackground: Color = GreyF3F3F3,

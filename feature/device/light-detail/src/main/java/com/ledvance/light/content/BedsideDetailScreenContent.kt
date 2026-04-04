@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -52,10 +54,12 @@ internal fun BedsideDetailScreenContent(
     onCctChange: (Int) -> Unit,
     onBrightnessChange: (Int) -> Unit,
 ) {
+    val scrollState = rememberScrollState()
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 25.dp),
+            .padding(horizontal = 22.dp)
+            .verticalScroll(scrollState),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
@@ -109,6 +113,7 @@ private fun TimerListView(
         CardView(paddingValues = PaddingValues(vertical = 12.5.dp)) {
             ScheduleSettingCard(
                 title = stringResource(timer.timerType.getNameResId()),
+                icon = painterResource(R.mipmap.icon_timer),
                 switch = timer.enabled,
                 onSwitchChange = { onTimerChange(timer.copy(enabled = it)) },
                 hour = timer.hour,
@@ -119,7 +124,7 @@ private fun TimerListView(
                 displayRepeat = timer.displayRepeat,
                 onRepeatChange = { days -> onTimerChange(timer.copy(days = days)) },
                 delay = timer.delay,
-                displayDelay = "${timer.delay}m",
+                displayDelay = "${timer.delay} min",
                 onDelayChange = { delay -> onTimerChange(timer.copy(delay = delay)) }
             )
         }
@@ -131,6 +136,7 @@ private fun TimerListView(
 private fun SliderControlView(
     brightness: Int,
     cct: Int,
+    cctRange: IntRange = 1800..6500,
     onBrightnessChange: (Int) -> Unit,
     onCctChange: (Int) -> Unit,
 ) {
@@ -148,10 +154,10 @@ private fun SliderControlView(
         modifier = Modifier.padding(bottom = 10.dp),
         title = stringResource(R.string.cct),
         icon = painterResource(R.drawable.ic_cct),
-        value = cct,
+        value = cct.coerceIn(cctRange),
         unit = "K"
     ) {
-        LdvCctGradientSlider(value = cct, valueRange = 1800..6500, onValueChange = onCctChange)
+        LdvCctGradientSlider(value = cct.coerceIn(cctRange), valueRange = cctRange, onValueChange = onCctChange)
     }
 }
 

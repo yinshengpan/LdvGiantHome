@@ -65,7 +65,7 @@ private fun FlowRowScope.ModeItem(
     Card(
         modifier = Modifier
             .weight(1f)
-            .height(112.dp),
+            .height(101.5.dp),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent)
@@ -86,13 +86,13 @@ private fun FlowRowScope.ModeItem(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .padding(horizontal = 18.5.dp),
                 horizontalAlignment = Alignment.Start,
                 verticalArrangement = Arrangement.Center
             ) {
                 Box(
                     modifier = Modifier
-                        .size(40.dp)
+                        .size(37.dp)
                         .background(
                             color = if (isSelected) Color(0x33FFFFFF) else Color(0xFFF3F3F3),
                             shape = RoundedCornerShape(12.dp),
@@ -102,14 +102,14 @@ private fun FlowRowScope.ModeItem(
                         painter = painterResource(id = mode.getIconResId()),
                         contentDescription = null,
                         tint = if (isSelected) Color.White else Color(0xFFFF976E),
-                        modifier = Modifier.size(26.dp)
+                        modifier = Modifier.size(24.dp)
                     )
                 }
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(11.dp))
                 Text(
                     text = stringResource(id = mode.getNameResId()),
                     color = if (isSelected) Color.White else AppTheme.colors.title,
-                    fontSize = 14.sp,
+                    fontSize = 13.sp,
                     fontWeight = FontWeight.Medium
                 )
             }

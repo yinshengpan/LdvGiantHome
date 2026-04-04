@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -66,7 +67,7 @@ fun ItemView(
         )
         when {
             switch != null && onSwitchChange != null -> {
-                LedvanceSwitch(switch, onSwitchChange)
+                MeluceSwitch(switch, onSwitchChange)
             }
 
             contentIconResId != null -> {
@@ -94,8 +95,8 @@ fun ItemView(
             Image(
                 painter = painterResource(R.drawable.ic_arrow_right),
                 contentDescription = null,
-                modifier = Modifier.size(20.dp),
-                colorFilter = ColorFilter.tint(AppTheme.colors.body)
+                modifier = Modifier.padding(start = 4.dp).size(11.dp),
+                colorFilter = ColorFilter.tint(Color(0xFF979797))
             )
         }
     }

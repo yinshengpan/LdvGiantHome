@@ -4,12 +4,14 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -31,6 +33,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
@@ -44,7 +47,8 @@ fun LdvGradientSlider(
     onValueComplete: (Int) -> Unit = {},
     valueRange: IntRange = 1..100,
     minValue: Int = 1,
-    gradientColors: List<Color>
+    gradientColors: List<Color>,
+    isFullGradient: Boolean = false
 ) {
     var isDragging by remember { mutableStateOf(false) }
     val currentOnValueChange by rememberUpdatedState(onValueChange)
@@ -127,24 +131,32 @@ fun LdvGradientSlider(
                     .fillMaxWidth()
                     .height(trackHeightDp)
                     .clip(RoundedCornerShape(percent = 50))
-                    .background(Color(0xFFE3E3E3))
+                    .background(
+                        if (isFullGradient) {
+                            Brush.horizontalGradient(gradientColors)
+                        } else {
+                            Brush.linearGradient(listOf(Color(0xFFE3E3E3), Color(0xFFE3E3E3)))
+                        }
+                    )
             )
             
             // Active Progress
-            val activeWidth = (progress * maxProgressWidth) + thumbSizePx + (thumbMarginPx * 2)
-            Box(
-                modifier = Modifier
-                    .height(trackHeightDp)
-                    .width(with(density) { activeWidth.toDp() })
-                    .clip(RoundedCornerShape(percent = 50))
-                    .background(
-                        Brush.horizontalGradient(
-                            colors = gradientColors,
-                            startX = 0f,
-                            endX = trackWidth
+            if (!isFullGradient) {
+                val activeWidth = (progress * maxProgressWidth) + thumbSizePx + (thumbMarginPx * 2)
+                Box(
+                    modifier = Modifier
+                        .height(trackHeightDp)
+                        .width(with(density) { activeWidth.toDp() })
+                        .clip(RoundedCornerShape(percent = 50))
+                        .background(
+                            Brush.horizontalGradient(
+                                colors = gradientColors,
+                                startX = 0f,
+                                endX = trackWidth
+                            )
                         )
-                    )
-            )
+                )
+            }
 
             // Thumb
             Card(
@@ -197,6 +209,24 @@ fun LdvCctGradientSlider(
         valueRange = valueRange,
         minValue = minValue,
         gradientColors = gradientColors,
+        isFullGradient = true,
         modifier = modifier
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun LdvGradientSliderPreview() {
+    Column {
+        LdvBrightnessGradientSlider(
+            value = 50,
+            onValueChange = {},
+            modifier = Modifier.padding(16.dp)
+        )
+        LdvCctGradientSlider(
+            value = 4000,
+            onValueChange = {},
+            modifier = Modifier.padding(16.dp)
+        )
+    }
 }

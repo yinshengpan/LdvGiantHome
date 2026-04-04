@@ -38,7 +38,6 @@ internal fun LightDetailsScreen(
         onActionPressed = { onNavigateToSetting.invoke(deviceId) },
         onBackPressed = onBackClick,
         backTitle = "Home",
-        enableScroll = true,
         isLoading = (uiState as? LightDetailsContract.UiState.Success)?.loading ?: false
     ) {
         when (uiState) {

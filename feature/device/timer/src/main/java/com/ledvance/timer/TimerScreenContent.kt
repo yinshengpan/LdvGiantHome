@@ -38,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.ledvance.domain.bean.TimerUiItem
 import com.ledvance.domain.bean.command.common.TimerType
 import com.ledvance.ui.R
-import com.ledvance.ui.component.LedvanceSwitch
+import com.ledvance.ui.component.MeluceSwitch
 import com.ledvance.ui.component.ScheduleSettingCard
 import com.ledvance.ui.extensions.debouncedClickable
 import com.ledvance.ui.extensions.getFullNameResId
@@ -75,6 +75,7 @@ internal fun TimerScreenContent(
         ) {
 
             ScheduleSettingCard(
+                backgroundColor = AppTheme.colors.screenSecondaryBackground,
                 title = stringResource(R.string.timer_regularly_on),
                 switch = onTimer.enabled,
                 onSwitchChange = { onTimerSwitchChange(TimerType.GiantOn, it) },
@@ -90,6 +91,7 @@ internal fun TimerScreenContent(
             )
 
             ScheduleSettingCard(
+                backgroundColor = AppTheme.colors.screenSecondaryBackground,
                 modifier = Modifier.padding(top = 10.dp),
                 title = stringResource(R.string.timer_regularly_off),
                 switch = offTimer.enabled,
@@ -241,7 +243,7 @@ private fun Item(
         )
         when {
             switch != null && onSwitchChange != null -> {
-                LedvanceSwitch(switch, onSwitchChange)
+                MeluceSwitch(switch, onSwitchChange)
             }
 
             content != null -> {

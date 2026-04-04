@@ -44,7 +44,7 @@ import com.ledvance.domain.bean.DeviceId
 import com.ledvance.domain.bean.DeviceUiItem
 import com.ledvance.domain.bean.isLdvBedside
 import com.ledvance.ui.R
-import com.ledvance.ui.component.LedvanceSwitch
+import com.ledvance.ui.component.MeluceSwitch
 import com.ledvance.ui.extensions.clipWithBorder
 import com.ledvance.ui.extensions.debouncedClickable
 import com.ledvance.ui.extensions.getIconResId
@@ -266,7 +266,7 @@ private fun DeviceItem(
                             .debouncedClickable { onConnectClick.invoke(device.deviceId) },
                     )
                 } else {
-                    LedvanceSwitch(
+                    MeluceSwitch(
                         checked = switch,
                         onCheckedChange = { onSwitchChange.invoke(device.deviceId, it) },
                         modifier = Modifier.padding(top = 10.dp, end = 10.dp),

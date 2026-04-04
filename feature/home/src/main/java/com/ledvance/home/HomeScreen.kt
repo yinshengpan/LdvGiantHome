@@ -136,15 +136,15 @@ private fun HomeHeader(appName: String, onToAddNewDevice: () -> Unit) {
         modifier = Modifier
             .padding(top = 15.dp)
             .fillMaxWidth()
-            .height(48.dp)
-            .padding(horizontal = 25.dp),
+            .height(44.dp)
+            .padding(horizontal = 23.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
-            painter = painterResource(R.mipmap.christmas_eve_icon),
+            painter = painterResource(R.mipmap.icon_user),
             contentDescription = null,
             modifier = Modifier
-                .size(40.dp)
+                .size(36.8.dp)
                 .clipWithBorder(
                     shape = CircleShape,
                     borderWidth = 2.dp,
@@ -154,11 +154,11 @@ private fun HomeHeader(appName: String, onToAddNewDevice: () -> Unit) {
         Text(
             text = appName,
             style = AppTheme.typography.titleMedium.copy(
-                fontSize = 24.sp,
+                fontSize = 22.sp,
                 fontWeight = FontWeight.W700,
             ),
             color = Color(0xFFFF976E),
-            modifier = Modifier.padding(start = 12.dp)
+            modifier = Modifier.padding(start = 11.dp)
         )
         Spacer(modifier = Modifier.weight(1f))
         Image(
@@ -166,7 +166,7 @@ private fun HomeHeader(appName: String, onToAddNewDevice: () -> Unit) {
             contentDescription = "Add",
             contentScale = ContentScale.FillWidth,
             modifier = Modifier
-                .size(26.dp)
+                .size(24.dp)
                 .debouncedClickable(onClick = onToAddNewDevice)
         )
     }

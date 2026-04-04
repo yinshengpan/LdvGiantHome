@@ -46,7 +46,7 @@ fun <T> WheelPicker(
     visibleItemsCount: Int = 5,
     highlightColor: Color = Color(0xFFBC00FF),
     textColor: Color = Color.White,
-    textSize: TextUnit = 20.sp,
+    textSize: TextUnit = 33.sp,
     highlightShape: RoundedCornerShape = RoundedCornerShape(12.dp),
     onSelectionChanged: (T) -> Unit = {},
     onPickCompleted: (T) -> Unit = {},
@@ -141,15 +141,15 @@ fun <T> WheelPicker(
 
                 val alpha = when (distance) {
                     0 -> 1.0f
-                    1 -> 0.7f
-                    2 -> 0.4f
-                    else -> 0.2f
+                    1 -> 0.4f
+                    2 -> 0.2f
+                    else -> 0.1f
                 }
                 val scale = when (distance) {
-                    0 -> 1.2f
-                    1 -> 1.0f
-                    2 -> 0.9f
-                    else -> 0.8f
+                    0 -> 1f
+                    1 -> 0.6f
+                    2 -> 0.5f
+                    else -> 0.4f
                 }
 
                 Box(
@@ -162,11 +162,11 @@ fun <T> WheelPicker(
                         text = label(item),
                         color = if (distance == 0) textColor else textColor.copy(alpha = alpha),
                         fontSize = textSize,
-                        fontWeight = if (distance == 0) FontWeight.Bold else FontWeight.Normal,
+                        fontWeight = if (distance == 0) FontWeight.W400 else FontWeight.Normal,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier
-                            .padding(horizontal = 30.dp)
+                            .padding(horizontal = 10.dp)
                             .graphicsLayer(
                                 scaleX = scale,
                                 scaleY = scale

@@ -104,8 +104,9 @@ class GiantProtocol(
     }
 
     override suspend fun setCct(cct: Int) = queue.execute {
-        Timber.tag(TAG).d("setCCT: cct=$cct")
-        val (warm, cool) = ColorUtils.cctToWwCw(cct)
+        val realCct = cct.coerceIn(0, 100)
+        Timber.tag(TAG).d("setCCT: cct=$cct,realCct:$realCct")
+        val (warm, cool) = ColorUtils.cctToWwCw(realCct)
         client.write(
             buildCommand(
                 GiantCommandType.SetColour.command,
@@ -163,7 +164,16 @@ class GiantProtocol(
     /** 设置设备当前时间 (Byte2=0x01, Byte3=时, Byte4=分, Byte5=秒, Byte6=星期) */
     override suspend fun setCurrentTime(hour: Int, min: Int, sec: Int, weekDay: Int) = queue.execute {
         Timber.tag(TAG).d("setCurrentTime: $hour:$min:$sec, weekDay=$weekDay")
-        client.write(buildCommand(GiantCommandType.SetCurrentTime.command, 0x01, hour.toByte(), min.toByte(), sec.toByte(), weekDay.toByte()))
+        client.write(
+            buildCommand(
+                GiantCommandType.SetCurrentTime.command,
+                0x01,
+                hour.toByte(),
+                min.toByte(),
+                sec.toByte(),
+                weekDay.toByte()
+            )
+        )
     }
 
     override suspend fun syncCurrentTime(): Boolean {

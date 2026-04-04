@@ -79,6 +79,7 @@
     <string name="timer_time">"Time"</string>
     <string name="timer_delay">"Delay"</string>
     <string name="timer_repeat">"Repeat"</string>
+    <string name="unit_min">"min"</string>
 
     <string name="music_device_mic">"Device Mic"</string>
     <string name="music_phone_mic">"Phone Mic"</string>

@@ -130,7 +130,7 @@ private fun LedvanceBottomBar(
     ) {
         NavigationBar(
             modifier = Modifier
-                .height(86.dp)
+                .height(80.dp)
                 .padding(horizontal = 10.dp),
             containerColor = AppTheme.colors.cardBackground,
             contentColor = Color.Unspecified,
@@ -150,12 +150,12 @@ private fun LedvanceBottomBar(
                     Icon(
                         painter = painterResource(id = iconId),
                         contentDescription = stringResource(id = destination.iconTextId),
-                        modifier = Modifier.size(22.dp)
+                        modifier = Modifier.size(20.dp)
                     )
                     Text(
                         text = stringResource(id = destination.iconTextId),
-                        style = AppTheme.typography.bodyMedium.copy(fontSize = 14.sp, fontWeight = FontWeight.W400),
-                        modifier = Modifier.padding(top = 6.dp),
+                        style = AppTheme.typography.bodyMedium.copy(fontSize = 11.sp, fontWeight = FontWeight.W400),
+                        modifier = Modifier.padding(top = 5.dp),
                         color = if (selected) AppTheme.colors.mainTabSelected else AppTheme.colors.mainTabUnselected,
                     )
                 }
