@@ -21,6 +21,7 @@ internal interface HomeContract {
         data class Success(
             val appName: String = "",
             val devices: List<DeviceUiItem> = listOf(),
+            val onlineDeviceCount: Int = 0,
             val loading: Boolean = false,
         ) : UiState
     }

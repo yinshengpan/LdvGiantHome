@@ -60,7 +60,8 @@ internal class HomeViewModel @Inject constructor(
             Timber.tag(TAG).d("merge -> deviceId=${device.deviceId}, dbOnline=${device.isOnline}, newOnline=$isOnline")
             device.copy(isOnline = isOnline)
         }
-        HomeContract.UiState.Success(devices = mergedDevices, loading = state.loading)
+        val onlineDeviceCount = mergedDevices.filter { it.isOnline }.size
+        HomeContract.UiState.Success(devices = mergedDevices, loading = state.loading, onlineDeviceCount = onlineDeviceCount)
     }.onStart {
         Timber.tag(TAG).d("Home -> start loading")
     }.onEach { uiState ->
