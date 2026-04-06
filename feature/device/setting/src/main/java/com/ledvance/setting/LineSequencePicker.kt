@@ -1,5 +1,6 @@
 package com.ledvance.setting
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ledvance.domain.bean.command.giant.LineSequence
@@ -40,15 +42,20 @@ internal fun LineSequencePicker(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White, RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-            .padding(24.dp)
+            .background(Color.White, RoundedCornerShape(topStart = 22.dp, topEnd = 22.dp))
+            .padding(horizontal = 32.dp)
+            .padding(bottom = 24.dp, top = 28.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = stringResource(R.string.dialog_select_line_sequence_title),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
+            fontSize = 19.sp,
+            fontWeight = FontWeight.W700,
             color = Color.Black,
-            modifier = Modifier.padding(bottom = 16.dp)
+            textAlign = TextAlign.Start,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
         )
 
         val sequences = LineSequence.items
@@ -66,12 +73,16 @@ internal fun LineSequencePicker(
                     Text(
                         text = sequence.title,
                         modifier = Modifier.weight(1f),
+                        style = AppTheme.typography.bodyMedium.copy(
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.W400
+                        ),
                         color = Color.Black
                     )
-                    Icon(
-                        painter = painterResource(R.drawable.ic_check_circle),
+                    Image(
+                        painter = painterResource(if (selectedSequence == sequence) R.mipmap.icon_checked else R.mipmap.icon_unchecked),
                         contentDescription = null,
-                        tint = if (selectedSequence == sequence) AppTheme.colors.primary else AppTheme.colors.divider
+                        modifier = Modifier.size(14.dp),
                     )
                 }
             }
@@ -87,22 +98,30 @@ internal fun LineSequencePicker(
                 onClick = onCancel,
                 modifier = Modifier
                     .weight(1f)
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFF2F2F2), contentColor = Color.Black),
-                shape = RoundedCornerShape(28.dp)
+                    .height(46.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFFB5B5B5),
+                    contentColor = Color.White
+                ),
+                shape = RoundedCornerShape(11.dp)
             ) {
-                Text(text = stringResource(R.string.cancel))
+                Text(text = stringResource(R.string.cancel), fontSize = 15.sp, fontWeight = FontWeight.W400)
             }
 
-            Button(
-                onClick = { onConfirm(selectedSequence) },
+            Box(
                 modifier = Modifier
                     .weight(1f)
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = AppTheme.colors.primary, contentColor = Color.White),
-                shape = RoundedCornerShape(28.dp)
+                    .height(46.dp)
+                    .background(AppTheme.colors.cardBackgroundBrush, RoundedCornerShape(11.dp))
+                    .clickable { onConfirm(selectedSequence) },
+                contentAlignment = Alignment.Center
             ) {
-                Text(text = stringResource(R.string.confirm))
+                Text(
+                    text = stringResource(R.string.confirm),
+                    color = Color.White,
+                    fontSize = 15.sp,
+                    fontWeight = FontWeight.W400
+                )
             }
         }
     }

@@ -27,21 +27,20 @@ fun rememberBluetoothEnableState(): EnableState {
     val context = LocalContext.current
     val bluetoothEnable by BluetoothManager.bluetoothEnableState.collectAsStateWithLifecycle()
     var showRequestDialog by rememberSaveable { mutableStateOf(false) }
-    if (showRequestDialog) {
-        LedvanceDialog(
-            title = stringResource(R.string.dialog_bluetooth_enable_request_title),
-            message = stringResource(R.string.dialog_bluetooth_enable_request_message),
-            cancelText = stringResource(id = R.string.cancel),
-            confirmText = stringResource(id = R.string.go_to_setting),
-            onCancel = {
-                showRequestDialog = false
-            },
-            onConfirm = {
-                showRequestDialog = false
-                context.openBluetooth()
-            }
-        )
-    }
+    LedvanceDialog(
+        visible = showRequestDialog,
+        title = stringResource(R.string.dialog_bluetooth_enable_request_title),
+        message = stringResource(R.string.dialog_bluetooth_enable_request_message),
+        cancelText = stringResource(id = R.string.cancel),
+        confirmText = stringResource(id = R.string.go_to_setting),
+        onCancel = {
+            showRequestDialog = false
+        },
+        onConfirm = {
+            showRequestDialog = false
+            context.openBluetooth()
+        }
+    )
     val bluetoothEnableState = remember(bluetoothEnable) {
         BluetoothEnableState(isBluetoothEnable = bluetoothEnable) {
             showRequestDialog = true

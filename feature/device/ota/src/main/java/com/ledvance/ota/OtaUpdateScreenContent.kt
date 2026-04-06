@@ -178,11 +178,11 @@ private fun FirmwareUpdateAvailable(
                 }
                 Text(
                     text = stringResource(R.string.update),
-                    style = AppTheme.typography.titleSmall,
+                    style = AppTheme.typography.titleSmall.copy(fontSize = 12.sp),
                     color = AppTheme.colors.buttonContent,
                     modifier = Modifier
                         .background(
-                            color = AppTheme.colors.buttonBackground,
+                            brush = AppTheme.colors.cardBackgroundBrush,
                             shape = RoundedCornerShape(4.dp)
                         )
                         .debouncedClickable {

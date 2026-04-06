@@ -117,17 +117,16 @@ internal fun HomeScreen(
         }
     }
 
-    if (deviceToDelete != null) {
-        LedvanceDialog(
-            title = stringResource(R.string.dialog_delete_device_title),
-            message = stringResource(R.string.dialog_delete_device_message),
-            onCancel = { deviceToDelete = null },
-            onConfirm = {
-                viewModel.onDeleteDevice(deviceToDelete!!)
-                deviceToDelete = null
-            }
-        )
-    }
+    LedvanceDialog(
+        visible = deviceToDelete != null,
+        title = stringResource(R.string.dialog_delete_device_title),
+        message = stringResource(R.string.dialog_delete_device_message),
+        onCancel = { deviceToDelete = null },
+        onConfirm = {
+            viewModel.onDeleteDevice(deviceToDelete!!)
+            deviceToDelete = null
+        }
+    )
 }
 
 @Composable

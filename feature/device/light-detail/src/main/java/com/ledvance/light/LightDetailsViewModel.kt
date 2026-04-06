@@ -8,9 +8,11 @@ import com.ledvance.domain.bean.LightCommand
 import com.ledvance.domain.bean.TimerUiItem
 import com.ledvance.domain.bean.WorkMode
 import com.ledvance.domain.bean.command.common.ModeType
+import com.ledvance.domain.bean.command.common.TimerType
 import com.ledvance.domain.bean.command.common.getTimerMode
 import com.ledvance.domain.bean.isLdvBedside
 import com.ledvance.light.component.CardFeature
+import com.ledvance.ui.R
 import com.ledvance.ui.component.SnackbarManager
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceStateUseCase
@@ -18,6 +20,7 @@ import com.ledvance.usecase.device.GetDeviceTimersUseCase
 import com.ledvance.usecase.device.GetDeviceUseCase
 import com.ledvance.usecase.device.SyncDeviceTimerUseCase
 import com.ledvance.usecase.device.UpdateDeviceTimerUseCase
+import com.ledvance.utils.extensions.getString
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -89,26 +92,29 @@ internal class LightDetailsViewModel @AssistedInject constructor(
                 val modeType = device.modeType ?: ModeType.LdvWakeup
                 LightDetailsContract.DetailState.LdvBedsideState(
                     power = device.power,
-                    brightness = screenState.whiteModeBrightness.takeIf { it != -1 } ?: device.brightness,
-                    cct = screenState.whiteModeCct.takeIf { it != -1 } ?: device.cct,
+                    brightness = screenState.whiteModeBrightness.orDefault(device.brightness),
+                    cct = screenState.whiteModeCct.orDefault(device.cct),
                     modeType = modeType,
                     modeList = ModeType.ldvBedsideModeList,
-                    timerList = timers.filter { it.timerType.mode == modeType.getTimerMode()?.command }
-                        // command 就是 index
-                        .sortedBy { it.timerType.command }
+                    timerList = buildTimerList(
+                        timers = timers,
+                        modeType = modeType,
+                    )
                 )
             }
 
-            else -> LightDetailsContract.DetailState.GiantDetailState(
-                power = device.power,
-                workMode = screenState.workMode ?: device.workMode,
-                colourModeHue = screenState.colourModeHue.takeIf { it != -1 } ?: device.h,
-                colourModeSat = screenState.colourModeSat.takeIf { it != -1 } ?: device.s,
-                colourModeBrightness = screenState.colourModeBrightness.takeIf { it != -1 } ?: device.v,
-                whiteModeCct = screenState.whiteModeCct.takeIf { it != -1 } ?: device.cct,
-                whiteModeBrightness = screenState.whiteModeBrightness.takeIf { it != -1 } ?: device.brightness,
-                cardFeatureList = cardFeatureMap[device.deviceType] ?: listOf(),
-            )
+            else -> {
+                LightDetailsContract.DetailState.GiantDetailState(
+                    power = device.power,
+                    workMode = screenState.workMode ?: device.workMode,
+                    colourModeHue = screenState.colourModeHue.orDefault(device.h),
+                    colourModeSat = screenState.colourModeSat.orDefault(device.s),
+                    colourModeBrightness = screenState.colourModeBrightness.orDefault(device.v),
+                    whiteModeCct = screenState.whiteModeCct.orDefault(device.cct),
+                    whiteModeBrightness = screenState.whiteModeBrightness.orDefault(device.brightness),
+                    cardFeatureList = cardFeatureMap[device.deviceType].orEmpty(),
+                )
+            }
         }
         LightDetailsContract.UiState.Success(
             loading = screenState.loading,
@@ -262,6 +268,32 @@ internal class LightDetailsViewModel @AssistedInject constructor(
             screenState.update { it.copy(loading = false) }
         }
     }
+
+    private fun buildTimerList(
+        timers: List<TimerUiItem>,
+        modeType: ModeType,
+    ): List<TimerUiItem> {
+        val targetMode = modeType.getTimerMode()?.command
+        return timers
+            .filter { it.timerType.mode == targetMode }
+            .ifEmpty { defaultTimers(modeType) }
+            .sortedBy { it.timerType.command }
+    }
+
+    private fun defaultTimers(modeType: ModeType): List<TimerUiItem> {
+        val isWakeup = modeType == ModeType.LdvWakeup
+
+        val first = if (isWakeup) TimerType.LdvWakeup1 else TimerType.LdvSleep1
+        val second = if (isWakeup) TimerType.LdvWakeup2 else TimerType.LdvSleep2
+
+        return listOf(
+            TimerUiItem(timerType = first, displayRepeat = getString(R.string.never)),
+            TimerUiItem(timerType = second, displayRepeat = getString(R.string.never))
+        )
+    }
+
+    private fun Int.orDefault(default: Int): Int =
+        takeIf { it != -1 } ?: default
 
     private data class ScreenState(
         val workMode: WorkMode? = null,

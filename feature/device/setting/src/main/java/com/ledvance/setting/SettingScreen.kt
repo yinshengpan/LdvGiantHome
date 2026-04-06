@@ -1,24 +1,21 @@
 package com.ledvance.setting
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ledvance.domain.bean.DeviceId
+import com.ledvance.domain.bean.command.giant.LineSequence
+import com.ledvance.setting.dialog.LineSequencePickerDialog
 import com.ledvance.ui.R
 import com.ledvance.ui.component.LedvanceScreen
 import com.ledvance.ui.component.OfflineBanner
 import com.ledvance.ui.dialog.LedvanceDialog
-import com.ledvance.ui.theme.AppTheme
 import com.ledvance.ui.utils.OneTimeActionEffect
 
 /**
@@ -39,7 +36,7 @@ internal fun SettingScreen(
     onNavigateToOta: () -> Unit,
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    var showLineSequencePicker by remember { mutableStateOf(false) }
+    var showLineSequencePicker by remember { mutableStateOf<LineSequence?>(null) }
     var showResetDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
 
@@ -63,7 +60,7 @@ internal fun SettingScreen(
                 val state = uiState as SettingContract.UiState.Success
                 SettingScreenContent(
                     uiState = state,
-                    onLineSequenceClick = { showLineSequencePicker = true },
+                    onLineSequenceClick = { showLineSequencePicker = state.lineSequence },
                     onResetClick = { showResetDialog = true },
                     onUpgradeClick = onNavigateToOta,
                     onDeleteClick = { showDeleteDialog = true }
@@ -77,47 +74,37 @@ internal fun SettingScreen(
         }
     }
 
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    if (showLineSequencePicker) {
-        val successState = uiState as? SettingContract.UiState.Success
-        ModalBottomSheet(
-            onDismissRequest = { showLineSequencePicker = false },
-            sheetState = sheetState,
-            sheetGesturesEnabled = false,
-            dragHandle = null
-        ) {
-            LineSequencePicker(
-                initialSequence = successState?.lineSequence,
-                onCancel = { showLineSequencePicker = false },
-                onConfirm = {
-                    viewModel.setLineSequence(it)
-                    showLineSequencePicker = false
-                }
-            )
+    LineSequencePickerDialog(
+        visible = showLineSequencePicker != null,
+        lineSequence = showLineSequencePicker,
+        onDismiss = {
+            showLineSequencePicker = null
+        },
+        onConfirm = {
+            viewModel.setLineSequence(it)
+            showLineSequencePicker = null
         }
-    }
+    )
 
-    if (showResetDialog) {
-        LedvanceDialog(
-            title = stringResource(R.string.dialog_reset_title),
-            message = stringResource(R.string.dialog_reset_message),
-            onCancel = { showResetDialog = false },
-            onConfirm = {
-                viewModel.resetDevice()
-                showResetDialog = false
-            }
-        )
-    }
+    LedvanceDialog(
+        visible = showResetDialog,
+        title = stringResource(R.string.dialog_reset_title),
+        message = stringResource(R.string.dialog_reset_message),
+        onCancel = { showResetDialog = false },
+        onConfirm = {
+            viewModel.resetDevice()
+            showResetDialog = false
+        }
+    )
 
-    if (showDeleteDialog) {
-        LedvanceDialog(
-            title = stringResource(R.string.dialog_delete_device_title),
-            message = stringResource(R.string.dialog_delete_device_message),
-            onCancel = { showDeleteDialog = false },
-            onConfirm = {
-                viewModel.deleteDevice()
-                showDeleteDialog = false
-            }
-        )
-    }
+    LedvanceDialog(
+        visible = showDeleteDialog,
+        title = stringResource(R.string.dialog_delete_device_title),
+        message = stringResource(R.string.dialog_delete_device_message),
+        onCancel = { showDeleteDialog = false },
+        onConfirm = {
+            viewModel.deleteDevice()
+            showDeleteDialog = false
+        }
+    )
 }

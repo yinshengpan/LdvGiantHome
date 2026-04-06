@@ -103,6 +103,7 @@ fun LedvanceBottomSheetDialog(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LedvanceDialog(
+    visible: Boolean,
     modifier: Modifier = Modifier,
     title: String? = null,
     message: String,
@@ -114,104 +115,107 @@ fun LedvanceDialog(
     onConfirm: (() -> Unit)? = null,
     onCancel: (() -> Unit)? = null,
 ) {
-    BasicAlertDialog(
-        modifier = modifier.fillMaxWidth(),
-        properties = DialogProperties(
-            dismissOnClickOutside = false,
-            usePlatformDefaultWidth = false,
-            dismissOnBackPress = false
-        ),
-        onDismissRequest = { onCancel?.invoke() },
-    ) {
-        Card(
-            modifier = Modifier
-                .padding(vertical = 20.dp, horizontal = 30.dp)
-                .fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(defaultElevation = 7.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = AppTheme.colors.dialogBackground
+    if (visible) {
+
+        BasicAlertDialog(
+            modifier = modifier.fillMaxWidth(),
+            properties = DialogProperties(
+                dismissOnClickOutside = false,
+                usePlatformDefaultWidth = false,
+                dismissOnBackPress = false
             ),
-            shape = RoundedCornerShape(14.dp)
+            onDismissRequest = { onCancel?.invoke() },
         ) {
-            Column(
+            Card(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                    .padding(vertical = 20.dp, horizontal = 30.dp)
+                    .fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(defaultElevation = 7.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = AppTheme.colors.dialogBackground
+                ),
+                shape = RoundedCornerShape(14.dp)
             ) {
-                title?.also {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    title?.also {
+                        Text(
+                            text = it,
+                            style = AppTheme.typography.titleLarge.copy(fontSize = 17.sp),
+                            color = AppTheme.colors.dialogTitle,
+                            textAlign = TextAlign.Center,
+                            overflow = TextOverflow.Ellipsis,
+                            maxLines = 1,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 16.dp)
+                                .padding(bottom = 8.dp)
+
+                        )
+                    }
                     Text(
-                        text = it,
-                        style = AppTheme.typography.titleLarge.copy(fontSize = 17.sp),
-                        color = AppTheme.colors.dialogTitle,
-                        textAlign = TextAlign.Center,
+                        text = message,
+                        style = AppTheme.typography.bodyLarge.copy(fontSize = 13.sp),
+                        color = AppTheme.colors.dialogMessage,
                         overflow = TextOverflow.Ellipsis,
-                        maxLines = 1,
+                        textAlign = TextAlign.Center,
+                        maxLines = maxLines,
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 16.dp)
-                            .padding(bottom = 8.dp)
-
+                            .padding(bottom = 15.dp)
                     )
-                }
-                Text(
-                    text = message,
-                    style = AppTheme.typography.bodyLarge.copy(fontSize = 13.sp),
-                    color = AppTheme.colors.dialogMessage,
-                    overflow = TextOverflow.Ellipsis,
-                    textAlign = TextAlign.Center,
-                    maxLines = maxLines,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp)
-                        .padding(bottom = 15.dp)
-                )
-                HorizontalDivider(thickness = 0.5.dp, color = AppTheme.colors.divider)
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(44.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    if (!cancelText.isNullOrEmpty()) {
+                    HorizontalDivider(thickness = 0.5.dp, color = AppTheme.colors.divider)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(44.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        if (!cancelText.isNullOrEmpty()) {
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxHeight()
+                                    .debouncedClickable {
+                                        onCancel?.invoke()
+                                    },
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Text(
+                                    text = cancelText,
+                                    textAlign = TextAlign.Center,
+                                    style = AppTheme.typography.bodyMedium.copy(fontSize = 17.sp),
+                                    color = cancelTextColor,
+                                )
+                            }
+                            VerticalDivider(
+                                thickness = 0.5.dp,
+                                color = AppTheme.colors.divider,
+                                modifier = Modifier.fillMaxHeight(),
+                            )
+                        }
+
                         Box(
                             modifier = Modifier
                                 .weight(1f)
                                 .fillMaxHeight()
                                 .debouncedClickable {
-                                    onCancel?.invoke()
+                                    onConfirm?.invoke()
                                 },
                             contentAlignment = Alignment.Center,
                         ) {
                             Text(
-                                text = cancelText,
+                                text = confirmText,
                                 textAlign = TextAlign.Center,
-                                style = AppTheme.typography.bodyMedium.copy(fontSize = 17.sp),
-                                color = cancelTextColor,
+                                style = AppTheme.typography.titleMedium.copy(fontSize = 17.sp),
+                                color = confirmTextColor,
                             )
                         }
-                        VerticalDivider(
-                            thickness = 0.5.dp,
-                            color = AppTheme.colors.divider,
-                            modifier = Modifier.fillMaxHeight(),
-                        )
-                    }
-
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .fillMaxHeight()
-                            .debouncedClickable {
-                                onConfirm?.invoke()
-                            },
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            text = confirmText,
-                            textAlign = TextAlign.Center,
-                            style = AppTheme.typography.titleMedium.copy(fontSize = 17.sp),
-                            color = confirmTextColor,
-                        )
                     }
                 }
             }

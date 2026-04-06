@@ -3,14 +3,16 @@ package com.ledvance.timer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ledvance.domain.bean.DeviceId
-import com.ledvance.domain.bean.command.common.TimerType
 import com.ledvance.domain.bean.TimerUiItem
+import com.ledvance.domain.bean.command.common.TimerType
+import com.ledvance.ui.R
 import com.ledvance.ui.component.SnackbarManager
 import com.ledvance.usecase.device.DeviceControlUseCase
 import com.ledvance.usecase.device.GetDeviceStateUseCase
 import com.ledvance.usecase.device.GetDeviceTimersUseCase
 import com.ledvance.usecase.device.SyncDeviceTimerUseCase
 import com.ledvance.usecase.device.UpdateDeviceTimerUseCase
+import com.ledvance.utils.extensions.getString
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -22,7 +24,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.DayOfWeek
 
 /**
  * @author : jason yin
@@ -51,11 +52,8 @@ internal class TimerViewModel @AssistedInject constructor(
         flow2 = getDeviceStateUseCase(deviceId),
         flow3 = screenState
     ) { timers, deviceState, state ->
-        val onTimer = timers.find { it.timerType == TimerType.GiantOn } ?: TimerUiItem(TimerType.GiantOn)
-        val offTimer = timers.find { it.timerType == TimerType.GiantOff } ?: TimerUiItem(TimerType.GiantOff)
         TimerContract.UiState.Success(
-            onTimer = onTimer,
-            offTimer = offTimer,
+            timerList = timers.ifEmpty { defaultGiantTimers() }.sortedByDescending { it.timerType.command },
             isOnline = deviceState.isOnline,
             loading = state.loading
         )
@@ -77,27 +75,18 @@ internal class TimerViewModel @AssistedInject constructor(
         }
     }
 
-    override fun onTimerSwitchChange(timerType: TimerType, enabled: Boolean) {
-        updateTimer(timerType) { it.copy(enabled = enabled) }
-    }
+    private fun defaultGiantTimers() = listOf(
+        TimerUiItem(timerType = TimerType.GiantOn, displayRepeat = getString(R.string.never)),
+        TimerUiItem(timerType = TimerType.GiantOff, displayRepeat = getString(R.string.never))
+    )
 
-    override fun onTimerTimeChange(timerType: TimerType, hour: Int, minute: Int) {
-        updateTimer(timerType) { it.copy(hour = hour, minute = minute) }
-    }
-
-    override fun onTimerRepeatChange(timerType: TimerType, days: Set<DayOfWeek>) {
-        updateTimer(timerType) { it.copy(days = days) }
-    }
-
-    private fun updateTimer(timerType: TimerType, transform: (TimerUiItem) -> TimerUiItem) {
-        val currentState = uiState.value as? TimerContract.UiState.Success ?: return
-        val timer = if (timerType == TimerType.GiantOn) currentState.onTimer else currentState.offTimer
+    override fun onTimerChange(timer: TimerUiItem) {
         viewModelScope.launch {
             screenState.update { it.copy(loading = true) }
             val success = updateDeviceTimerUseCase(
                 parameter = UpdateDeviceTimerUseCase.Param(
                     deviceId = deviceId,
-                    timer = transform(timer)
+                    timer = timer
                 )
             )
             if (success.isFailure || !success.getOrDefault(false)) {

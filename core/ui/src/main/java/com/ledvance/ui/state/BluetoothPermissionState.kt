@@ -31,21 +31,20 @@ fun rememberBluetoothPermissionState(): BluetoothPermissionState {
     val context = LocalContext.current.applicationContext
     val permissionState = rememberMultiplePermissionsState(permissions = BLUETOOTH_PERMISSION)
     var showRequestDialog by rememberSaveable { mutableStateOf(false) }
-    if (showRequestDialog) {
-        LedvanceDialog(
-            title = stringResource(R.string.dialog_bluetooth_permissions_request_title),
-            message = stringResource(R.string.dialog_bluetooth_permissions_request_message),
-            cancelText = stringResource(id = R.string.cancel),
-            confirmText = stringResource(id = R.string.go_to_setting),
-            onCancel = {
-                showRequestDialog = false
-            },
-            onConfirm = {
-                showRequestDialog = false
-                context.openAppDetail()
-            }
-        )
-    }
+    LedvanceDialog(
+        visible = showRequestDialog,
+        title = stringResource(R.string.dialog_bluetooth_permissions_request_title),
+        message = stringResource(R.string.dialog_bluetooth_permissions_request_message),
+        cancelText = stringResource(id = R.string.cancel),
+        confirmText = stringResource(id = R.string.go_to_setting),
+        onCancel = {
+            showRequestDialog = false
+        },
+        onConfirm = {
+            showRequestDialog = false
+            context.openAppDetail()
+        }
+    )
     val multiplePermissionsState = remember(permissionState) {
         MutableBluetoothPermissionState(permissionState) {
             showRequestDialog = true

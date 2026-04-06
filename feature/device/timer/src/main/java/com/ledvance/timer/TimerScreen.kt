@@ -35,11 +35,8 @@ internal fun TimerScreen(
             is TimerContract.UiState.Success -> {
                 val state = uiState as TimerContract.UiState.Success
                 TimerScreenContent(
-                    onTimer = state.onTimer,
-                    offTimer = state.offTimer,
-                    onTimerSwitchChange = viewModel::onTimerSwitchChange,
-                    onTimerTimeChange = viewModel::onTimerTimeChange,
-                    onTimerRepeatChange = viewModel::onTimerRepeatChange
+                    uiState = state,
+                    onTimerChange = viewModel::onTimerChange
                 )
                 OfflineBanner(
                     visible = !state.isOnline,

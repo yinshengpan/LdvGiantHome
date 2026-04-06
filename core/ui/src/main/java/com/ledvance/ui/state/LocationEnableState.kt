@@ -26,21 +26,20 @@ fun rememberLocationEnableState(): EnableState {
     val context = LocalContext.current
     val locationEnable by LocationManager.locationEnable.collectAsStateWithLifecycle()
     var showRequestDialog by rememberSaveable { mutableStateOf(false) }
-    if (showRequestDialog) {
-        LedvanceDialog(
-            title = stringResource(id = R.string.dialog_location_enable_request_title),
-            message = stringResource(id = R.string.dialog_location_enable_request_message),
-            cancelText = stringResource(id = R.string.cancel),
-            confirmText = stringResource(id = R.string.go_to_setting),
-            onCancel = {
-                showRequestDialog = false
-            },
-            onConfirm = {
-                showRequestDialog = false
-                context.openLocation()
-            }
-        )
-    }
+    LedvanceDialog(
+        visible = showRequestDialog,
+        title = stringResource(id = R.string.dialog_location_enable_request_title),
+        message = stringResource(id = R.string.dialog_location_enable_request_message),
+        cancelText = stringResource(id = R.string.cancel),
+        confirmText = stringResource(id = R.string.go_to_setting),
+        onCancel = {
+            showRequestDialog = false
+        },
+        onConfirm = {
+            showRequestDialog = false
+            context.openLocation()
+        }
+    )
     val locationEnableState = remember(locationEnable) {
         LocationEnableState(isLocationEnable = locationEnable) {
             showRequestDialog = true

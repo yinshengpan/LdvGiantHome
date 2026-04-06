@@ -65,8 +65,6 @@ internal fun SearchScreen(
     }
 
     LedvanceScreen(
-        topBarContainerColor = AppTheme.colors.primaryBackground,
-        topBarContentColor = AppTheme.colors.primaryContent,
         horizontalAlignment = Alignment.CenterHorizontally,
         onBackPressed = onBackClick,
         verticalArrangement = Arrangement.Center,

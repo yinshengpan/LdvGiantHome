@@ -36,38 +36,34 @@ internal fun OtaUpdateScreen(
     var showUpdateDialog by remember { mutableStateOf(false) }
     var showLearnDialog by remember { mutableStateOf(false) }
 
-    if (showUpdateDialog) {
-        LedvanceDialog(
-            title = stringResource(R.string.dialog_firmware_upgrade_title),
-            message = stringResource(R.string.dialog_firmware_upgrade_message),
-            cancelText = stringResource(R.string.cancel),
-            confirmText = stringResource(R.string.confirm),
-            onCancel = {
-                showUpdateDialog = false
-            },
-            onConfirm = {
-                showUpdateDialog = false
-                viewModel.startUpdateFirmware()
-            },
-        )
-    }
+    LedvanceDialog(
+        visible = showUpdateDialog,
+        title = stringResource(R.string.dialog_firmware_upgrade_title),
+        message = stringResource(R.string.dialog_firmware_upgrade_message),
+        cancelText = stringResource(R.string.cancel),
+        confirmText = stringResource(R.string.confirm),
+        onCancel = {
+            showUpdateDialog = false
+        },
+        onConfirm = {
+            showUpdateDialog = false
+            viewModel.startUpdateFirmware()
+        },
+    )
 
-    if (showLearnDialog) {
-        LedvanceDialog(
-            title = stringResource(R.string.dialog_firmware_upgrade_learn_title),
-            message = stringResource(R.string.dialog_firmware_upgrade_learn_message),
-            confirmText = stringResource(R.string.got_it),
-            confirmTextColor = AppTheme.colors.dialogPositive,
-            cancelText = null,
-            onConfirm = {
-                showLearnDialog = false
-            },
-        )
-    }
+    LedvanceDialog(
+        visible = showLearnDialog,
+        title = stringResource(R.string.dialog_firmware_upgrade_learn_title),
+        message = stringResource(R.string.dialog_firmware_upgrade_learn_message),
+        confirmText = stringResource(R.string.got_it),
+        confirmTextColor = AppTheme.colors.dialogPositive,
+        cancelText = null,
+        onConfirm = {
+            showLearnDialog = false
+        },
+    )
 
     LedvanceScreen(
-        topBarContainerColor = AppTheme.colors.primaryBackground,
-        topBarContentColor = AppTheme.colors.primaryContent,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         onBackPressed = {
